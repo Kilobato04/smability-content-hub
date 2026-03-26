@@ -105,12 +105,12 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 /* --- FIX 1: La Flecha de Navegación --- */
 .slide-nav-arrow {
     position: absolute;
-    top: 60px; /* Alineado con el padding superior */
-    right: 60px; /* Alineado con el padding derecho */
-    font-size: 3rem;
-    font-weight: 300; /* Ligera para no competir con el logo */
+    top: 60px;    /* Ajustado al padding superior */
+    right: 60px;  /* Forzado a la derecha */
+    font-size: 3.5rem;
+    font-weight: 300;
     z-index: 10;
-    transition: transform 0.3s ease;
+    line-height: 1;
 }
 
 /* Flecha blanca para slides oscuros */
@@ -125,7 +125,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 }
 
 .slide-cta_clean .slide-nav-arrow {
-    display: none;
+    display: none !important;
 }
 
 /* --- FIX 2: El Enmarcado de Datos (Data Callout) --- */
