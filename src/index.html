@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smability Content Hub - Primer Deploy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <img src="assets/logo.svg" alt="Smability Logo" class="main-logo">
+            <h1>Cerebro de Contenidos (v0.1 Sim)</h1>
+        </header>
+
+        <main class="content-grid">
+            <section class="control-panel">
+                <h2>1. Instrucción Técnica</h2>
+                <textarea id="technical-instruction" placeholder="Ej: Caso de Estudio Vitro MTY, reducción de PM2.5 usando el modelo."></textarea>
+                
+                <div class="meta-controls">
+                    <select id="post-goal">
+                        <option value="demo">Vender Licencia ($15k)</option>
+                        <option value="awareness">Awareness ONG/Salud</option>
+                    </select>
+                </div>
+
+                <button id="generate-btn">Generar Propuesta de IA (Sim)</button>
+                
+                <hr>
+
+                <h2>2. Propuesta de Post de LinkedIn</h2>
+                <textarea id="linkedin-post-output" readonly></textarea>
+                <div class="action-buttons">
+                    <button class="secondary">Editar</button>
+                    <button class="primary">Copiar Texto</button>
+                </div>
+            </section>
+
+            <section class="preview-panel">
+                <h2>3. Vista Previa del Carrusel (Estilo Enterprise)</h2>
+                <div id="carousel-preview-container">
+                    <div class="carousel-placeholder">Escribe la instrucción y genera para ver el carrusel...</div>
+                </div>
+                <button id="download-pdf-btn" disabled>Descargar PDF para LinkedIn</button>
+            </section>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
