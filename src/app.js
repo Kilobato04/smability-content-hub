@@ -53,49 +53,61 @@ async function generateContent() {
 
 function renderCarouselPreview(carouselData) {
     const container = document.getElementById('carousel-preview-container');
-    container.innerHTML = ''; // Limpiar placeholder
+    container.innerHTML = ''; 
 
     if (!carouselData || !carouselData.slides) {
         container.innerHTML = '<div class="carousel-placeholder">Error en los datos del carrusel.</div>';
         return;
     }
 
+    const logoPath = "assets/logo.png"; // Ruta a tu logo PNG
+
     carouselData.slides.forEach((slide, index) => {
         const slideEl = document.createElement('div');
         slideEl.className = `slide-preview slide-${slide.type}`;
         
-        // Lógica de renderizado según el tipo de slide (Enterprise TEC style)
+        // Determinar si el logo debe ser blanco o color original según el tipo de slide
+        const isDarkSlide = (slide.type === 'cover_bold' || slide.type === 'data_callout');
+        const logoStyle = isDarkSlide ? 'style="height:50px; filter: brightness(0) invert(1);"' : 'style="height:50px;"';
+
         if (slide.type === 'cover_bold') {
             slideEl.style.backgroundImage = `url(${slide.bg_image})`;
             slideEl.innerHTML = `
                 <div class="cover-overlay"></div>
-                <div class="slide-branding" style="z-index:2; position:relative; color:white; font-weight:bold;">SMABILITY</div>
+                <div class="slide-branding" style="z-index:2; position:relative;">
+                    <img src="${logoPath}" ${logoStyle}>
+                </div>
                 <h3>${slide.headline}</h3>
                 <div class="slide-metric" style="z-index:2; position:relative; color:var(--smability-green); font-size:4rem; font-weight:900;">${slide.metric}</div>
                 <div class="slide-footer" style="z-index:2; position:relative; color:#AAA;">1 / ${carouselData.slides.length}</div>
             `;
         } else if (slide.type === 'split_map') {
-            // Mañana inyectamos el mapa técnico real aquí
             slideEl.innerHTML = `
-                <div class="slide-branding" style="color:var(--smability-blue); font-weight:bold;">SMABILITY</div>
+                <div class="slide-branding">
+                    <img src="${logoPath}" ${logoStyle}>
+                </div>
                 <h3>${slide.headline}</h3>
-                <div class="map-placeholder" style="flex-grow:1; background-color:#EEE; display:flex; justify-content:center; align-items:center; color:#AAA; font-style:italic;">[Mapa Técnico de Dispersión Dummy]</div>
+                <div class="map-placeholder" style="flex-grow:1; background-color:#EEE; display:flex; justify-content:center; align-items:center; color:#AAA; font-style:italic; border-radius:8px; margin: 15px 0;">[Mapa Técnico de Dispersión Real]</div>
                 <p>${slide.supporting_text}</p>
                 <div class="slide-footer" style="color:#AAA;">${index + 1} / ${carouselData.slides.length}</div>
             `;
         } else if (slide.type === 'data_callout') {
             slideEl.innerHTML = `
-                <div class="slide-branding" style="color:white; font-weight:bold;">SMABILITY</div>
+                <div class="slide-branding">
+                    <img src="${logoPath}" ${logoStyle}>
+                </div>
                 <h3>${slide.headline}</h3>
-                <p style="color:white;">${slide.supporting_text}</p>
+                <p style="color:white; font-size: 1.5rem;">${slide.supporting_text}</p>
                 <div class="slide-footer" style="color:#AAA;">${index + 1} / ${carouselData.slides.length}</div>
             `;
         } else if (slide.type === 'cta_clean') {
             slideEl.innerHTML = `
-                <div class="slide-branding" style="color:var(--smability-blue); font-weight:bold;">SMABILITY</div>
+                <div class="slide-branding">
+                    <img src="${logoPath}" ${logoStyle}>
+                </div>
                 <h3>${slide.headline}</h3>
-                <p>${slide.supporting_text}</p>
-                <div class="cta-arrow" style="font-size:3rem; color:var(--smability-blue);">→</div>
+                <p style="font-size: 1.5rem;">${slide.supporting_text}</p>
+                <div class="cta-arrow" style="font-size:4rem; color:var(--smability-blue); font-weight: bold;">→</div>
             `;
         }
 
