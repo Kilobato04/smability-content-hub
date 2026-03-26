@@ -53,9 +53,16 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Estilos de la Vista Previa del Carrusel (1:1 Aspect Ratio) */
 #carousel-preview-container {
-    width: 100%; aspect-ratio: 1 / 1;
-    background-color: white; border: 2px solid var(--border-color);
-    border-radius: 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 10px;
+    width: 100%;
+    background-color: #333; /* Fondo oscuro para resaltar las tarjetas */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espacio entre tarjetas */
+    padding: 20px;
+    overflow-y: auto; /* Permite scroll para ver todas las tarjetas */
+    max-height: 80vh; /* Altura máxima de la sección */
 }
 
 .carousel-placeholder {
@@ -65,20 +72,35 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Estilos de los Slides Individuales (Replicando el look TEC) */
 .slide-preview {
-    width: 100%; aspect-ratio: 1 / 1; /* Tamaño base para la vista previa, se escalará */
-    border: 1px solid #EEE; position: relative; overflow: hidden;
-    display: flex; flex-direction: column; justify-content: space-between;
-    padding: 10%; /* Margen porcentual para escalado */
+    width: 100%;
+    aspect-ratio: 1 / 1; 
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 60px; /* Padding interno generoso tipo Enterprise */
     box-sizing: border-box;
+    background-color: white;
+    flex-shrink: 0; /* Evita que el flexbox los aplaste */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 .slide-preview h3 {
-    font-size: 2.5rem; /* Ajustar dinámicamente */
-    font-weight: 900; line-height: 1.1;
-    text-transform: uppercase; margin: 0;
+    font-size: 3rem; /* Tamaño impacto */
+    font-weight: 900;
+    line-height: 1.05;
+    text-transform: uppercase;
+    margin: 20px 0;
+    z-index: 2;
 }
 
-.slide-preview p { font-size: 1.2rem; line-height: 1.5; margin-top: 10px; }
+.slide-preview p {
+    font-size: 1.4rem;
+    line-height: 1.4;
+    font-weight: 400;
+    z-index: 2;
+}
 
 /* Tipos de Slide */
 .slide-cover_bold {
