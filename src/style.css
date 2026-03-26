@@ -24,7 +24,11 @@ header {
     margin-bottom: 40px; border-bottom: 2px solid var(--border-color); padding-bottom: 20px;
 }
 
-.main-logo { height: 50px; } /* Reemplazar placeholder mañana */
+.main-logo { 
+    height: 50px; 
+    width: auto; /* Mantiene la proporción del PNG */
+    object-fit: contain; 
+}
 
 .content-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
