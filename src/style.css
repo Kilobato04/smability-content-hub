@@ -102,6 +102,67 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
     z-index: 2;
 }
 
+/* --- FIX 1: La Flecha de Navegación --- */
+.slide-nav-arrow {
+    position: absolute;
+    top: 60px; /* Alineado con el padding superior */
+    right: 60px; /* Alineado con el padding derecho */
+    font-size: 3rem;
+    font-weight: 300; /* Ligera para no competir con el logo */
+    z-index: 10;
+    transition: transform 0.3s ease;
+}
+
+/* Flecha blanca para slides oscuros */
+.slide-cover_bold .slide-nav-arrow,
+.slide-data_callout .slide-nav-arrow {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Flecha azul para slides claros */
+.slide-split_map .slide-nav-arrow {
+    color: var(--smability-blue);
+}
+
+.slide-cta_clean .slide-nav-arrow {
+    display: none;
+}
+
+/* --- FIX 2: El Enmarcado de Datos (Data Callout) --- */
+.slide-data_callout {
+    background-color: var(--dark-bg); /* Fondo aún más oscuro para contraste */
+    justify-content: center;
+    text-align: center;
+    padding: 80px; /* Un poco más de padding para el frame */
+}
+
+/* El Frame Técnico */
+.slide-data_callout::before {
+    content: '';
+    position: absolute;
+    top: 40px; left: 40px; right: 40px; bottom: 40px;
+    border: 8px solid var(--smability-green); /* Borde neón industrial */
+    border-radius: 12px;
+    z-index: 1;
+    pointer-events: none; /* No interfiere con clics */
+}
+
+/* Ajuste de tipografía dentro del frame */
+.slide-data_callout h3 {
+    color: var(--smability-green);
+    font-size: 4.5rem; /* Aún más grande el dato */
+    margin-bottom: 10px;
+}
+
+.slide-data_callout p {
+    color: white;
+    font-size: 1.8rem;
+    border-left: none; /* Quitamos el borde izquierdo anterior */
+    padding-left: 0;
+    max-width: 80%; /* Centrar el texto */
+    margin: 0 auto;
+}
+
 /* Tipos de Slide */
 .slide-cover_bold {
     background-size: cover; background-position: center; color: white;
