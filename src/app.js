@@ -55,18 +55,12 @@ function renderCarouselPreview(carouselData) {
     const container = document.getElementById('carousel-preview-container');
     container.innerHTML = ''; 
 
-    if (!carouselData || !carouselData.slides) {
-        container.innerHTML = '<div class="carousel-placeholder">Error en los datos del carrusel.</div>';
-        return;
-    }
-
-    const logoPath = "assets/logo.png"; // Ruta a tu logo PNG
+    const logoPath = "assets/logo.png";
 
     carouselData.slides.forEach((slide, index) => {
         const slideEl = document.createElement('div');
         slideEl.className = `slide-preview slide-${slide.type}`;
         
-        // Determinar si el logo debe ser blanco o color original según el tipo de slide
         const isDarkSlide = (slide.type === 'cover_bold' || slide.type === 'data_callout');
         const logoStyle = isDarkSlide ? 'style="height:50px; filter: brightness(0) invert(1);"' : 'style="height:50px;"';
 
@@ -78,36 +72,30 @@ function renderCarouselPreview(carouselData) {
                     <img src="${logoPath}" ${logoStyle}>
                 </div>
                 <h3>${slide.headline}</h3>
-                <div class="slide-metric" style="z-index:2; position:relative; color:var(--smability-green); font-size:4rem; font-weight:900;">${slide.metric}</div>
-                <div class="slide-footer" style="z-index:2; position:relative; color:#AAA;">1 / ${carouselData.slides.length}</div>
+                <div class="slide-metric" style="z-index:2; position:relative; color:var(--smability-green); font-size:5rem; font-weight:900; margin-top: auto;">${slide.metric}</div>
+                <div class="slide-footer" style="z-index:2; position:relative; color:rgba(255,255,255,0.6); font-weight:bold; margin-top:20px;">01 — CASO DE ESTUDIO</div>
             `;
         } else if (slide.type === 'split_map') {
             slideEl.innerHTML = `
-                <div class="slide-branding">
-                    <img src="${logoPath}" ${logoStyle}>
-                </div>
-                <h3>${slide.headline}</h3>
-                <div class="map-placeholder" style="flex-grow:1; background-color:#EEE; display:flex; justify-content:center; align-items:center; color:#AAA; font-style:italic; border-radius:8px; margin: 15px 0;">[Mapa Técnico de Dispersión Real]</div>
-                <p>${slide.supporting_text}</p>
-                <div class="slide-footer" style="color:#AAA;">${index + 1} / ${carouselData.slides.length}</div>
+                <div class="slide-branding"><img src="${logoPath}" ${logoStyle}></div>
+                <h3 style="font-size: 2.2rem; color: var(--smability-blue);">${slide.headline}</h3>
+                <div class="map-placeholder" style="flex-grow:1; background: linear-gradient(45deg, #eee 25%, #f9f9f9 25%, #f9f9f9 50%, #eee 50%, #eee 75%, #f9f9f9 75%, #f9f9f9 100%); background-size: 40px 40px; border: 2px solid #ddd; border-radius:12px; margin: 20px 0; display:flex; align-items:center; justify-content:center; color:#999;">[VISUALIZACIÓN DE DISPERSIÓN REAL]</div>
+                <p style="font-weight: 700;">${slide.supporting_text}</p>
+                <div class="slide-footer" style="color:#AAA;">0${index + 1} — MODELACIÓN PREDICTIVA</div>
             `;
         } else if (slide.type === 'data_callout') {
             slideEl.innerHTML = `
-                <div class="slide-branding">
-                    <img src="${logoPath}" ${logoStyle}>
-                </div>
-                <h3>${slide.headline}</h3>
-                <p style="color:white; font-size: 1.5rem;">${slide.supporting_text}</p>
-                <div class="slide-footer" style="color:#AAA;">${index + 1} / ${carouselData.slides.length}</div>
+                <div class="slide-branding"><img src="${logoPath}" ${logoStyle}></div>
+                <h3 style="font-size: 4rem;">${slide.headline}</h3>
+                <p style="color:white; font-size: 1.8rem; border-left: 5px solid var(--smability-green); padding-left: 20px;">${slide.supporting_text}</p>
+                <div class="slide-footer" style="color:rgba(255,255,255,0.5); margin-top:40px;">0${index + 1} — IMPACTO FINANCIERO</div>
             `;
         } else if (slide.type === 'cta_clean') {
             slideEl.innerHTML = `
-                <div class="slide-branding">
-                    <img src="${logoPath}" ${logoStyle}>
-                </div>
-                <h3>${slide.headline}</h3>
-                <p style="font-size: 1.5rem;">${slide.supporting_text}</p>
-                <div class="cta-arrow" style="font-size:4rem; color:var(--smability-blue); font-weight: bold;">→</div>
+                <div class="slide-branding"><img src="${logoPath}" ${logoStyle}></div>
+                <h3 style="color: var(--smability-blue);">${slide.headline}</h3>
+                <p style="font-size: 1.6rem; color: #666;">${slide.supporting_text}</p>
+                <div style="background: var(--smability-blue); color: white; padding: 20px; border-radius: 8px; font-weight: bold; text-align: center; font-size: 1.5rem; margin-top: 20px;">AGENDAR LLAMADA TÉCNICA →</div>
             `;
         }
 
