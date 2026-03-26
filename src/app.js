@@ -51,32 +51,34 @@ async function generateContent() {
     }
 }
 
+// --- src/app.js ---
 function renderCarouselPreview(carouselData) {
     const container = document.getElementById('carousel-preview-container');
     container.innerHTML = ''; 
 
     const logoPath = "assets/logo.png";
-    const totalSlides = carouselData.slides.length;
+    const slides = carouselData.slides;
 
-    carouselData.slides.forEach((slide, index) => {
+    slides.forEach((slide, index) => {
         const slideEl = document.createElement('div');
         slideEl.className = `slide-preview slide-${slide.type}`;
         
         const isDarkSlide = (slide.type === 'cover_bold' || slide.type === 'data_callout');
         const logoStyle = isDarkSlide ? 'style="height:50px; filter: brightness(0) invert(1);"' : 'style="height:50px;"';
 
-        // HTML base de la flecha de navegación (se oculta en CSS para el último slide)
-        const navArrowHTML = '<div class="slide-nav-arrow">→</div>';
+        // LÓGICA DE LA FLECHA: Solo si NO es el último slide
+        const isLastSlide = (index === slides.length - 1);
+        const navArrowHTML = isLastSlide ? '' : '<div class="slide-nav-arrow">→</div>';
 
         if (slide.type === 'cover_bold') {
             slideEl.style.backgroundImage = `url(${slide.bg_image})`;
             slideEl.innerHTML = `
                 <div class="cover-overlay"></div>
-                ${navArrowHTML}
+                ${navArrowHTML} 
                 <div class="slide-branding" style="z-index:2; position:relative;">
                     <img src="${logoPath}" ${logoStyle}>
                 </div>
-                <h3>${slide.headline}</h3>
+                <h3 style="z-index:2; position:relative;">${slide.headline}</h3>
                 <div class="slide-metric" style="z-index:2; position:relative; color:var(--smability-green); font-size:6rem; font-weight:900; margin-top: auto;">${slide.metric}</div>
                 <div class="slide-footer" style="z-index:2; position:relative; color:rgba(255,255,255,0.6); font-weight:bold; margin-top:20px;">01 — CASO DE ESTUDIO</div>
             `;
@@ -90,7 +92,6 @@ function renderCarouselPreview(carouselData) {
                 <div class="slide-footer" style="color:#AAA; font-weight:bold;">0${index + 1} — MODELACIÓN PREDICTIVA</div>
             `;
         } else if (slide.type === 'data_callout') {
-            // El frame se genera vía CSS (::before)
             slideEl.innerHTML = `
                 ${navArrowHTML}
                 <div class="slide-branding"><img src="${logoPath}" ${logoStyle}></div>
@@ -99,12 +100,12 @@ function renderCarouselPreview(carouselData) {
                 <div class="slide-footer" style="color:rgba(255,255,255,0.5); font-weight:bold; margin-top:40px;">0${index + 1} — IMPACTO FINANCIERO</div>
             `;
         } else if (slide.type === 'cta_clean') {
-            // No incluimos flecha aquí (se oculta vía CSS, pero mejor ser explícitos)
+            // Sin navArrowHTML aquí por la lógica isLastSlide
             slideEl.innerHTML = `
                 <div class="slide-branding"><img src="${logoPath}" ${logoStyle}></div>
                 <h3 style="color: var(--smability-blue); font-size: 2.8rem;">${slide.headline}</h3>
                 <p style="font-size: 1.8rem; color: #666; margin-bottom: 30px;">${slide.supporting_text}</p>
-                <div style="background: var(--smability-blue); color: white; padding: 25px; border-radius: 12px; font-weight: bold; text-align: center; font-size: 1.8rem; text-transform: uppercase;">AGENDAR LLAMADA TÉCNICA DE 15 MIN →</div>
+                <div style="background: var(--smability-blue); color: white; padding: 25px; border-radius: 12px; font-weight: bold; text-align: center; font-size: 1.8rem; text-transform: uppercase;">AGENDAR LLAMADA TÉCNICA →</div>
             `;
         }
 
