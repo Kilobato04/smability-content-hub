@@ -1,0 +1,98 @@
+/* src/style.css */
+:root {
+    --smability-blue: #0047AB; /* Reemplazar con azul exacto mañana */
+    --smability-green: #39FF14; /* Reemplazar con verde exacto mañana */
+    --dark-bg: #1A1A1A;
+    --text-on-dark: #FFFFFF;
+    --text-on-light: #333333;
+    --border-color: #DDDDDD;
+}
+
+body {
+    margin: 0; padding: 0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Usaremos fuentes bold sans-serif */
+    background-color: #F9F9F9;
+    color: var(--text-on-light);
+}
+
+.app-container {
+    max-width: 1400px; margin: 0 auto; padding: 40px;
+}
+
+header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 40px; border-bottom: 2px solid var(--border-color); padding-bottom: 20px;
+}
+
+.main-logo { height: 50px; } /* Reemplazar placeholder mañana */
+
+.content-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+}
+
+textarea {
+    width: 100%; height: 200px; padding: 15px; border: 1px solid var(--border-color);
+    border-radius: 8px; font-family: inherit; font-size: 1rem; margin-bottom: 20px; resize: vertical;
+}
+
+#linkedin-post-output { background-color: #F0F0F0; height: 300px; }
+
+button {
+    padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer;
+    font-size: 1rem; font-weight: 600; text-transform: uppercase;
+}
+
+button.primary { background-color: var(--smability-blue); color: white; }
+button.secondary { background-color: #E0E0E0; color: #333; }
+#generate-btn { width: 100%; background-color: var(--smability-green); color: black; font-size: 1.1rem; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Estilos de la Vista Previa del Carrusel (1:1 Aspect Ratio) */
+#carousel-preview-container {
+    width: 100%; aspect-ratio: 1 / 1;
+    background-color: white; border: 2px solid var(--border-color);
+    border-radius: 8px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 10px;
+}
+
+.carousel-placeholder {
+    display: flex; justify-content: center; align-items: center; height: 100%;
+    color: #AAA; font-style: italic;
+}
+
+/* Estilos de los Slides Individuales (Replicando el look TEC) */
+.slide-preview {
+    width: 100%; aspect-ratio: 1 / 1; /* Tamaño base para la vista previa, se escalará */
+    border: 1px solid #EEE; position: relative; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 10%; /* Margen porcentual para escalado */
+    box-sizing: border-box;
+}
+
+.slide-preview h3 {
+    font-size: 2.5rem; /* Ajustar dinámicamente */
+    font-weight: 900; line-height: 1.1;
+    text-transform: uppercase; margin: 0;
+}
+
+.slide-preview p { font-size: 1.2rem; line-height: 1.5; margin-top: 10px; }
+
+/* Tipos de Slide */
+.slide-cover_bold {
+    background-size: cover; background-position: center; color: white;
+}
+
+.slide-cover_bold .cover-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(0,71,171,0.9) 0%, rgba(0,0,0,0.7) 100%);
+    z-index: 1;
+}
+
+.slide-cover_bold * { z-index: 2; position: relative; }
+
+.slide-data_callout {
+    background-color: var(--smability-blue); color: white; justify-content: center; text-align: center;
+}
+.slide-data_callout h3 { color: var(--smability-green); }
+
+.slide-cta_clean { background-color: #F0F8FF; border: 2px solid var(--smability-blue); }
+.slide-cta_clean h3 { color: var(--smability-blue); }
