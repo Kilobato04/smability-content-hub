@@ -238,3 +238,33 @@ select {
     padding: 0 !important;
     background-color: transparent !important;
 }
+
+/* Color para días con post programado */
+.cal-day.has-content {
+    background-color: var(--smability-blue);
+    color: white;
+    cursor: pointer;
+}
+
+/* Color para días ya publicados (Persistencia) */
+.cal-day.published {
+    background-color: #28a745 !important; /* Verde */
+    color: white;
+    position: relative;
+}
+
+.cal-day.published::after {
+    content: '✓';
+    position: absolute;
+    font-size: 0.7rem;
+    bottom: 2px;
+    right: 2px;
+}
+
+/* Limpieza de márgenes para el PDF */
+@media print {
+    .slide-preview {
+        margin: 0 !important;
+        page-break-after: always;
+    }
+}
