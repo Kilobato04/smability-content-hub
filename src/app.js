@@ -51,9 +51,7 @@ function renderCalendar() {
     const today = new Date();
 
     for (let x = 0; x < startOffset; x++) {
-        const e = document.createElement('div');
-        e.className = 'cal-day empty';
-        cal.appendChild(e);
+        const e = document.createElement('div'); e.className = 'cal-day empty'; cal.appendChild(e);
     }
 
     for (let i = 1; i <= daysInMonth; i++) {
@@ -75,11 +73,9 @@ function renderCalendar() {
             if (localStorage.getItem(key)) day.classList.add('published');
             day.addEventListener('click', () => {
                 if (localStorage.getItem(key)) {
-                    localStorage.removeItem(key);
-                    day.classList.remove('published');
+                    localStorage.removeItem(key); day.classList.remove('published');
                 } else {
-                    localStorage.setItem(key, 'true');
-                    day.classList.add('published');
+                    localStorage.setItem(key, 'true'); day.classList.add('published');
                 }
             });
         }
@@ -109,7 +105,7 @@ async function generateContent() {
     const postId = document.getElementById('post-selector').value;
     if (!postId) return alert('Selecciona un post del plan.');
 
-    const postData  = masterPlan.pipeline.find(p => p.id === postId);
+    const postData   = masterPlan.pipeline.find(p => p.id === postId);
     const postOutput = document.getElementById('linkedin-post-output');
     const container  = document.getElementById('carousel-preview-container');
     const genBtn     = document.getElementById('generate-btn');
@@ -126,15 +122,22 @@ async function generateContent() {
             body: JSON.stringify({
                 technical_data: postData.datos,
                 category: postData.cat,
+                slides: postData.slides.map(s => ({ type: s.type, headline: s.headline, metric: s.metric || null })),
                 model: 'gpt-4o',
-                temperature: 0.5
+                temperature: 0.6
             })
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
+
+        // El API ahora devuelve: { linkedin_post, slide_messages: [...] }
         postOutput.value = data.linkedin_post;
-        renderCarouselPreview(postData);
+
+        // Enriquecer slides con mensajes generados por IA
+        const enriched = enrichSlides(postData, data.slide_messages || []);
+        renderCarouselPreview(enriched);
         document.getElementById('download-pdf-btn').disabled = false;
+
     } catch (err) {
         postOutput.value = `Error: ${err.message}`;
         container.innerHTML = '<div class="carousel-placeholder">Error al generar.</div>';
@@ -145,17 +148,34 @@ async function generateContent() {
     }
 }
 
-// ─── 5. UTILIDAD: imagen → base64 ───────────────────────────
-// html2canvas no puede leer rutas relativas desde nodos fuera del
-// flujo normal. Pre-convertimos cada imagen a data URL.
+// ─── 5. ENRIQUECER SLIDES CON MENSAJES IA ───────────────────
+// Fusiona los mensajes generados por el LLM con la estructura del JSON
+function enrichSlides(postData, slideMessages) {
+    return {
+        ...postData,
+        slides: postData.slides.map((slide, i) => {
+            const msg = slideMessages[i] || {};
+            return {
+                ...slide,
+                // El LLM puede sobreescribir o añadir estos campos
+                ai_hook:      msg.hook      || null,  // gancho superior (cover)
+                ai_body:      msg.body      || null,  // párrafo de desarrollo
+                ai_stat_ctx:  msg.stat_ctx  || null,  // contexto bajo la métrica
+                ai_cta_label: msg.cta_label || null,  // texto del botón CTA
+                cat_tag:      postData.cat             // pill de categoría
+            };
+        })
+    };
+}
+
+// ─── 6. UTILIDAD: imagen → base64 ───────────────────────────
 function imgToBase64(src) {
     return new Promise(resolve => {
         const img = new Image();
         img.crossOrigin = 'anonymous';
         img.onload = () => {
             const c = document.createElement('canvas');
-            c.width  = img.naturalWidth;
-            c.height = img.naturalHeight;
+            c.width = img.naturalWidth; c.height = img.naturalHeight;
             c.getContext('2d').drawImage(img, 0, 0);
             resolve(c.toDataURL('image/jpeg', 0.92));
         };
@@ -164,110 +184,106 @@ function imgToBase64(src) {
     });
 }
 
-// ─── 6. BUILD SLIDE ─────────────────────────────────────────
-// Único constructor para pantalla Y PDF.
-// sidepx = undefined  →  modo preview (usa clases CSS + rem)
-// sidepx = 1080       →  modo PDF     (todo inline proporcional)
-// bgBase64            →  data URL de la imagen de fondo (solo PDF)
+// ─── 7. BUILD SLIDE ─────────────────────────────────────────
 function buildSlideEl(slide, index, total, sidepx, bgBase64) {
-    const pdf  = !!sidepx;
-    const S    = sidepx || 0;
+    const isPDF = !!sidepx;
+    const S     = sidepx || 0;
 
     const el = document.createElement('div');
     el.className = `slide-preview slide-${slide.type}`;
 
-    // ── Fondo ────────────────────────────────────────────────
-    const bgUrl = pdf ? bgBase64 : (slide.bg || null);
+    // Fondo
+    const bgUrl = isPDF ? bgBase64 : (slide.bg || null);
     if (bgUrl) {
         el.style.backgroundImage    = `url(${bgUrl})`;
         el.style.backgroundSize     = 'cover';
         el.style.backgroundPosition = 'center';
     }
 
-    // ── Estilos base del contenedor (solo PDF) ───────────────
-    if (pdf) {
-        const bgColor = slide.type === 'cta_clean'
-            ? '' // lo ponemos en background shorthand abajo
-            : '#0D0D0D';
-
+    if (isPDF) {
         el.style.cssText = `
             background-image:${bgUrl ? `url(${bgUrl})` : 'none'};
-            background-size:cover;
-            background-position:center;
-            background-color:${bgColor};
-            width:${S}px;
-            height:${S}px;
-            aspect-ratio:unset;
-            position:relative;
-            display:flex;
-            flex-direction:column;
+            background-size:cover;background-position:center;
+            background-color:#0D0D0D;
+            width:${S}px;height:${S}px;aspect-ratio:unset;
+            position:relative;display:flex;flex-direction:column;
             justify-content:space-between;
-            padding:${Math.round(S * 0.052)}px;
-            overflow:hidden;
-            box-sizing:border-box;
-            border-radius:0;
-            box-shadow:none;
-        `;
+            padding:${Math.round(S*0.052)}px;
+            overflow:hidden;box-sizing:border-box;
+            border-radius:0;box-shadow:none;`;
         if (slide.type === 'cta_clean')
             el.style.background = 'linear-gradient(145deg,#020f2a 0%,#001a5c 60%,#0a0a0a 100%)';
     }
 
-    // ── Escala proporcional a S ──────────────────────────────
-    const pad       = pdf ? Math.round(S * 0.052) : 56;
-    const fs_h3     = pdf ? Math.round(S * 0.072) : 48;   // px
-    const fs_metric = pdf ? Math.round(S * 0.115) : 76;
-    const fs_p      = pdf ? Math.round(S * 0.024) : 16;
-    const fs_num    = pdf ? Math.round(S * 0.017) : 11;
-    const fs_ftr    = pdf ? Math.round(S * 0.017) : 11;
-    const fs_arrow  = pdf ? Math.round(S * 0.042) : 29;
-    const dot_sz    = pdf ? Math.round(S * 0.009) : 7;
-    const gap_sm    = pdf ? Math.round(S * 0.011) : 12;
-    const fp        = pdf ? Math.round(S * 0.026) : 28;   // frame padding
-    const fc        = pdf ? Math.round(S * 0.033) : 36;   // frame corner
+    // Escala proporcional
+    const pad      = isPDF ? Math.round(S*0.052) : 56;
+    const fs_tag   = isPDF ? Math.round(S*0.018) : 12;
+    const fs_h3    = isPDF ? Math.round(S*0.068) : 44;
+    const fs_hook  = isPDF ? Math.round(S*0.026) : 17;
+    const fs_body  = isPDF ? Math.round(S*0.022) : 14;
+    const fs_met   = isPDF ? Math.round(S*0.110) : 72;
+    const fs_ctx   = isPDF ? Math.round(S*0.022) : 14;
+    const fs_num   = isPDF ? Math.round(S*0.016) : 11;
+    const fs_ftr   = isPDF ? Math.round(S*0.016) : 11;
+    const fs_arrow = isPDF ? Math.round(S*0.040) : 26;
+    const dot_sz   = isPDF ? Math.round(S*0.009) : 7;
+    const gap      = isPDF ? Math.round(S*0.014) : 14;
+    const fp       = isPDF ? Math.round(S*0.026) : 28;
+    const fc       = isPDF ? Math.round(S*0.033) : 36;
 
-    // ── Overlay cover_bold ───────────────────────────────────
-    const overlayDiv = slide.type === 'cover_bold'
-        ? `<div style="position:absolute;inset:0;
-               background:linear-gradient(160deg,
-                   rgba(0,0,0,0.88) 0%,
-                   rgba(0,71,171,0.75) 50%,
-                   rgba(0,0,0,0.95) 100%);
-               z-index:1;pointer-events:none;"></div>`
-        : '';
+    // ── Pill de categoría (viral: da contexto inmediato) ─────
+    const catTag = slide.cat_tag ? `
+        <div style="
+            display:inline-block;
+            background:rgba(57,255,20,0.12);
+            border:1px solid #39FF14;
+            color:#39FF14;
+            font-family:'Space Grotesk',sans-serif;
+            font-size:${fs_tag}px;font-weight:700;
+            letter-spacing:.12em;text-transform:uppercase;
+            padding:${isPDF?Math.round(S*.005):4}px ${isPDF?Math.round(S*.012):10}px;
+            border-radius:4px;margin-bottom:${gap}px;">
+            ${slide.cat_tag}
+        </div>` : '';
+
+    // ── Overlay cover ────────────────────────────────────────
+    const overlayDiv = slide.type === 'cover_bold' ? `
+        <div style="position:absolute;inset:0;
+            background:linear-gradient(160deg,
+                rgba(0,0,0,0.88) 0%,rgba(0,71,171,0.75) 50%,rgba(0,0,0,0.95) 100%);
+            z-index:1;pointer-events:none;"></div>` : '';
 
     // ── Marco neon data_callout ──────────────────────────────
-    const bw = pdf ? 4 : 3;
-    const frameDiv = slide.type === 'data_callout'
-        ? `<div style="position:absolute;top:${fp}px;left:${fp}px;right:${fp}px;bottom:${fp}px;
-               border:${pdf?2:1.5}px solid rgba(57,255,20,0.25);border-radius:8px;
-               z-index:1;pointer-events:none;"></div>
-           <div style="position:absolute;top:${fp}px;left:${fp}px;
-               width:${fc}px;height:${fc}px;
-               border-top:${bw}px solid #39FF14;border-left:${bw}px solid #39FF14;
-               border-radius:8px 0 0 0;z-index:2;pointer-events:none;"></div>
-           <div style="position:absolute;bottom:${fp}px;right:${fp}px;
-               width:${fc}px;height:${fc}px;
-               border-bottom:${bw}px solid #39FF14;border-right:${bw}px solid #39FF14;
-               border-radius:0 0 8px 0;z-index:2;pointer-events:none;"></div>`
-        : '';
+    const bw = isPDF ? 4 : 3;
+    const frameDiv = slide.type === 'data_callout' ? `
+        <div style="position:absolute;top:${fp}px;left:${fp}px;right:${fp}px;bottom:${fp}px;
+            border:${isPDF?2:1.5}px solid rgba(57,255,20,0.25);border-radius:8px;
+            z-index:1;pointer-events:none;"></div>
+        <div style="position:absolute;top:${fp}px;left:${fp}px;
+            width:${fc}px;height:${fc}px;
+            border-top:${bw}px solid #39FF14;border-left:${bw}px solid #39FF14;
+            border-radius:8px 0 0 0;z-index:2;pointer-events:none;"></div>
+        <div style="position:absolute;bottom:${fp}px;right:${fp}px;
+            width:${fc}px;height:${fc}px;
+            border-bottom:${bw}px solid #39FF14;border-right:${bw}px solid #39FF14;
+            border-radius:0 0 8px 0;z-index:2;pointer-events:none;"></div>` : '';
 
     // ── Número de lámina ─────────────────────────────────────
-    const numTop  = pdf ? Math.round(S * 0.045) : 48;
-    const numLeft = pdf ? Math.round(S * 0.022) : 24;
+    const numTop  = isPDF ? Math.round(S*0.045) : 48;
+    const numLeft = isPDF ? Math.round(S*0.022) : 24;
     const numLabel = `
         <span style="
             position:absolute;top:${numTop}px;left:${numLeft}px;
             font-family:'Space Grotesk',sans-serif;
             font-size:${fs_num}px;font-weight:700;
             letter-spacing:.15em;text-transform:uppercase;
-            color:#555555;z-index:10;
-            background:rgba(0,0,0,0.5);
-            padding:${Math.round(S*0.003||3)}px ${Math.round(S*0.008||8)}px;
+            color:#555;z-index:10;background:rgba(0,0,0,0.5);
+            padding:${isPDF?Math.round(S*.003):3}px ${isPDF?Math.round(S*.008):8}px;
             border-radius:4px;">
             0${index+1} / 0${total}
         </span>`;
 
-    // ── Flecha — siempre verde neon, siempre inline ──────────
+    // ── Flecha verde neon ────────────────────────────────────
     const isLast = index === total - 1;
     const arrow = isLast ? '' : `
         <div style="
@@ -275,34 +291,106 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
             font-size:${fs_arrow}px;line-height:1;
             color:#39FF14;z-index:10;user-select:none;">→</div>`;
 
-    // ── Métrica ──────────────────────────────────────────────
-    const metricHTML = slide.metric ? `
-        <div style="
-            font-family:'Space Grotesk',sans-serif;
-            font-size:${fs_metric}px;font-weight:900;line-height:1;
-            color:#39FF14;letter-spacing:-.04em;
-            margin:${gap_sm}px 0;">
-            ${slide.metric}
-        </div>` : '';
+    // ── Contenido según tipo de slide ────────────────────────
+    let bodyContent = '';
 
-    // ── Texto de apoyo ───────────────────────────────────────
-    const supportHTML = slide.supporting_text ? `
-        <p style="
-            font-family:'Inter',sans-serif;
-            font-size:${fs_p}px;
-            color:#9A9A9A;line-height:1.6;margin:0;">
-            ${slide.supporting_text}
-        </p>` : '';
+    if (slide.type === 'cover_bold') {
+        // Hook de IA arriba del titular (gancho tipo revista)
+        const hookLine = slide.ai_hook ? `
+            <p style="
+                font-family:'Inter',sans-serif;
+                font-size:${fs_hook}px;font-weight:600;
+                color:#9A9A9A;line-height:1.4;
+                margin:0 0 ${gap}px;
+                border-left:3px solid #39FF14;
+                padding-left:${isPDF?Math.round(S*.014):12}px;">
+                ${slide.ai_hook}
+            </p>` : '';
 
-    // ── Titular ──────────────────────────────────────────────
-    const h3HTML = `
-        <h3 style="
-            font-family:'Space Grotesk',sans-serif;
-            font-size:${fs_h3}px;font-weight:900;line-height:1.0;
-            letter-spacing:-.02em;text-transform:uppercase;
-            color:#ffffff;margin:0 0 ${gap_sm}px;">
-            ${slide.headline}
-        </h3>`;
+        bodyContent = `
+            ${catTag}
+            <h3 style="
+                font-family:'Space Grotesk',sans-serif;
+                font-size:${fs_h3}px;font-weight:900;line-height:1.0;
+                letter-spacing:-.02em;text-transform:uppercase;
+                color:#fff;margin:0 0 ${gap}px;">
+                ${slide.headline}
+            </h3>
+            ${hookLine}`;
+
+    } else if (slide.type === 'data_callout') {
+        // Métrica central + contexto IA abajo
+        const ctxLine = (slide.ai_stat_ctx || slide.supporting_text) ? `
+            <p style="
+                font-family:'Inter',sans-serif;
+                font-size:${fs_ctx}px;color:#9A9A9A;
+                line-height:1.5;margin:${gap}px 0 0;
+                max-width:75%;margin-left:auto;margin-right:auto;">
+                ${slide.ai_stat_ctx || slide.supporting_text}
+            </p>` : '';
+
+        bodyContent = `
+            <p style="
+                font-family:'Space Grotesk',sans-serif;
+                font-size:${isPDF?Math.round(S*.028):18}px;font-weight:700;
+                color:#fff;margin:0 0 ${gap}px;text-align:center;">
+                ${slide.headline}
+            </p>
+            <div style="
+                font-family:'Space Grotesk',sans-serif;
+                font-size:${fs_met}px;font-weight:900;line-height:1;
+                color:#39FF14;letter-spacing:-.04em;text-align:center;">
+                ${slide.metric || ''}
+            </div>
+            ${ctxLine}`;
+
+    } else if (slide.type === 'cta_clean') {
+        // CTA con label generado por IA
+        const ctaLabel = slide.ai_cta_label || slide.supporting_text || 'Agenda una demo';
+        const subBody  = slide.ai_body || '';
+
+        bodyContent = `
+            <h3 style="
+                font-family:'Space Grotesk',sans-serif;
+                font-size:${fs_h3}px;font-weight:900;line-height:1.0;
+                letter-spacing:-.02em;text-transform:uppercase;
+                color:#fff;margin:0 0 ${gap}px;">
+                ${slide.headline}
+            </h3>
+            ${subBody ? `<p style="font-family:'Inter',sans-serif;font-size:${fs_body}px;color:#9A9A9A;line-height:1.6;margin:0 0 ${gap*1.5}px;">${subBody}</p>` : ''}
+            <div style="
+                display:inline-flex;align-items:center;gap:10px;
+                border:2px solid #39FF14;border-radius:6px;
+                padding:${isPDF?Math.round(S*.013):14}px ${isPDF?Math.round(S*.026):28}px;
+                font-family:'Space Grotesk',sans-serif;
+                font-size:${isPDF?Math.round(S*.020):13}px;
+                font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+                color:#39FF14;">
+                ↗ ${ctaLabel}
+            </div>`;
+
+    } else {
+        // split_map u otros — headline + body IA
+        const bodyText = slide.ai_body || slide.supporting_text || '';
+        bodyContent = `
+            ${catTag}
+            <h3 style="
+                font-family:'Space Grotesk',sans-serif;
+                font-size:${fs_h3}px;font-weight:900;line-height:1.0;
+                letter-spacing:-.02em;text-transform:uppercase;
+                color:#fff;margin:0 0 ${gap}px;">
+                ${slide.headline}
+            </h3>
+            ${bodyText ? `
+            <p style="
+                font-family:'Inter',sans-serif;
+                font-size:${fs_body}px;color:#9A9A9A;
+                line-height:1.65;margin:0;
+                border-left:2px solid rgba(57,255,20,0.4);
+                padding-left:${isPDF?Math.round(S*.014):12}px;">
+                ${bodyText}
+            </p>` : ''}`;
+    }
 
     // ── Footer ───────────────────────────────────────────────
     const footer = `
@@ -311,19 +399,21 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
             font-family:'Space Grotesk',sans-serif;
             font-size:${fs_ftr}px;font-weight:700;
             letter-spacing:.12em;text-transform:uppercase;
-            color:#555555;
-            border-top:1px solid rgba(255,255,255,0.08);
-            padding-top:${Math.round(S*0.013||14)}px;
+            color:#555;border-top:1px solid rgba(255,255,255,0.08);
+            padding-top:${isPDF?Math.round(S*.013):14}px;
             margin-top:auto;position:relative;z-index:2;">
             <span style="
                 width:${dot_sz}px;height:${dot_sz}px;border-radius:50%;
                 background:#39FF14;display:inline-block;
-                margin-right:${Math.round(S*0.007||8)}px;flex-shrink:0;">
+                margin-right:${isPDF?Math.round(S*.007):8}px;flex-shrink:0;">
             </span>smability.io
         </div>`;
 
-    // ── Body padding superior (clearance del número de lámina) ─
-    const bodyPadTop = pdf ? Math.round(S * 0.074) : 80;
+    const bodyPadTop = isPDF ? Math.round(S*0.074) : 80;
+
+    // Para data_callout centramos verticalmente
+    const wrapJustify = slide.type === 'data_callout' ? 'center' : 'space-between';
+    const wrapAlign   = slide.type === 'data_callout' ? 'center' : 'stretch';
 
     el.innerHTML = `
         ${overlayDiv}
@@ -334,33 +424,46 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
             position:relative;z-index:2;
             width:100%;height:100%;
             display:flex;flex-direction:column;
-            justify-content:space-between;">
+            justify-content:${wrapJustify};
+            align-items:${wrapAlign};
+            text-align:${slide.type === 'data_callout' ? 'center' : 'left'};">
             <div style="
-                flex:1;display:flex;flex-direction:column;
-                justify-content:flex-end;
-                padding-top:${bodyPadTop}px;">
-                ${h3HTML}
-                ${metricHTML}
-                ${supportHTML}
+                flex:${slide.type === 'data_callout' ? '0' : '1'};
+                display:flex;flex-direction:column;
+                justify-content:${slide.type === 'data_callout' ? 'center' : 'flex-end'};
+                padding-top:${slide.type === 'data_callout' ? 0 : bodyPadTop}px;">
+                ${bodyContent}
             </div>
-            ${footer}
-        </div>`;
+            ${slide.type === 'data_callout' ? '' : footer}
+        </div>
+        ${slide.type === 'data_callout' ? `
+        <div style="
+            position:absolute;bottom:${pad}px;left:${pad}px;right:${pad}px;
+            display:flex;align-items:center;z-index:2;
+            font-family:'Space Grotesk',sans-serif;
+            font-size:${fs_ftr}px;font-weight:700;
+            letter-spacing:.12em;text-transform:uppercase;
+            color:#555;border-top:1px solid rgba(255,255,255,0.08);
+            padding-top:${isPDF?Math.round(S*.013):14}px;">
+            <span style="width:${dot_sz}px;height:${dot_sz}px;border-radius:50%;
+                background:#39FF14;display:inline-block;
+                margin-right:${isPDF?Math.round(S*.007):8}px;flex-shrink:0;"></span>smability.io
+        </div>` : ''}`;
 
     return el;
 }
 
-// ─── 7. RENDER PREVIEW ──────────────────────────────────────
+// ─── 8. RENDER PREVIEW ──────────────────────────────────────
 function renderCarouselPreview(postData) {
     const container = document.getElementById('carousel-preview-container');
     container.innerHTML = '';
     const total = postData.slides.length;
     postData.slides.forEach((slide, i) => {
-        // Sin sidepx ni bgBase64 → modo preview pantalla
         container.appendChild(buildSlideEl(slide, i, total));
     });
 }
 
-// ─── 8. DESCARGA PDF ────────────────────────────────────────
+// ─── 9. DESCARGA PDF ────────────────────────────────────────
 async function downloadCarouselPDF() {
     if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
         alert('Librerías no cargadas. Recarga la página.');
@@ -369,73 +472,54 @@ async function downloadCarouselPDF() {
     const postId = document.getElementById('post-selector').value;
     if (!postId) return alert('Genera el contenido primero.');
 
-    const postData = masterPlan.pipeline.find(p => p.id === postId);
+    const container = document.getElementById('carousel-preview-container');
+    const rendered  = container.querySelectorAll('.slide-preview');
+    if (!rendered.length) return alert('Genera el contenido primero.');
+
+    // Reconstruimos los slides enriquecidos desde el DOM actual
+    // guardando el postData enriquecido en una variable de módulo
+    const postData = _lastEnrichedPost;
+    if (!postData) return alert('Genera el contenido primero.');
+
     const btn = document.getElementById('download-pdf-btn');
     btn.disabled = true;
-
     const SIDE = 1080;
 
-    // Stage visible fuera del viewport (position:fixed, izquierda negativa).
-    // NO usamos visibility:hidden — html2canvas necesita que el nodo sea pintable.
     const stage = document.createElement('div');
     stage.style.cssText = [
-        'position:fixed',
-        'top:0',
-        `left:-${SIDE + 100}px`,
-        `width:${SIDE}px`,
-        `height:${SIDE}px`,
-        'overflow:hidden',
-        'z-index:99999',
-        'pointer-events:none',
+        'position:fixed','top:0',`left:-${SIDE+100}px`,
+        `width:${SIDE}px`,`height:${SIDE}px`,
+        'overflow:hidden','z-index:99999','pointer-events:none'
     ].join(';');
     document.body.appendChild(stage);
 
     try {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'px',
-            format: [SIDE, SIDE],
-            hotfixes: ['px_scaling'],
-            compress: true
+            orientation:'portrait', unit:'px',
+            format:[SIDE,SIDE], hotfixes:['px_scaling'], compress:true
         });
 
         const total = postData.slides.length;
 
         for (let i = 0; i < total; i++) {
-            btn.textContent = `Capturando ${i + 1} / ${total}…`;
-
+            btn.textContent = `Capturando ${i+1} / ${total}…`;
             const slideData = postData.slides[i];
 
-            // Pre-convertir imagen a base64 para que html2canvas la lea sin CORS
             let bgBase64 = null;
-            if (slideData.bg) {
-                bgBase64 = await imgToBase64(slideData.bg);
-            }
+            if (slideData.bg) bgBase64 = await imgToBase64(slideData.bg);
 
-            // Construir clon con tamaños proporcionales a 1080px + bg en base64
             const clone = buildSlideEl(slideData, i, total, SIDE, bgBase64);
-
             stage.innerHTML = '';
             stage.appendChild(clone);
 
-            // Esperar 2 frames para que el browser pinte fuentes + colores
             await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
             const canvas = await html2canvas(clone, {
-                scale: 2,
-                useCORS: true,
-                allowTaint: false,
-                logging: false,
-                width: SIDE,
-                height: SIDE,
-                windowWidth: SIDE,
-                windowHeight: SIDE,
-                x: 0,
-                y: 0,
-                scrollX: 0,
-                scrollY: 0,
-                backgroundColor: '#0D0D0D',
+                scale:2, useCORS:true, allowTaint:false, logging:false,
+                width:SIDE, height:SIDE, windowWidth:SIDE, windowHeight:SIDE,
+                x:0, y:0, scrollX:0, scrollY:0,
+                backgroundColor:'#0D0D0D',
                 onclone: doc => {
                     const lnk = doc.createElement('link');
                     lnk.rel  = 'stylesheet';
@@ -445,8 +529,8 @@ async function downloadCarouselPDF() {
             });
 
             const imgData = canvas.toDataURL('image/jpeg', 0.95);
-            if (i > 0) pdf.addPage([SIDE, SIDE], 'portrait');
-            pdf.addImage(imgData, 'JPEG', 0, 0, SIDE, SIDE, `s${i}`, 'FAST');
+            if (i > 0) pdf.addPage([SIDE,SIDE],'portrait');
+            pdf.addImage(imgData,'JPEG',0,0,SIDE,SIDE,`s${i}`,'FAST');
         }
 
         btn.textContent = 'Guardando…';
@@ -462,7 +546,14 @@ async function downloadCarouselPDF() {
     }
 }
 
-// ─── 9. HELPERS ─────────────────────────────────────────────
+// Variable de módulo para pasar el post enriquecido al PDF
+let _lastEnrichedPost = null;
+
+// Sobreescribir renderCarouselPreview para guardar referencia
+const _origRender = renderCarouselPreview;
+// (ya referenciada arriba, la guardamos al final del init)
+
+// ─── 10. HELPERS ────────────────────────────────────────────
 function toggleEdit() {
     const area = document.getElementById('linkedin-post-output');
     area.readOnly = !area.readOnly;
@@ -479,5 +570,16 @@ function copyText() {
             b.textContent = '✓ Copiado';
             setTimeout(() => b.textContent = orig, 2000);
         });
+    });
+}
+
+// Parche limpio: guardar post enriquecido antes de renderizar
+function renderCarouselPreview(postData) {
+    _lastEnrichedPost = postData;
+    const container = document.getElementById('carousel-preview-container');
+    container.innerHTML = '';
+    const total = postData.slides.length;
+    postData.slides.forEach((slide, i) => {
+        container.appendChild(buildSlideEl(slide, i, total));
     });
 }
