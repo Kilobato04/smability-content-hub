@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function init() {
     try {
+        await preloadLogo(); // carga logo.png como base64 una sola vez
         const res = await fetch('data/master_abril.json');
         masterPlan = await res.json();
         populateSelector();
@@ -367,10 +368,10 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
             ${hookLine}`;
 
         // Logo blanco grande en esquina superior derecha de la portada
-        // Lo insertamos como elemento absoluto dentro del wrapper
+        const coverLogoH = isPDF ? Math.round(S*0.050) : 32;
         bodyContent = `
             <div style="position:absolute;top:${pad}px;right:${pad}px;z-index:10;">
-                ${logoFull(coverLogoH, '#FFFFFF')}
+                ${logoImg(coverLogoH, isPDF, 'brightness(0) invert(1)')}
             </div>
             ` + bodyContent;
 
@@ -580,7 +581,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                     background:#39FF14;display:inline-block;flex-shrink:0;"></span>
                 <span>smability.io</span>
             </div>
-            ${logoFull(isPDF?Math.round(S*0.022):14, '#555555')}
+            ${logoImg(isPDF?Math.round(S*0.028):18, isPDF, 'brightness(0) invert(0.4)')}
         </div>` : ''}`;
 
     return el;
