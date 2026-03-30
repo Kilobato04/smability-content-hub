@@ -205,3 +205,43 @@ select {
         height: 1080px !important;
     }
 }
+
+/* src/style.css */
+
+/* Limpieza absoluta para la exportación */
+@media print {
+    body { background: none !important; }
+    
+    .slide-preview {
+        position: fixed !important; /* Evita que se mueva por el flujo del DOM */
+        top: 0 !important;
+        left: 0 !important;
+        margin: 0 !important;
+        padding: 60px !important;
+        border: none !important;
+        box-shadow: none !important;
+        display: flex !important;
+        width: 1080px !important;
+        height: 1080px !important;
+    }
+}
+
+/* Recuperar el Look Navy Profundo */
+.slide-cover_bold {
+    background-color: var(--smability-navy) !important;
+}
+
+.slide-cover_bold::before {
+    background: linear-gradient(135deg, #001A4D 0%, #050505 100%) !important;
+    opacity: 0.95;
+}
+
+/* Asegurar que el contenido no se desplace */
+.slide-content-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+}
