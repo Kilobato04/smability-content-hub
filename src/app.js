@@ -125,7 +125,24 @@ async function generateContent() {
     }
 }
 
-// ─── 5. BUILD SLIDE ──────────────────────────────────────────
+// ─── UTILIDAD: imagen local → base64 ─────────────────────────
+// html2canvas no puede leer rutas relativas desde un elemento
+// fuera del flujo normal. Convertimos a data URL antes de capturar.
+function imgToBase64(src) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+            const c = document.createElement('canvas');
+            c.width = img.naturalWidth;
+            c.height = img.naturalHeight;
+            c.getContext('2d').drawImage(img, 0, 0);
+            resolve(c.toDataURL('image/jpeg', 0.9));
+        };
+        img.onerror = () => resolve(null); // si falla, seguimos sin imagen
+        img.src = src + '?t=' + Date.now(); // cache-bust
+    });
+}
 // Construye cada slide con divs reales (no pseudo-elementos CSS)
 // para que html2canvas los pinte correctamente en el PDF.
 function buildSlideEl(slide, index, total, sidepx) {
@@ -327,8 +344,16 @@ async function downloadCarouselPDF() {
         for (let i = 0; i < total; i++) {
             btn.textContent = `Capturando ${i + 1} / ${total}…`;
 
-            // Clon con todos los tamaños proporcionales a 1080px
-            const clone = buildSlideEl(postData.slides[i], i, total, SIDE);
+            const slideData = postData.slides[i];
+
+            // Convertir background-image a base64 ANTES de construir el clon
+            // html2canvas no puede leer rutas relativas desde un nodo fuera del DOM normal
+            let bgBase64 = null;
+            if (slideData.bg) {
+                bgBase64 = await imgToBase64(slideData.bg);
+            }
+
+            const clone = buildSlideEl(slideData, i, total, SIDE, bgBase64);
 
             // Aseguramos background explícito (gradiente no hereda bien)
             if (postData.slides[i].type === 'cta_clean') {
@@ -340,9 +365,8 @@ async function downloadCarouselPDF() {
             stage.innerHTML = '';
             stage.appendChild(clone);
 
-            // Esperamos que el browser pinte completamente: fuentes + background-image
-            // 400ms para dar tiempo a que background-image cargue desde assets/
-            await new Promise(r => setTimeout(r, 400));
+            // La imagen ya está en base64, solo esperamos 1 frame para fuentes
+            await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
             const canvas = await html2canvas(clone, {
                 scale: 2,              // 2160×2160 → alta res, luego jsPDF lo reduce
