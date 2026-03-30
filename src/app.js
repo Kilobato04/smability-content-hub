@@ -155,43 +155,39 @@ async function downloadCarouselPDF() {
     if (slides.length === 0) return alert("Genera el contenido primero.");
 
     const btn = document.getElementById('download-pdf-btn');
-    btn.textContent = "Consolidando láminas...";
+    btn.textContent = "Ajustando encuadre...";
     btn.disabled = true;
 
-    // Opciones base para cada página
+    // 1. Opciones de PDF con coordenadas reseteadas
     const opt = {
         margin: 0,
-        filename: `Smability_Carrusel_${new Date().getTime()}.pdf`,
+        filename: `Smability_LinkedIn_${new Date().getTime()}.pdf`,
         image: { type: 'jpeg', quality: 1.0 },
         html2canvas: { 
             scale: 2, 
             useCORS: true, 
             logging: false,
-            letterRendering: true
+            scrollY: -window.scrollY, // COMPENSA EL SCROLL ACTUAL
+            windowWidth: 1080,
+            windowHeight: 1080
         },
-        jsPDF: { unit: 'px', format: [1080, 1080], orientation: 'portrait' }
+        jsPDF: { unit: 'px', format: [1080, 1080], orientation: 'portrait', compress: true }
     };
 
     try {
-        // Inicializamos el trabajador de html2pdf
+        // Inicializamos el worker
         let worker = html2pdf().set(opt).from(slides[0]).toPdf();
 
-        // Iteramos sobre el resto de las láminas
         for (let i = 1; i < slides.length; i++) {
             worker = worker.get('pdf').then((pdf) => {
-                // Verificación de seguridad para evitar el error de 'null'
-                if (pdf) {
-                    pdf.addPage();
-                }
+                if (pdf) pdf.addPage();
             }).from(slides[i]).toContainer().toCanvas().toPdf();
         }
 
-        // Guardar el archivo final
         await worker.save();
 
     } catch (e) {
-        console.error("Error en generación de PDF:", e);
-        alert("Error al consolidar el PDF. Revisa la consola.");
+        console.error("Error en encuadre PDF:", e);
     } finally {
         btn.textContent = "Descargar PDF para LinkedIn";
         btn.disabled = false;
