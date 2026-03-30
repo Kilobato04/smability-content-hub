@@ -1,6 +1,6 @@
 {
   "mes": "Abril 2026",
-  "meta_ingresos": "$40,000 USD",
+  "meta_ingresos": "$200,000 USD",
   "empresa": {
     "nombre": "Smability SAPI de CV",
     "fundacion": 2017,
@@ -16,35 +16,34 @@
       "fecha": "2026-04-02",
       "cat": "PATENTE",
       "datos": {
-        "titulo": "SMAAmicro — Algoritmo de Monitoreo de Calidad del Aire",
-        "registro_impi": "MX/a/2026/001",
-        "co_desarrollador": "Universidad Iberoamericana CDMX",
-        "tipo": "Patente de sistema IoT + algoritmo de calibración virtual",
-        "alcance": "Exclusividad técnica en México y proceso USPTO en curso",
-        "diferenciador": "No es hardware genérico: patentamos el algoritmo que calibra sensores de bajo costo contra estaciones oficiales SIMAT",
-        "mejora_calibracion": "Reducción del 49% en error absoluto medio (MAE de 17.8 a 9.1)",
-        "r2_post_calibracion": "0.9085 vs referencia oficial CCA-UNAM",
-        "validado_por": "ICAyCC UNAM — evaluación oficial de microsensores 2022",
-        "precio_smaa": "$8,400 USD (dispositivo + PDN anual)",
-        "dato_viral": "Un sensor de $8,400 USD reemplaza datos que antes costaban $200,000+ en estaciones fijas"
+        "titulo": "Sistema modular y método para determinación de islas de calor",
+        "registro_impi": "MX/a/2024/088166",
+        "co_desarrollador": "IBERO - Universidad Iberoamericana CDMX",
+        "tipo": "Patente de sistema IoT para determinación de islas de calor",
+        "alcance": "Exclusividad técnica en México - Solicitud de Patente con IMPI",
+        "diferenciador": "No es hardware genérico: patente de algoritmo de isla de calor a través del desarrollo de dispostivios IoT accesibles",
+        "invento": "La invención consiste en un sistema modular y un método diseñado para monitorear y diagnosticar islas de calor urbanas de forma granular en tiempo real",
+        "sistema": "El sistema utiliza dispositivos físicos equipados con sensores para medir variables como PM2.5, PM10, temperatura, humedad relativa y óxido nitroso (NO2)",
+        "datos": "Los datos recopilados se transmiten a una plataforma centralizada en la nube, donde se procesan para generar mapas e índices de islas de calor.",
+        "dato_viral": "Un dispositivo de $8,000 USD reemplaza datos que antes costaban $200,000+ en estaciones fijas"
       },
       "slides": [
         {
           "type": "cover_bold",
-          "headline": "PATENTAMOS EL ALGORITMO QUE OTROS NO TIENEN.",
-          "metric": "R²: 0.9085",
+          "headline": "PATENTAMOS EL SISTEMA QUE OTROS NO TIENEN.",
+          "metric": "Monitoreo de Islas de Calor Urbanas",
           "bg": "assets/patente_bg.jpg"
         },
         {
           "type": "data_callout",
-          "headline": "49% MENOS ERROR. MISMO SENSOR.",
-          "metric": "−49%",
-          "supporting_text": "Reducción en error absoluto medio tras calibración virtual SMAA vs referencia oficial CCA-UNAM."
+          "headline": "SISTEMA QUE CARACTERIZA ISLAS DE CALOR.",
+          "metric": "NO Calculamos, MEDIMOS",
+          "supporting_text": "Reducción en error absoluto medio tras calibración virtual con dispositivos propietarios calibrados."
         },
         {
           "type": "cta_clean",
           "headline": "TRABAJA CON LOS CREADORES.",
-          "supporting_text": "Co-desarrollado con Universidad Iberoamericana CDMX. Agenda demo técnica."
+          "supporting_text": "Co-desarrollado con la IBERO CDMX. Agenda demo técnica."
         }
       ]
     },
