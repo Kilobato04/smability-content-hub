@@ -418,12 +418,18 @@ button:disabled { opacity: .35; cursor: not-allowed; }
     flex-shrink: 0;
 }
 
-/* Branding / logo dentro de slide */
+/* Branding / logo dentro de slide — siempre blanco */
 .slide-branding {
     position: absolute;
     top: var(--pad);
     left: var(--pad);
     z-index: 10;
+}
+
+.slide-branding img {
+    filter: brightness(0) invert(1);
+    height: 32px;
+    width: auto;
 }
 
 /* Cuerpo principal del slide */
