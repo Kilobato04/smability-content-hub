@@ -1,11 +1,15 @@
+/* ============================================================
+   SMABILITY CONTENT HUB — app.js
+   Compatible con: index.html · master_abril.json · style.css
+   ============================================================ */
+
 let masterPlan = null;
 let currentSelectedMonth = 3; // Abril por defecto
 
-// --- 1. INICIALIZACIÓN ÚNICA ---
+// --- 1. INICIALIZACIÓN ---
 document.addEventListener('DOMContentLoaded', () => {
     init();
-    
-    // Configuración única de botones y selectores
+
     document.getElementById('month-selector').addEventListener('change', (e) => {
         currentSelectedMonth = parseInt(e.target.value);
         renderCalendar();
@@ -13,9 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('generate-btn').addEventListener('click', generateContent);
     document.getElementById('download-pdf-btn').addEventListener('click', downloadCarouselPDF);
-    
-    // Botón Editar
-    document.querySelector('.action-buttons .secondary').addEventListener('click', toggleEdit);
+
+    // Botón Editar — selección robusta por texto
+    document.querySelectorAll('.action-buttons button').forEach(btn => {
+        if (btn.textContent.trim() === 'Editar') {
+            btn.addEventListener('click', toggleEdit);
+        }
+    });
 });
 
 async function init() {
@@ -25,70 +33,113 @@ async function init() {
         populateSelector();
         renderCalendar();
     } catch (e) {
-        console.error("Error cargando el Plan Maestro:", e);
+        console.error('Error cargando el Plan Maestro:', e);
+        document.getElementById('post-selector').innerHTML =
+            '<option value="">Error al cargar el plan</option>';
     }
 }
 
-// --- 2. LÓGICA DEL CALENDARIO ---
+// --- 2. CALENDARIO ---
 function renderCalendar() {
     const cal = document.getElementById('calendar-grid');
-    if (!cal) return;
-    
+    if (!cal || !masterPlan) return;
+
     const year = 2026;
     cal.innerHTML = '';
-    
+
+    // Cabecera de días
+    ['L','M','X','J','V','S','D'].forEach(d => {
+        const wd = document.createElement('div');
+        wd.className = 'cal-day empty';
+        wd.style.cssText = 'font-size:.6rem;font-weight:700;letter-spacing:.08em;color:var(--g600);background:transparent;cursor:default;';
+        wd.textContent = d;
+        cal.appendChild(wd);
+    });
+
     const firstDayIndex = new Date(year, currentSelectedMonth, 1).getDay();
-    const startOffset = firstDayIndex === 0 ? 6 : firstDayIndex - 1; 
+    const startOffset = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
     const daysInMonth = new Date(year, currentSelectedMonth + 1, 0).getDate();
+    const today = new Date();
 
     for (let x = 0; x < startOffset; x++) {
-        const emptyDay = document.createElement('div');
-        emptyDay.className = 'cal-day empty';
-        cal.appendChild(emptyDay);
+        const empty = document.createElement('div');
+        empty.className = 'cal-day empty';
+        cal.appendChild(empty);
     }
 
     for (let i = 1; i <= daysInMonth; i++) {
-        const day = document.createElement('div');
         const dateObj = new Date(year, currentSelectedMonth, i);
-        const dayOfWeek = dateObj.getDay();
+        const dow = dateObj.getDay();
+        const day = document.createElement('div');
 
         day.className = 'cal-day';
         day.textContent = i;
-        if (dayOfWeek === 0 || dayOfWeek === 6) day.classList.add('weekend');
 
-        const hasPost = masterPlan.pipeline.some(p => {
-            const pDate = new Date(p.fecha + "T00:00:00");
-            return pDate.getMonth() === currentSelectedMonth && pDate.getDate() === i;
-        });
-        if (hasPost) day.classList.add('has-content');
-        
-        const key = `pub_${year}_${currentSelectedMonth}_${i}`;
-        if (localStorage.getItem(key)) day.classList.add('published');
+        if (dow === 0 || dow === 6) {
+            day.classList.add('weekend');
+        } else {
+            // ¿tiene post en el plan maestro?
+            const hasPost = masterPlan.pipeline.some(p => {
+                const d = new Date(p.fecha + 'T00:00:00');
+                return d.getMonth() === currentSelectedMonth && d.getDate() === i;
+            });
+            if (hasPost) day.classList.add('has-content');
 
-        day.onclick = () => {
-            if (localStorage.getItem(key)) {
-                localStorage.removeItem(key);
-                day.classList.remove('published');
-            } else {
-                localStorage.setItem(key, "true");
-                day.classList.add('published');
-            }
-        };
+            // ¿ya publicado? (persiste en localStorage)
+            const key = `pub_${year}_${currentSelectedMonth}_${i}`;
+            if (localStorage.getItem(key)) day.classList.add('published');
+
+            // Toggle publicado al hacer clic
+            day.addEventListener('click', () => {
+                if (localStorage.getItem(key)) {
+                    localStorage.removeItem(key);
+                    day.classList.remove('published');
+                } else {
+                    localStorage.setItem(key, 'true');
+                    day.classList.add('published');
+                }
+            });
+        }
+
+        // Hoy
+        if (i === today.getDate() &&
+            currentSelectedMonth === today.getMonth() &&
+            year === today.getFullYear()) {
+            day.classList.add('today');
+        }
+
         cal.appendChild(day);
     }
 }
 
-// --- 3. GENERACIÓN DE CONTENIDO ---
+// --- 3. SELECTOR DE POSTS ---
+function populateSelector() {
+    const selector = document.getElementById('post-selector');
+    selector.innerHTML = '<option value="">Selecciona un post...</option>';
+    masterPlan.pipeline.forEach(post => {
+        const opt = document.createElement('option');
+        opt.value = post.id;
+        // Fecha legible + categoría + título del primer slide
+        const fecha = post.fecha.split('-').reverse().slice(0,2).join('/');
+        opt.textContent = `${fecha} · ${post.cat} · ${post.slides[0].headline.substring(0,40)}`;
+        selector.appendChild(opt);
+    });
+}
+
+// --- 4. GENERACIÓN ---
 async function generateContent() {
     const postId = document.getElementById('post-selector').value;
-    if (!postId) return alert("Selecciona un post.");
+    if (!postId) return alert('Selecciona un post del plan.');
 
     const postData = masterPlan.pipeline.find(p => p.id === postId);
     const postOutput = document.getElementById('linkedin-post-output');
-    const carouselContainer = document.getElementById('carousel-preview-container');
+    const container = document.getElementById('carousel-preview-container');
+    const genBtn = document.getElementById('generate-btn');
 
-    postOutput.value = "Generando con IA avanzada...";
-    carouselContainer.innerHTML = '<div class="carousel-placeholder">Procesando...</div>';
+    postOutput.value = '';
+    container.innerHTML = '<div class="carousel-placeholder">Generando con IA…</div>';
+    genBtn.disabled = true;
+    genBtn.textContent = 'Generando…';
 
     try {
         const response = await fetch('/api/generate-post', {
@@ -97,118 +148,154 @@ async function generateContent() {
             body: JSON.stringify({
                 technical_data: postData.datos,
                 category: postData.cat,
-                model: "gpt-4o",
+                model: 'gpt-4o',
                 temperature: 0.5
             })
         });
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
+
         postOutput.value = data.linkedin_post;
         renderCarouselPreview(postData);
         document.getElementById('download-pdf-btn').disabled = false;
+
     } catch (error) {
         postOutput.value = `Error: ${error.message}`;
+        container.innerHTML = '<div class="carousel-placeholder">Error al generar. Revisa la consola.</div>';
+        console.error(error);
+    } finally {
+        genBtn.disabled = false;
+        genBtn.textContent = 'Generar Post e Imágenes';
     }
 }
 
+// --- 5. RENDER DEL CARRUSEL ---
 function renderCarouselPreview(postData) {
     const container = document.getElementById('carousel-preview-container');
-    container.innerHTML = ''; 
-    const logoPath = "assets/logo.png";
+    container.innerHTML = '';
+
+    const total = postData.slides.length;
 
     postData.slides.forEach((slide, index) => {
-        const slideEl = document.createElement('div');
-        slideEl.className = `slide-preview slide-${slide.type}`;
-        
-        // Forzamos el fondo desde el inicio para evitar parpadeos
+        const el = document.createElement('div');
+        el.className = `slide-preview slide-${slide.type}`;
+
+        // Imagen de fondo si existe
         if (slide.bg) {
-            slideEl.style.backgroundImage = `url(${slide.bg})`;
-            slideEl.style.backgroundSize = 'cover';
-            slideEl.style.backgroundPosition = 'center';
+            el.style.backgroundImage = `url(${slide.bg})`;
+            el.style.backgroundSize = 'cover';
+            el.style.backgroundPosition = 'center';
         }
 
-        const isDark = (slide.type === 'cover_bold' || slide.type === 'data_callout');
-        const logoStyle = isDark ? 'style="filter: brightness(0) invert(1);"' : '';
-        const navArrow = (index === postData.slides.length - 1) ? '' : '<div class="slide-nav-arrow">→</div>';
+        const isLastSlide = index === total - 1;
+        const arrow = isLastSlide ? '' : '<div class="slide-nav-arrow">→</div>';
 
-        // Estructura con z-index explícito para evitar desformateo
-        slideEl.innerHTML = `
-            <div class="slide-content-wrapper" style="position:relative; z-index:10; width:100%; height:100%; display:flex; flex-direction:column; justify-content:space-between;">
-                ${slide.type === 'cover_bold' ? '<div class="cover-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:-1;"></div>' : ''}
-                ${navArrow}
-                <div class="slide-branding"><img src="${logoPath}" ${logoStyle} height="50"></div>
+        // Overlay para cover con imagen
+        const overlay = (slide.type === 'cover_bold' && slide.bg)
+            ? '<div class="cover-overlay"></div>'
+            : '';
+
+        // Número de lámina
+        const numLabel = `<span class="slide-num">0${index + 1} / 0${total}</span>`;
+
+        // Métrica
+        const metricHTML = slide.metric
+            ? `<div class="slide-metric">${slide.metric}</div>`
+            : '';
+
+        // Texto de apoyo
+        const supportHTML = slide.supporting_text
+            ? `<p>${slide.supporting_text}</p>`
+            : '';
+
+        // Footer unificado: dot + smability.io
+        const footer = `
+            <div class="slide-footer">
+                <span class="dot"></span>smability.io
+            </div>`;
+
+        el.innerHTML = `
+            ${overlay}
+            ${numLabel}
+            ${arrow}
+            <div class="slide-content-wrapper">
                 <div class="slide-body">
-                    <h3 style="margin:0;">${slide.headline}</h3>
-                    ${slide.metric ? `<div class="slide-metric" style="color:var(--smability-green); font-size:5rem; font-weight:900;">${slide.metric}</div>` : ''}
-                    ${slide.supporting_text ? `<p style="font-size:1.5rem;">${slide.supporting_text}</p>` : ''}
+                    <h3>${slide.headline}</h3>
+                    ${metricHTML}
+                    ${supportHTML}
                 </div>
-                <div class="slide-footer">0${index + 1} — SMABILITY TÉCNICO</div>
-            </div>
-        `;
-        container.appendChild(slideEl);
+                ${footer}
+            </div>`;
+
+        container.appendChild(el);
     });
 }
 
-// --- 4. DESCARGA PDF (FIX DEFINITIVO) ---
+// --- 6. DESCARGA PDF ---
 async function downloadCarouselPDF() {
     const container = document.getElementById('carousel-preview-container');
     const slides = container.querySelectorAll('.slide-preview');
-    if (slides.length === 0) return alert("Genera el contenido primero.");
+    if (!slides.length) return alert('Genera el contenido primero.');
 
     const btn = document.getElementById('download-pdf-btn');
-    btn.textContent = "Ajustando encuadre...";
+    btn.textContent = 'Preparando PDF…';
     btn.disabled = true;
 
-    // 1. Opciones de PDF con coordenadas reseteadas
     const opt = {
         margin: 0,
-        filename: `Smability_LinkedIn_${new Date().getTime()}.pdf`,
+        filename: `Smability_LinkedIn_${Date.now()}.pdf`,
         image: { type: 'jpeg', quality: 1.0 },
-        html2canvas: { 
-            scale: 2, 
-            useCORS: true, 
+        html2canvas: {
+            scale: 2,
+            useCORS: true,
             logging: false,
-            scrollY: -window.scrollY, // COMPENSA EL SCROLL ACTUAL
+            scrollY: -window.scrollY,
             windowWidth: 1080,
             windowHeight: 1080
         },
-        jsPDF: { unit: 'px', format: [1080, 1080], orientation: 'portrait', compress: true }
+        jsPDF: {
+            unit: 'px',
+            format: [1080, 1080],
+            orientation: 'portrait',
+            compress: true
+        }
     };
 
     try {
-        // Inicializamos el worker
         let worker = html2pdf().set(opt).from(slides[0]).toPdf();
-
         for (let i = 1; i < slides.length; i++) {
-            worker = worker.get('pdf').then((pdf) => {
-                if (pdf) pdf.addPage();
-            }).from(slides[i]).toContainer().toCanvas().toPdf();
+            worker = worker
+                .get('pdf').then(pdf => pdf.addPage())
+                .from(slides[i]).toContainer().toCanvas().toPdf();
         }
-
         await worker.save();
-
     } catch (e) {
-        console.error("Error en encuadre PDF:", e);
+        console.error('Error generando PDF:', e);
+        alert('Error al generar el PDF. Revisa la consola.');
     } finally {
-        btn.textContent = "Descargar PDF para LinkedIn";
+        btn.textContent = 'Descargar PDF para LinkedIn';
         btn.disabled = false;
     }
 }
 
-// Helper funciones
-function populateSelector() {
-    const selector = document.getElementById('post-selector');
-    selector.innerHTML = '<option value="">Selecciona un post...</option>';
-    masterPlan.pipeline.forEach(post => {
-        const opt = document.createElement('option');
-        opt.value = post.id;
-        opt.textContent = `${post.fecha} - ${post.id}`;
-        selector.appendChild(opt);
-    });
-}
-
+// --- 7. HELPERS ---
 function toggleEdit() {
     const area = document.getElementById('linkedin-post-output');
     area.readOnly = !area.readOnly;
-    area.style.backgroundColor = area.readOnly ? "#F0F0F0" : "#FFF";
-    this.textContent = area.readOnly ? "Editar" : "Guardar";
+    area.style.backgroundColor = area.readOnly ? '' : 'rgba(255,255,255,0.04)';
+    this.textContent = area.readOnly ? 'Editar' : 'Guardar';
+}
+
+function copyText() {
+    const text = document.getElementById('linkedin-post-output').value;
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+        const btns = document.querySelectorAll('.action-buttons .primary');
+        btns.forEach(b => {
+            const orig = b.textContent;
+            b.textContent = '✓ Copiado';
+            setTimeout(() => b.textContent = orig, 2000);
+        });
+    });
 }
