@@ -29,13 +29,23 @@ function populateSelector() {
 function renderCalendar() {
     const cal = document.getElementById('calendar-grid');
     cal.innerHTML = '';
-    // Simulación de 30 días de Abril
+    
+    // Obtenemos los días que tienen posts programados del JSON
+    const postedDays = masterPlan.pipeline.map(p => {
+        const dateParts = p.fecha.split('-');
+        return parseInt(dateParts[2]); // Extrae el día
+    });
+
     for(let i=1; i<=30; i++) {
         const day = document.createElement('div');
         day.className = 'cal-day';
         day.textContent = i;
-        const hasPost = masterPlan.pipeline.some(p => parseInt(p.fecha.split('-')[2]) === i);
-        if(hasPost) day.classList.add('has-content');
+        
+        // Resaltar solo si el día está en el pipeline de Smability
+        if(postedDays.includes(i)) {
+            day.classList.add('has-content');
+            day.title = "Post programado";
+        }
         cal.appendChild(day);
     }
 }
