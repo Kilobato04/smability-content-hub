@@ -26,27 +26,50 @@ function populateSelector() {
     });
 }
 
+// Listener para el cambio de mes
+document.getElementById('month-selector').addEventListener('change', renderCalendar);
+
 function renderCalendar() {
     const cal = document.getElementById('calendar-grid');
+    const selectedMonth = parseInt(document.getElementById('month-selector').value);
     cal.innerHTML = '';
     
-    // Obtenemos los días que tienen posts programados del JSON
-    const postedDays = masterPlan.pipeline.map(p => {
-        const dateParts = p.fecha.split('-');
-        return parseInt(dateParts[2]); // Extrae el día
-    });
+    // Calcular días del mes seleccionado (Año 2026 fijo por ahora)
+    const daysInMonth = new Date(2026, selectedMonth + 1, 0).getDate();
 
-    for(let i=1; i<=30; i++) {
+    for(let i=1; i<=daysInMonth; i++) {
         const day = document.createElement('div');
         day.className = 'cal-day';
         day.textContent = i;
         
-        // Resaltar solo si el día está en el pipeline de Smability
-        if(postedDays.includes(i)) {
-            day.classList.add('has-content');
-            day.title = "Post programado";
+        // Verificar si hay post en el JSON maestro para este día/mes
+        const hasPost = masterPlan.pipeline.some(p => {
+            const date = new Date(p.fecha);
+            return date.getMonth() === selectedMonth && date.getDate() === i;
+        });
+
+        if(hasPost) day.classList.add('has-content');
+        
+        // PERSISTENCIA: Cargar estado guardado
+        if(localStorage.getItem(`pub_2026_${selectedMonth}_${i}`)) {
+            day.classList.add('published');
         }
+
+        // Evento para marcar como publicado
+        day.addEventListener('click', () => togglePublished(selectedMonth, i, day));
+
         cal.appendChild(day);
+    }
+}
+
+function togglePublished(month, day, element) {
+    const key = `pub_2026_${month}_${day}`;
+    if(localStorage.getItem(key)) {
+        localStorage.removeItem(key);
+        element.classList.remove('published');
+    } else {
+        localStorage.setItem(key, "true");
+        element.classList.add('published');
     }
 }
 
@@ -180,38 +203,48 @@ function copyText() {
 
 
 document.getElementById('download-pdf-btn').addEventListener('click', async () => {
-    const element = document.getElementById('carousel-preview-container');
+    const container = document.getElementById('carousel-preview-container');
+    const slides = container.querySelectorAll('.slide-preview');
     const downloadBtn = document.getElementById('download-pdf-btn');
     
-    // Clonamos temporalmente para limpiar estilos de scroll que arruinan la captura
-    const contentToPrint = element.cloneNode(true);
-    contentToPrint.style.height = 'auto';
-    contentToPrint.style.maxHeight = 'none';
-    contentToPrint.style.overflow = 'visible';
-    
-    downloadBtn.textContent = "Generando PDF...";
-    
+    downloadBtn.textContent = "Procesando...";
+
+    // Crear contenedor temporal invisible para un renderizado limpio
+    const tempContainer = document.createElement('div');
+    tempContainer.style.width = '1080px';
+    tempContainer.style.position = 'absolute';
+    tempContainer.style.left = '-9999px';
+    document.body.appendChild(tempContainer);
+
+    // Clonar slides forzando el tamaño exacto de LinkedIn (1:1)
+    slides.forEach(slide => {
+        const clone = slide.cloneNode(true);
+        clone.style.width = '1080px';
+        clone.style.height = '1080px';
+        clone.style.margin = '0';
+        clone.style.display = 'flex'; 
+        tempContainer.appendChild(clone);
+    });
+
     const opt = {
-        margin:       0,
-        filename:     `Smability_Carrusel_${new Date().getTime()}.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { 
-            scale: 2, 
+        margin: 0,
+        filename: `Smability_Carrusel_${new Date().getTime()}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+            scale: 1, 
             useCORS: true,
-            logging: false,
-            scrollY: 0,
-            scrollX: 0
+            windowWidth: 1080
         },
-        jsPDF:        { unit: 'px', format: [1080, 1080], orientation: 'portrait' },
-        pagebreak:    { mode: 'css', before: '.slide-preview' } 
+        jsPDF: { unit: 'px', format: [1080, 1080], orientation: 'portrait' },
+        pagebreak: { mode: 'css', before: '.slide-preview' }
     };
 
     try {
-        await html2pdf().set(opt).from(contentToPrint).save();
+        await html2pdf().set(opt).from(tempContainer).save();
+        document.body.removeChild(tempContainer);
         downloadBtn.textContent = "Descargar PDF para LinkedIn";
     } catch (e) {
-        console.error("Error generando PDF:", e);
-        alert("Error al generar el PDF.");
-        downloadBtn.textContent = "Descargar PDF para LinkedIn";
+        console.error("Error en PDF:", e);
+        downloadBtn.textContent = "Error al descargar";
     }
 });
