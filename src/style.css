@@ -261,6 +261,22 @@ select {
     right: 2px;
 }
 
+.calendar-mini {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 columnas fijas */
+    gap: 5px;
+}
+
+.cal-day.empty {
+    background: transparent;
+    border: none;
+}
+
+.cal-day.weekend {
+    background-color: #f8f9fa;
+    color: #ccc; /* Gris claro para fines de semana */
+}
+
 /* Limpieza de márgenes para el PDF */
 @media print {
     .slide-preview {
@@ -268,3 +284,4 @@ select {
         page-break-after: always;
     }
 }
+
