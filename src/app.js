@@ -29,35 +29,52 @@ function populateSelector() {
 // Listener para el cambio de mes
 document.getElementById('month-selector').addEventListener('change', renderCalendar);
 
+// Variables globales para el calendario
+let currentSelectedMonth = 3; // Abril por defecto
+
+function initCalendar() {
+    const monthSelector = document.getElementById('month-selector');
+    if (monthSelector) {
+        monthSelector.addEventListener('change', (e) => {
+            currentSelectedMonth = parseInt(e.target.value);
+            renderCalendar();
+        });
+    }
+    renderCalendar();
+}
+
 function renderCalendar() {
     const cal = document.getElementById('calendar-grid');
-    const selectedMonth = parseInt(document.getElementById('month-selector').value);
-    cal.innerHTML = '';
+    if (!cal) return;
     
-    // Calcular días del mes seleccionado (Año 2026 fijo por ahora)
-    const daysInMonth = new Date(2026, selectedMonth + 1, 0).getDate();
+    cal.innerHTML = '';
+    const daysInMonth = new Date(2026, currentSelectedMonth + 1, 0).getDate();
 
     for(let i=1; i<=daysInMonth; i++) {
         const day = document.createElement('div');
         day.className = 'cal-day';
         day.textContent = i;
         
-        // Verificar si hay post en el JSON maestro para este día/mes
+        // Verificar posts en el JSON
         const hasPost = masterPlan.pipeline.some(p => {
-            const date = new Date(p.fecha);
-            return date.getMonth() === selectedMonth && date.getDate() === i;
+            const d = new Date(p.fecha);
+            return d.getMonth() === currentSelectedMonth && d.getDate() === i;
         });
-
         if(hasPost) day.classList.add('has-content');
         
-        // PERSISTENCIA: Cargar estado guardado
-        if(localStorage.getItem(`pub_2026_${selectedMonth}_${i}`)) {
-            day.classList.add('published');
-        }
+        // PERSISTENCIA
+        const storageKey = `pub_2026_${currentSelectedMonth}_${i}`;
+        if(localStorage.getItem(storageKey)) day.classList.add('published');
 
-        // Evento para marcar como publicado
-        day.addEventListener('click', () => togglePublished(selectedMonth, i, day));
-
+        day.onclick = () => {
+            if(localStorage.getItem(storageKey)) {
+                localStorage.removeItem(storageKey);
+                day.classList.remove('published');
+            } else {
+                localStorage.setItem(storageKey, "true");
+                day.classList.add('published');
+            }
+        };
         cal.appendChild(day);
     }
 }
@@ -133,8 +150,15 @@ function renderCarouselPreview(carouselData) {
         const isLastSlide = (index === slides.length - 1);
         const navArrowHTML = isLastSlide ? '' : '<div class="slide-nav-arrow">→</div>';
 
+        // --- PUNTO 2: FIX DE IMAGEN DE FONDO ---
+        // Solo aplicamos el fondo si slide.bg existe y no es undefined
+        if (slide.bg) {
+            slideEl.style.backgroundImage = `url(${slide.bg})`;
+        } else {
+            slideEl.style.backgroundImage = 'none';
+        }
+
         if (slide.type === 'cover_bold') {
-            slideEl.style.backgroundImage = `url(${slide.bg_image})`;
             slideEl.innerHTML = `
                 <div class="cover-overlay"></div>
                 ${navArrowHTML} 
@@ -163,7 +187,6 @@ function renderCarouselPreview(carouselData) {
                 <div class="slide-footer" style="color:rgba(255,255,255,0.5); font-weight:bold; margin-top:40px;">0${index + 1} — IMPACTO FINANCIERO</div>
             `;
         } else if (slide.type === 'cta_clean') {
-            // Sin navArrowHTML aquí por la lógica isLastSlide
             slideEl.innerHTML = `
                 <div class="slide-branding"><img src="${logoPath}" ${logoStyle}></div>
                 <h3 style="color: var(--smability-blue); font-size: 2.8rem;">${slide.headline}</h3>
@@ -209,20 +232,26 @@ document.getElementById('download-pdf-btn').addEventListener('click', async () =
     
     downloadBtn.textContent = "Procesando...";
 
-    // Crear contenedor temporal invisible para un renderizado limpio
+    // Contenedor temporal
     const tempContainer = document.createElement('div');
     tempContainer.style.width = '1080px';
     tempContainer.style.position = 'absolute';
     tempContainer.style.left = '-9999px';
     document.body.appendChild(tempContainer);
 
-    // Clonar slides forzando el tamaño exacto de LinkedIn (1:1)
     slides.forEach(slide => {
         const clone = slide.cloneNode(true);
         clone.style.width = '1080px';
         clone.style.height = '1080px';
         clone.style.margin = '0';
-        clone.style.display = 'flex'; 
+        clone.style.display = 'flex';
+        
+        // FIX CRÍTICO: Si el slide original no tiene imagen de fondo real, 
+        // eliminamos cualquier intento de cargar "undefined"
+        if (!slide.style.backgroundImage || slide.style.backgroundImage === 'url("undefined")') {
+            clone.style.backgroundImage = 'none';
+        }
+
         tempContainer.appendChild(clone);
     });
 
@@ -232,8 +261,9 @@ document.getElementById('download-pdf-btn').addEventListener('click', async () =
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
             scale: 1, 
-            useCORS: true,
-            windowWidth: 1080
+            useCORS: true, // Importante para las imágenes
+            windowWidth: 1080,
+            removeContainer: true
         },
         jsPDF: { unit: 'px', format: [1080, 1080], orientation: 'portrait' },
         pagebreak: { mode: 'css', before: '.slide-preview' }
