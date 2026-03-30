@@ -10,37 +10,45 @@
     <div class="app-container">
         <header>
             <img src="assets/logo.png" alt="Smability Logo" class="main-logo">
-            <h1>Cerebro de Contenidos (v0.1 Sim)</h1>
+            <div class="header-info">
+                <h1>Hub de Contenidos</h1>
+                <div class="status-badge">Meta Abril: $40k USD</div>
+            </div>
         </header>
 
         <main class="content-grid">
             <section class="control-panel">
-                <h2>1. Instrucción Técnica</h2>
-                <textarea id="technical-instruction" placeholder="Ej: Caso de Estudio Vitro MTY, reducción de PM2.5 usando el modelo."></textarea>
-                
-                <div class="meta-controls">
-                    <select id="post-goal">
-                        <option value="demo">Vender Licencia ($15k)</option>
-                        <option value="awareness">Awareness ONG/Salud</option>
-                    </select>
+                <div class="calendar-section">
+                    <h2>📅 Calendario de Abril</h2>
+                    <div id="calendar-grid" class="calendar-mini"></div>
                 </div>
-
-                <button id="generate-btn">Generar Propuesta de IA (Sim)</button>
                 
                 <hr>
 
-                <h2>2. Propuesta de Post de LinkedIn</h2>
-                <textarea id="linkedin-post-output" readonly></textarea>
-                <div class="action-buttons">
-                    <button class="secondary">Editar</button>
-                    <button class="primary">Copiar Texto</button>
+                <h2>🚀 Generador de Post</h2>
+                <div class="selector-group">
+                    <label for="post-selector">Selecciona un post del plan:</label>
+                    <select id="post-selector">
+                        <option value="">Cargando plan maestro...</option>
+                    </select>
+                </div>
+
+                <button id="generate-btn" class="primary-btn">Generar Post e Imágenes</button>
+                
+                <div class="output-area">
+                    <h3>Copy para LinkedIn (Propuesta IA)</h3>
+                    <textarea id="linkedin-post-output" readonly></textarea>
+                    <div class="action-buttons">
+                        <button class="secondary">Editar</button>
+                        <button class="primary" onclick="copyText()">Copiar Texto</button>
+                    </div>
                 </div>
             </section>
 
             <section class="preview-panel">
-                <h2>3. Vista Previa del Carrusel (Estilo Enterprise)</h2>
+                <h2>🖼️ Vista Previa Carrusel (Enterprise Style)</h2>
                 <div id="carousel-preview-container">
-                    <div class="carousel-placeholder">Escribe la instrucción y genera para ver el carrusel...</div>
+                    <div class="carousel-placeholder">Selecciona un post para visualizar el carrusel...</div>
                 </div>
                 <button id="download-pdf-btn" disabled>Descargar PDF para LinkedIn</button>
             </section>
