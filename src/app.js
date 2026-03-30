@@ -150,75 +150,87 @@ function renderCarouselPreview(postData) {
 
 // --- 4. DESCARGA PDF (FIX DEFINITIVO) ---
 async function downloadCarouselPDF() {
-    const slides = document.querySelectorAll('.slide-preview');
-    if (slides.length === 0) return;
+    const container = document.getElementById('carousel-preview-container');
+    const slides = container.querySelectorAll('.slide-preview');
+    if (slides.length === 0) return alert("Genera el contenido primero.");
 
     const btn = document.getElementById('download-pdf-btn');
-    btn.textContent = "Renderizando láminas...";
+    const originalText = btn.textContent;
+    btn.textContent = "Sincronizando láminas...";
     btn.disabled = true;
-    
+
+    // 1. Crear el trabajador temporal en un lugar visible pero fuera de pantalla
+    // Usamos 'fixed' para que no dependa del scroll del usuario
     const worker = document.createElement('div');
-    worker.id = "pdf-worker";
-    worker.style.width = '1080px';
     worker.style.position = 'fixed';
-    worker.style.left = '-2000px';
+    worker.style.left = '-3000px'; 
     worker.style.top = '0';
+    worker.style.width = '1080px';
     document.body.appendChild(worker);
 
     const promises = [];
 
-    slides.forEach(slide => {
+    // 2. Clonar láminas con limpieza profunda de estilos
+    slides.forEach((slide) => {
         const clone = slide.cloneNode(true);
         clone.style.width = '1080px';
         clone.style.height = '1080px';
-        clone.style.display = 'flex';
         clone.style.margin = '0';
-        clone.style.padding = '60px';
-        clone.style.boxSizing = 'border-box';
+        clone.style.display = 'flex';
+        clone.style.flexDirection = 'column';
         clone.style.pageBreakAfter = 'always';
         clone.style.position = 'relative';
         
-        // Asegurar que el fondo se herede correctamente en el clon
-        clone.style.backgroundImage = slide.style.backgroundImage;
-        
-        if (slide.style.backgroundImage.includes('url')) {
-            const url = slide.style.backgroundImage.slice(4, -1).replace(/"/g, "");
+        // Forzar que el clon mantenga el fondo del original
+        const bg = window.getComputedStyle(slide).backgroundImage;
+        if (bg && bg !== 'none' && !bg.includes('undefined')) {
+            clone.style.backgroundImage = bg;
+            clone.style.backgroundSize = 'cover';
+            
+            // Precarga de seguridad
+            const url = bg.slice(4, -1).replace(/"/g, "");
             const img = new Image();
             img.src = url;
             promises.push(new Promise(res => { img.onload = res; img.onerror = res; }));
         }
+
         worker.appendChild(clone);
     });
 
     try {
+        // Esperar a que las imágenes carguen físicamente en el navegador
         await Promise.all(promises);
-        // Pequeña pausa para asegurar que el DOM del worker esté listo
-        await new Promise(resolve => setTimeout(resolve, 500));
         
-        btn.textContent = "Generando archivo...";
-        
+        // PAUSA CRÍTICA: 800ms para que el DOM del worker se estabilice
+        btn.textContent = "Generando PDF final...";
+        await new Promise(resolve => setTimeout(resolve, 800));
+
         const opt = {
             margin: 0,
-            filename: 'Smability_LinkedIn_Carrusel.pdf',
+            filename: `Smability_Carrusel_${new Date().getTime()}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { 
-                scale: 1, 
+                scale: 1, // Escala 1 es suficiente si forzamos 1080px
                 useCORS: true, 
-                width: 1080, 
-                height: 1080 * slides.length,
+                width: 1080,
+                windowWidth: 1080,
                 scrollY: 0,
-                windowWidth: 1080
+                scrollX: 0
             },
             jsPDF: { unit: 'px', format: [1080, 1080], orientation: 'portrait' },
             pagebreak: { mode: 'css', before: '.slide-preview' }
         };
 
+        // Ejecutar la exportación
         await html2pdf().set(opt).from(worker).save();
+
     } catch (e) {
-        console.error("Error crítico en PDF:", e);
+        console.error("Error en exportación PDF:", e);
+        alert("Error al generar el PDF. Revisa la consola.");
     } finally {
+        // Limpieza
         document.body.removeChild(worker);
-        btn.textContent = "Descargar PDF para LinkedIn";
+        btn.textContent = originalText;
         btn.disabled = false;
     }
 }
