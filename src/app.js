@@ -45,36 +45,63 @@ function initCalendar() {
 
 function renderCalendar() {
     const cal = document.getElementById('calendar-grid');
-    if (!cal) return;
+    const monthSelector = document.getElementById('month-selector');
+    if (!cal || !monthSelector) return;
     
+    const selectedMonth = parseInt(monthSelector.value);
+    const year = 2026;
     cal.innerHTML = '';
-    const daysInMonth = new Date(2026, currentSelectedMonth + 1, 0).getDate();
+    
+    // 1. Obtener el primer día de la semana de ese mes (0 = Domingo, 1 = Lunes...)
+    const firstDayIndex = new Date(year, selectedMonth, 1).getDay();
+    // Ajuste para que empiece en Lunes (opcional, depende de tu CSS)
+    const startOffset = firstDayIndex === 0 ? 6 : firstDayIndex - 1; 
 
-    for(let i=1; i<=daysInMonth; i++) {
+    // 2. Obtener total de días del mes
+    const daysInMonth = new Date(year, selectedMonth + 1, 0).getDate();
+
+    // 3. Crear espacios vacíos para los días del mes anterior
+    for (let x = 0; x < startOffset; x++) {
+        const emptyDay = document.createElement('div');
+        emptyDay.className = 'cal-day empty';
+        cal.appendChild(emptyDay);
+    }
+
+    // 4. Crear los días reales
+    for (let i = 1; i <= daysInMonth; i++) {
         const day = document.createElement('div');
+        const dateObj = new Date(year, selectedMonth, i);
+        const dayOfWeek = dateObj.getDay(); // 0 es domingo, 6 es sábado
+
         day.className = 'cal-day';
         day.textContent = i;
         
-        // Verificar posts en el JSON
+        // Resaltar fines de semana (Sábado=6, Domingo=0)
+        if (dayOfWeek === 0 || dayOfWeek === 6) {
+            day.classList.add('weekend');
+        }
+
+        // Lógica de posts del JSON
         const hasPost = masterPlan.pipeline.some(p => {
-            const d = new Date(p.fecha);
-            return d.getMonth() === currentSelectedMonth && d.getDate() === i;
+            const pDate = new Date(p.fecha + "T00:00:00"); // Forzar hora local
+            return pDate.getMonth() === selectedMonth && pDate.getDate() === i;
         });
-        if(hasPost) day.classList.add('has-content');
+        if (hasPost) day.classList.add('has-content');
         
-        // PERSISTENCIA
-        const storageKey = `pub_2026_${currentSelectedMonth}_${i}`;
-        if(localStorage.getItem(storageKey)) day.classList.add('published');
+        // Persistencia (LocalStorage)
+        const key = `pub_${year}_${selectedMonth}_${i}`;
+        if (localStorage.getItem(key)) day.classList.add('published');
 
         day.onclick = () => {
-            if(localStorage.getItem(storageKey)) {
-                localStorage.removeItem(storageKey);
+            if (localStorage.getItem(key)) {
+                localStorage.removeItem(key);
                 day.classList.remove('published');
             } else {
-                localStorage.setItem(storageKey, "true");
+                localStorage.setItem(key, "true");
                 day.classList.add('published');
             }
         };
+
         cal.appendChild(day);
     }
 }
