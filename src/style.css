@@ -473,14 +473,22 @@ button:disabled { opacity: .35; cursor: not-allowed; }
     background: var(--bg-slide);
 }
 
-/* Overlay del cover (inyectado por JS cuando hay bg image) */
+/* Overlay del cover — entre imagen de fondo y contenido */
 .cover-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0,0,0,0.55);
+    /* Gradiente direccional: más opaco abajo donde está el texto */
+    background: linear-gradient(
+        160deg,
+        rgba(0, 0, 0, 0.72) 0%,
+        rgba(0, 71, 171, 0.55) 50%,
+        rgba(0, 0, 0, 0.85) 100%
+    );
     z-index: 1;
+    pointer-events: none;
 }
 
+/* Todo el contenido del slide va sobre el overlay */
 .slide-cover_bold .slide-content-wrapper,
 .slide-data_callout .slide-content-wrapper,
 .slide-split_map .slide-content-wrapper,
@@ -492,6 +500,12 @@ button:disabled { opacity: .35; cursor: not-allowed; }
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+}
+
+/* El número de lámina y la flecha también sobre el overlay */
+.slide-preview .slide-num,
+.slide-preview .slide-nav-arrow {
+    z-index: 3;
 }
 
 /* data_callout — marco técnico neon */
