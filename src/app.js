@@ -296,41 +296,55 @@ async function downloadCarouselPDF() {
 
     const SIDE = 1080;
 
-    // Host de dimensiones 0 — invisible, no afecta scroll ni layout
-    const host = document.createElement('div');
-    host.style.cssText = 'position:fixed;top:0;left:0;width:0;height:0;overflow:hidden;z-index:-9999;';
+    // Stage: position:fixed fuera de la pantalla visible pero SIN visibility:hidden
+    // html2canvas necesita que el elemento sea "pintable" por el browser.
+    // left:-9999px lo saca del viewport sin afectar el scroll del documento.
     const stage = document.createElement('div');
-    stage.style.cssText = `position:absolute;top:0;left:0;width:${SIDE}px;height:${SIDE}px;overflow:hidden;visibility:hidden;`;
-    host.appendChild(stage);
-    document.body.appendChild(host);
+    stage.style.cssText = [
+        'position:fixed',
+        'top:0',
+        `left:-${SIDE + 200}px`,   // fuera de pantalla a la izquierda
+        `width:${SIDE}px`,
+        `height:${SIDE}px`,
+        'overflow:hidden',
+        'z-index:99999',
+        'pointer-events:none',
+        'background:#0D0D0D',
+    ].join(';');
+    document.body.appendChild(stage);
 
     try {
         const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF({ orientation:'portrait', unit:'px', format:[SIDE,SIDE], hotfixes:['px_scaling'], compress:true });
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'px',
+            format: [SIDE, SIDE],
+            hotfixes: ['px_scaling'],
+            compress: true
+        });
         const total = postData.slides.length;
 
         for (let i = 0; i < total; i++) {
-            btn.textContent = `Capturando ${i+1}/${total}…`;
+            btn.textContent = `Capturando ${i + 1} / ${total}…`;
 
-            // Construimos el clon con tamaños proporcionales a 1080px
+            // Clon con todos los tamaños proporcionales a 1080px
             const clone = buildSlideEl(postData.slides[i], i, total, SIDE);
 
-            // Fondo de color del tipo de slide
-            if (!postData.slides[i].bg) {
-                if (postData.slides[i].type === 'cta_clean')
-                    clone.style.background = 'linear-gradient(145deg,#020f2a 0%,#001a5c 60%,#0a0a0a 100%)';
-                else
-                    clone.style.backgroundColor = '#0D0D0D';
+            // Aseguramos background explícito (gradiente no hereda bien)
+            if (postData.slides[i].type === 'cta_clean') {
+                clone.style.background = 'linear-gradient(145deg,#020f2a 0%,#001a5c 60%,#0a0a0a 100%)';
+            } else if (!postData.slides[i].bg) {
+                clone.style.backgroundColor = '#0D0D0D';
             }
 
             stage.innerHTML = '';
             stage.appendChild(clone);
 
-            // 2 frames para que el browser pinte fuentes e imágenes
-            await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+            // Esperamos que el browser pinte completamente: fuentes + background-image
+            await new Promise(r => setTimeout(r, 120));
 
             const canvas = await html2canvas(clone, {
-                scale: 1,          // el clon ya es 1080px, scale:1 = 1080px output
+                scale: 2,              // 2160×2160 → alta res, luego jsPDF lo reduce
                 useCORS: true,
                 allowTaint: false,
                 logging: false,
@@ -338,10 +352,13 @@ async function downloadCarouselPDF() {
                 height: SIDE,
                 windowWidth: SIDE,
                 windowHeight: SIDE,
-                x: 0, y: 0,
-                scrollX: 0, scrollY: 0,
+                x: 0,
+                y: 0,
+                scrollX: 0,
+                scrollY: 0,
                 backgroundColor: '#0D0D0D',
-                onclone: doc => {
+                onclone: (doc) => {
+                    // Inyectamos fuentes en el documento interno de html2canvas
                     const lnk = doc.createElement('link');
                     lnk.rel  = 'stylesheet';
                     lnk.href = 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&family=Inter:wght@400;600&display=swap';
@@ -349,6 +366,7 @@ async function downloadCarouselPDF() {
                 }
             });
 
+            // canvas es 2160×2160 → lo insertamos a 1080×1080 en el PDF
             const img = canvas.toDataURL('image/jpeg', 0.95);
             if (i > 0) pdf.addPage([SIDE, SIDE], 'portrait');
             pdf.addImage(img, 'JPEG', 0, 0, SIDE, SIDE, `s${i}`, 'FAST');
@@ -361,7 +379,7 @@ async function downloadCarouselPDF() {
         console.error('PDF error:', e);
         alert(`Error: ${e.message}`);
     } finally {
-        document.body.removeChild(host);
+        if (document.body.contains(stage)) document.body.removeChild(stage);
         btn.textContent = '↓ Descargar PDF para LinkedIn';
         btn.disabled = false;
     }
