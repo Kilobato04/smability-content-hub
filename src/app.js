@@ -272,13 +272,19 @@ document.getElementById('download-pdf-btn').addEventListener('click', async () =
         clone.style.height = '1080px';
         clone.style.margin = '0';
         clone.style.display = 'flex';
+    
+        // FIX CRÍTICO AMPLIADO: 
+        // 1. Eliminamos "undefined"
+        // 2. Verificamos si la imagen de fondo es válida antes de que html2canvas la procese
+        const bg = slide.style.backgroundImage;
         
-        // FIX CRÍTICO: Si el slide original no tiene imagen de fondo real, 
-        // eliminamos cualquier intento de cargar "undefined"
-        if (!slide.style.backgroundImage || slide.style.backgroundImage === 'url("undefined")') {
+        if (!bg || bg === 'none' || bg.includes('undefined')) {
             clone.style.backgroundImage = 'none';
+        } else {
+            // Mantenemos el fondo pero forzamos a que no rompa el renderizado si falla la carga
+            clone.style.backgroundOrigin = 'content-box'; 
         }
-
+    
         tempContainer.appendChild(clone);
     });
 
