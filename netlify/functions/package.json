@@ -1,0 +1,9 @@
+{
+  "name": "smability-functions",
+  "version": "1.0.0",
+  "description": "Dependencias para el Cerebro GPT de Smability",
+  "main": "generate-post.js",
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}
