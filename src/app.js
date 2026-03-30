@@ -153,6 +153,31 @@ function renderCarouselPreview(carouselData) {
     });
 }
 
+// Activar edición del textarea
+document.querySelector('.action-buttons .secondary').addEventListener('click', () => {
+    const textarea = document.getElementById('linkedin-post-output');
+    if (textarea.readOnly) {
+        textarea.readOnly = false;
+        textarea.style.backgroundColor = "#fff";
+        textarea.style.border = "2px solid var(--smability-green)";
+        textarea.focus();
+        document.querySelector('.action-buttons .secondary').textContent = "Guardar";
+    } else {
+        textarea.readOnly = true;
+        textarea.style.backgroundColor = "#F0F0F0";
+        textarea.style.border = "1px solid var(--border-color)";
+        document.querySelector('.action-buttons .secondary').textContent = "Editar";
+    }
+});
+
+// Función para copiar texto (que ya tenías referenciada en el HTML)
+function copyText() {
+    const text = document.getElementById('linkedin-post-output');
+    text.select();
+    document.execCommand('copy');
+    alert("¡Texto copiado para LinkedIn!");
+}
+
 
 document.getElementById('download-pdf-btn').addEventListener('click', async () => {
     const element = document.getElementById('carousel-preview-container');
