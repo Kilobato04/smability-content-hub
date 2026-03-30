@@ -1,0 +1,37 @@
+{
+  "mes": "Abril 2026",
+  "meta_ingresos": "$40,000 USD",
+  "pipeline": [
+    {
+      "id": "post_01_patente_mx",
+      "fecha": "2026-04-02",
+      "cat": "PATENTE",
+      "datos": { "titulo": "Algoritmo Dispersión Real-Time", "registro": "IMPI MX/a/2026", "valor": "Exclusividad técnica en Latam" },
+      "slides": [
+        { "type": "cover_bold", "headline": "TECNOLOGÍA PROTEGIDA: PATENTE IMPI.", "metric": "EXP: 2026/001", "bg": "assets/patente_bg.jpg" },
+        { "type": "data_callout", "headline": "PROPIEDAD INTELECTUAL MEXICANA.", "supporting_text": "No revendemos hardware; patentamos algoritmos de predicción." },
+        { "type": "cta_clean", "headline": "TRABAJA CON LOS CREADORES.", "supporting_text": "Agenda demo técnica." }
+      ]
+    },
+    {
+      "id": "post_02_caso_vitro",
+      "fecha": "2026-04-07",
+      "cat": "CASO_B2B",
+      "datos": { "cliente": "Vitro MTY", "ahorro": "$45,000 USD", "riesgo": "Clausura PROFEPA" },
+      "slides": [
+        { "type": "cover_bold", "headline": "CÓMO EVITAMOS UNA CLAUSURA EN MTY.", "metric": "ROI: 3.5X", "bg": "assets/vitro_bg.jpg" },
+        { "type": "split_map", "headline": "EL MODELO PREDICE LO INVISIBLE.", "supporting_text": "Inversión térmica detectada 48h antes." },
+        { "type": "data_callout", "headline": "$45K USD AHORRADOS EN MULTAS.", "supporting_text": "Eficiencia operativa mediante predicción." },
+        { "type": "cta_clean", "headline": "PROTEGE TU PLANTA.", "supporting_text": "Modelación > Hardware." }
+      ]
+    },
+    { "id": "post_03_contingencia_1", "fecha": "2026-04-09", "cat": "SALUD_ONG", "datos": { "pm25": "150µg/m3", "equivalencia": "7 cigarrillos" }, "slides": [{ "type": "cover_bold", "headline": "HOY RESPIRAR EN CDMX ES FUMAR.", "metric": "PM2.5: 150+", "bg": "assets/health_bg.jpg" }, { "type": "data_callout", "headline": "7 CIGARRILLOS AL DÍA.", "supporting_text": "Ese es el impacto pulmonar de la contingencia de hoy." }, { "type": "cta_clean", "headline": "MIDE EL RIESGO REAL.", "supporting_text": "Usa AireGPT gratis." }] },
+    { "id": "post_04_airegpt_demo", "fecha": "2026-04-14", "cat": "PRODUCTO", "datos": { "feature": "Consultoría IA", "tiempo_resp": "3 segundos" }, "slides": [{ "type": "cover_bold", "headline": "AIREGPT: TU CONSULTOR 24/7.", "metric": "IA ACTIVA", "bg": "assets/airegpt_bg.jpg" }, { "type": "data_callout", "headline": "RESPUESTAS TÉCNICAS EN SEGUNDOS.", "supporting_text": "Cumplimiento normativo al alcance de un chat." }, { "type": "cta_clean", "headline": "PRUEBA LA BETA.", "supporting_text": "Innovación Smability." }] },
+    { "id": "post_05_patente_us", "fecha": "2026-04-16", "cat": "PATENTE", "datos": { "entidad": "USPTO", "estatus": "Filing en proceso" }, "slides": [{ "type": "cover_bold", "headline": "RUMBO A LA PATENTE EN EE.UU.", "metric": "USPTO READY", "bg": "assets/global_bg.jpg" }, { "type": "data_callout", "headline": "ESTÁNDAR GLOBAL DE INGENIERÍA.", "supporting_text": "Validando AireGPT ante la oficina de patentes de US." }, { "type": "cta_clean", "headline": "TECNOLOGÍA DE EXPORTACIÓN.", "supporting_text": "Smability Global." }] },
+    { "id": "post_06_solucion_licencia", "fecha": "2026-04-21", "cat": "B2B_VENTA", "datos": { "modelo": "SaaS Predictivo", "ticket": "$15k USD" }, "slides": [{ "type": "cover_bold", "headline": "DEJA DE COMPRAR SENSORES CIEGOS.", "metric": "MODELO > HW", "bg": "assets/solution_bg.jpg" }, { "type": "data_callout", "headline": "INTELIGENCIA, NO SOLO DATOS.", "supporting_text": "Licencia anual de modelación de dispersión avanzada." }, { "type": "cta_clean", "headline": "COTIZA TU LICENCIA.", "supporting_text": "Paga por resultados." }] },
+    { "id": "post_07_caso_queretaro", "fecha": "2026-04-23", "cat": "CASO_B2B", "datos": { "sector": "Data Centers", "loc": "Querétaro" }, "slides": [{ "type": "cover_bold", "headline": "DATA CENTERS: AIRE Y ENFRIAMIENTO.", "metric": "QRO 2026", "bg": "assets/qro_bg.jpg" }, { "type": "data_callout", "headline": "CONTINUIDAD DE NEGOCIO.", "supporting_text": "Monitoreo crítico para infraestructura de TI." }, { "type": "cta_clean", "headline": "CASO QUERÉTARO.", "supporting_text": "Leer más." }] },
+    { "id": "post_08_contingencia_2", "fecha": "2026-04-28", "cat": "SALUD_ONG", "datos": { "alerta": "Inversión Térmica", "impacto": "Niños/Ancianos" }, "slides": [{ "type": "cover_bold", "headline": "ALERTA: INVERSIÓN TÉRMICA.", "metric": "ALTO RIESGO", "bg": "assets/alert_bg.jpg" }, { "type": "data_callout", "headline": "AIRE ATRAPADO A NIVEL DE PISO.", "supporting_text": "Las emisiones de hoy no se dispersan. Extrema precauciones." }, { "type": "cta_clean", "headline": "VER MAPA EN VIVO.", "supporting_text": "Smability Real-Time." }] },
+    { "id": "post_09_airegpt_update", "fecha": "2026-04-29", "cat": "PRODUCTO", "datos": { "update": "API integration", "norma": "NOM-025" }, "slides": [{ "type": "cover_bold", "headline": "AIREGPT AHORA LEE LA NOM-025.", "metric": "V2.0 UPDATE", "bg": "assets/update_bg.jpg" }, { "type": "data_callout", "headline": "AUDITORÍAS EN TIEMPO REAL.", "supporting_text": "Nuestra IA ahora cruza tus datos con la norma oficial mexicana." }, { "type": "cta_clean", "headline": "ACTUALIZA TU PLAN.", "supporting_text": "Smarter Compliance." }] },
+    { "id": "post_10_resumen_mes", "fecha": "2026-04-30", "cat": "INFORMATIVO", "datos": { "total_multas_evitadas": "$120k USD" }, "slides": [{ "type": "cover_bold", "headline": "ABRIL: EL MES QUE SALVAMOS LA OPERACIÓN.", "metric": "$120K SAVED", "bg": "assets/summary_bg.jpg" }, { "type": "data_callout", "headline": "RESULTADOS SMABILITY ABRIL.", "supporting_text": "3 clausuras evitadas. 10 alertas tempranas enviadas." }, { "type": "cta_clean", "headline": "¿LISTO PARA MAYO?", "supporting_text": "Hablemos de tu planta." }] }
+  ]
+}
