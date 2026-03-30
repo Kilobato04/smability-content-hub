@@ -2,14 +2,8 @@
   "name": "smability-content-hub",
   "version": "1.0.0",
   "description": "Plataforma de generación de contenidos B2B para Smability",
-  "main": "src/app.js",
   "dependencies": {
+    "axios": "^1.6.0",
     "html2pdf.js": "^0.10.1"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Smability",
-  "license": "ISC"
+  }
 }
