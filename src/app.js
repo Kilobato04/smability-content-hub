@@ -171,64 +171,68 @@ async function generateContent() {
 }
 
 // --- 5. RENDER DEL CARRUSEL ---
+function buildSlideEl(slide, index, total) {
+    const el = document.createElement('div');
+    el.className = `slide-preview slide-${slide.type}`;
+
+    if (slide.bg) {
+        el.style.backgroundImage = `url(${slide.bg})`;
+        el.style.backgroundSize = 'cover';
+        el.style.backgroundPosition = 'center';
+    }
+
+    const isLast = index === total - 1;
+
+    // ── Overlay: div real en lugar de ::before/::after (html2canvas no los pinta bien) ──
+    const overlayDiv = (slide.type === 'cover_bold')
+        ? `<div style="position:absolute;inset:0;
+               background:linear-gradient(160deg,rgba(0,0,0,0.88) 0%,rgba(0,71,171,0.75) 50%,rgba(0,0,0,0.95) 100%);
+               z-index:1;pointer-events:none;"></div>`
+        : '';
+
+    // Marco neon data_callout: 4 divs para las esquinas + borde
+    const frameDiv = (slide.type === 'data_callout')
+        ? `<div style="position:absolute;top:28px;left:28px;right:28px;bottom:28px;
+               border:1.5px solid rgba(57,255,20,0.25);border-radius:8px;z-index:1;pointer-events:none;"></div>
+           <div style="position:absolute;top:28px;left:28px;width:36px;height:36px;
+               border-top:3px solid #39FF14;border-left:3px solid #39FF14;
+               border-radius:8px 0 0 0;z-index:2;pointer-events:none;"></div>
+           <div style="position:absolute;bottom:28px;right:28px;width:36px;height:36px;
+               border-bottom:3px solid #39FF14;border-right:3px solid #39FF14;
+               border-radius:0 0 8px 0;z-index:2;pointer-events:none;"></div>`
+        : '';
+
+    const numLabel  = `<span class="slide-num">0${index + 1} / 0${total}</span>`;
+    const arrow     = isLast ? '' : `<div class="slide-nav-arrow">→</div>`;
+    const metricHTML  = slide.metric
+        ? `<div class="slide-metric">${slide.metric}</div>` : '';
+    const supportHTML = slide.supporting_text
+        ? `<p>${slide.supporting_text}</p>` : '';
+    const footer = `<div class="slide-footer"><span class="dot"></span>smability.io</div>`;
+
+    el.innerHTML = `
+        ${overlayDiv}
+        ${frameDiv}
+        ${numLabel}
+        ${arrow}
+        <div class="slide-content-wrapper" style="position:relative;z-index:2;width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-between;">
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding-top:80px;">
+                <h3 style="font-family:'Space Grotesk',sans-serif;font-size:3rem;font-weight:900;line-height:1.0;letter-spacing:-.02em;text-transform:uppercase;color:#fff;margin:0 0 16px;">${slide.headline}</h3>
+                ${metricHTML}
+                ${supportHTML}
+            </div>
+            ${footer}
+        </div>`;
+
+    return el;
+}
+
 function renderCarouselPreview(postData) {
     const container = document.getElementById('carousel-preview-container');
     container.innerHTML = '';
-
     const total = postData.slides.length;
-
-    postData.slides.forEach((slide, index) => {
-        const el = document.createElement('div');
-        el.className = `slide-preview slide-${slide.type}`;
-
-        // Imagen de fondo si existe
-        if (slide.bg) {
-            el.style.backgroundImage = `url(${slide.bg})`;
-            el.style.backgroundSize = 'cover';
-            el.style.backgroundPosition = 'center';
-        }
-
-        const isLastSlide = index === total - 1;
-        const arrow = isLastSlide ? '' : '<div class="slide-nav-arrow">→</div>';
-
-        // Overlay para cover con imagen
-        const overlay = (slide.type === 'cover_bold' && slide.bg)
-            ? '<div class="cover-overlay"></div>'
-            : '';
-
-        // Número de lámina
-        const numLabel = `<span class="slide-num">0${index + 1} / 0${total}</span>`;
-
-        // Métrica
-        const metricHTML = slide.metric
-            ? `<div class="slide-metric">${slide.metric}</div>`
-            : '';
-
-        // Texto de apoyo
-        const supportHTML = slide.supporting_text
-            ? `<p>${slide.supporting_text}</p>`
-            : '';
-
-        // Footer unificado: dot + smability.io
-        const footer = `
-            <div class="slide-footer">
-                <span class="dot"></span>smability.io
-            </div>`;
-
-        el.innerHTML = `
-            ${overlay}
-            ${numLabel}
-            ${arrow}
-            <div class="slide-content-wrapper">
-                <div class="slide-body">
-                    <h3>${slide.headline}</h3>
-                    ${metricHTML}
-                    ${supportHTML}
-                </div>
-                ${footer}
-            </div>`;
-
-        container.appendChild(el);
+    postData.slides.forEach((slide, i) => {
+        container.appendChild(buildSlideEl(slide, i, total));
     });
 }
 
