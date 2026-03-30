@@ -243,10 +243,9 @@ async function downloadCarouselPDF() {
     const btn = document.getElementById('download-pdf-btn');
     btn.disabled = true;
 
-    // jsPDF está incluido dentro de html2pdf.bundle; lo extraemos del global
-    // Si html2pdf no está disponible, abortamos con mensaje claro.
-    if (typeof html2pdf === 'undefined') {
-        alert('html2pdf no está cargado. Verifica el script en index.html.');
+    // Verificamos que html2canvas y jsPDF estén disponibles
+    if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+        alert('Librerías de PDF no cargadas. Verifica tu conexión a internet y recarga la página.');
         btn.disabled = false;
         return;
     }
