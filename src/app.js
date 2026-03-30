@@ -426,43 +426,69 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
         const insightBody = slide.ai_body || '';
 
         if (hasMetric) {
+            // Dimensiones absolutas para garantizar homologación pantalla ↔ PDF
+            const splitW    = isPDF ? S        : 500;   // ancho total del slide
+            const rightW    = isPDF ? Math.round(S*.42) : 210;
+            const leftW     = isPDF ? Math.round(S*.46) : 230;
+            const splitGap  = isPDF ? Math.round(S*.02) : 16;
+            const metFs     = isPDF ? Math.round(S*.095): 58;
+            const metLblFs  = isPDF ? Math.round(S*.017): 10;
+            const h3SmFs    = isPDF ? Math.round(S*.056): 34;
+            const rightPad  = isPDF ? Math.round(S*.03) : 20;
+
             bodyContent = `
-                <div style="display:flex;gap:${isPDF?Math.round(S*.04):40}px;align-items:center;flex:1;">
-                    <div style="flex:1;">
+                <div style="
+                    display:flex;
+                    gap:${splitGap}px;
+                    align-items:stretch;
+                    flex:1;
+                    min-height:0;
+                    width:100%;">
+                    <!-- IZQUIERDA -->
+                    <div style="
+                        width:${leftW}px;
+                        flex-shrink:0;
+                        display:flex;flex-direction:column;
+                        justify-content:center;
+                        gap:${gap}px;">
                         ${catTag}
                         <h3 style="
                             font-family:'Space Grotesk',sans-serif;
-                            font-size:${isPDF?Math.round(S*.060):38}px;font-weight:900;
+                            font-size:${h3SmFs}px;font-weight:900;
                             line-height:1.0;letter-spacing:-.02em;text-transform:uppercase;
-                            color:#fff;margin:0 0 ${gap*1.2}px;">
+                            color:#fff;margin:0;">
                             ${slide.headline}</h3>
                         <p style="
                             font-family:'Inter',sans-serif;
                             font-size:${fs_body}px;color:#9A9A9A;
                             line-height:1.65;margin:0;
-                            border-left:${isPDF?Math.round(S*.003):2}px solid rgba(57,255,20,0.4);
+                            border-left:${isPDF?Math.round(S*.003):2}px solid rgba(57,255,20,0.5);
                             padding-left:${isPDF?Math.round(S*.014):12}px;">
                             ${insightBody}</p>
                     </div>
+                    <!-- DERECHA: métrica -->
                     <div style="
-                        width:${isPDF?Math.round(S*.35):40}%;
+                        width:${rightW}px;
+                        flex-shrink:0;
                         background:rgba(255,255,255,0.03);
                         border-left:1px solid rgba(255,255,255,0.08);
+                        border-radius:0 6px 6px 0;
                         display:flex;flex-direction:column;
                         align-items:center;justify-content:center;
-                        padding:${isPDF?Math.round(S*.03):28}px;
-                        flex-shrink:0;">
+                        padding:${rightPad}px;
+                        box-sizing:border-box;">
                         <div style="
                             font-family:'Space Grotesk',sans-serif;
-                            font-size:${isPDF?Math.round(S*.100):62}px;font-weight:900;
+                            font-size:${metFs}px;font-weight:900;
                             color:#39FF14;letter-spacing:-.04em;line-height:1;
-                            text-align:center;">
+                            text-align:center;word-break:break-word;max-width:100%;">
                             ${slide.metric}</div>
                         <div style="
                             font-family:'Space Grotesk',sans-serif;
-                            font-size:${isPDF?Math.round(S*.018):11}px;font-weight:700;
+                            font-size:${metLblFs}px;font-weight:700;
                             letter-spacing:.12em;text-transform:uppercase;
-                            color:#555;margin-top:${gap*.6}px;text-align:center;">
+                            color:#555;margin-top:${Math.round(gap*.7)}px;
+                            text-align:center;line-height:1.3;">
                             ${slide.metric_label || ''}</div>
                     </div>
                 </div>`;
