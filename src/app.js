@@ -233,48 +233,86 @@ function renderCarouselPreview(postData) {
 }
 
 // --- 6. DESCARGA PDF ---
+// Estrategia: html2canvas slide por slide → jsPDF ensamblado manualmente.
+// Evita el bug de html2pdf worker que genera archivos separados o cortados.
 async function downloadCarouselPDF() {
     const container = document.getElementById('carousel-preview-container');
-    const slides = container.querySelectorAll('.slide-preview');
+    const slides = Array.from(container.querySelectorAll('.slide-preview'));
     if (!slides.length) return alert('Genera el contenido primero.');
 
     const btn = document.getElementById('download-pdf-btn');
-    btn.textContent = 'Preparando PDF…';
     btn.disabled = true;
 
-    const opt = {
-        margin: 0,
-        filename: `Smability_LinkedIn_${Date.now()}.pdf`,
-        image: { type: 'jpeg', quality: 1.0 },
-        html2canvas: {
-            scale: 2,
-            useCORS: true,
-            logging: false,
-            scrollY: -window.scrollY,
-            windowWidth: 1080,
-            windowHeight: 1080
-        },
-        jsPDF: {
-            unit: 'px',
-            format: [1080, 1080],
-            orientation: 'portrait',
-            compress: true
-        }
-    };
+    // jsPDF está incluido dentro de html2pdf.bundle; lo extraemos del global
+    // Si html2pdf no está disponible, abortamos con mensaje claro.
+    if (typeof html2pdf === 'undefined') {
+        alert('html2pdf no está cargado. Verifica el script en index.html.');
+        btn.disabled = false;
+        return;
+    }
+
+    const SIDE = 1080; // px — formato cuadrado LinkedIn
 
     try {
-        let worker = html2pdf().set(opt).from(slides[0]).toPdf();
-        for (let i = 1; i < slides.length; i++) {
-            worker = worker
-                .get('pdf').then(pdf => pdf.addPage())
-                .from(slides[i]).toContainer().toCanvas().toPdf();
+        // Renderizamos todos los slides a canvas en paralelo
+        btn.textContent = `Renderizando 1/${slides.length}…`;
+
+        const canvases = [];
+        for (let i = 0; i < slides.length; i++) {
+            btn.textContent = `Renderizando ${i + 1}/${slides.length}…`;
+
+            // Forzamos dimensiones cuadradas para el capture
+            const originalStyle = slides[i].getAttribute('style') || '';
+            slides[i].style.width  = SIDE + 'px';
+            slides[i].style.height = SIDE + 'px';
+            slides[i].style.aspectRatio = 'unset';
+
+            const canvas = await html2canvas(slides[i], {
+                scale: 2,           // 2160×2160 → alta resolución
+                useCORS: true,
+                allowTaint: false,
+                logging: false,
+                width: SIDE,
+                height: SIDE,
+                windowWidth: SIDE,
+                windowHeight: SIDE,
+                scrollX: 0,
+                scrollY: 0,
+                backgroundColor: '#0D0D0D'
+            });
+
+            // Restauramos el estilo original
+            slides[i].setAttribute('style', originalStyle);
+            canvases.push(canvas);
         }
-        await worker.save();
+
+        // Ensamblamos el PDF con jsPDF (viene en el bundle de html2pdf)
+        btn.textContent = 'Ensamblando PDF…';
+
+        // Accedemos a jsPDF desde el namespace que expone html2pdf.bundle
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'pt',
+            format: [SIDE, SIDE],
+            compress: true
+        });
+
+        canvases.forEach((canvas, i) => {
+            if (i > 0) pdf.addPage([SIDE, SIDE], 'portrait');
+            // Convertimos a JPEG al 95% de calidad
+            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+            pdf.addImage(imgData, 'JPEG', 0, 0, SIDE, SIDE, '', 'FAST');
+        });
+
+        const filename = `Smability_LinkedIn_Carrusel_${Date.now()}.pdf`;
+        pdf.save(filename);
+
     } catch (e) {
         console.error('Error generando PDF:', e);
-        alert('Error al generar el PDF. Revisa la consola.');
+        alert(`Error al generar el PDF: ${e.message}`);
     } finally {
-        btn.textContent = 'Descargar PDF para LinkedIn';
+        btn.textContent = '↓ Descargar PDF para LinkedIn';
         btn.disabled = false;
     }
 }
