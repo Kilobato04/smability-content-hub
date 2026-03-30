@@ -346,6 +346,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
     const bodyPadTop = isPDF ? Math.round(S*0.08) : 90;
 
     if (slide.type === 'cover_bold') {
+        const coverLogoH = isPDF ? Math.round(S*0.045) : 28;
         const hookLine = slide.ai_hook ? `
             <p style="
                 font-family:'Inter',sans-serif;
@@ -364,6 +365,14 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                 color:#fff;margin:0 0 ${gap*1.5}px;">
                 ${slide.headline}</h3>
             ${hookLine}`;
+
+        // Logo blanco grande en esquina superior derecha de la portada
+        // Lo insertamos como elemento absoluto dentro del wrapper
+        bodyContent = `
+            <div style="position:absolute;top:${pad}px;right:${pad}px;z-index:10;">
+                ${logoFull(coverLogoH, '#FFFFFF')}
+            </div>
+            ` + bodyContent;
 
     } else if (slide.type === 'data_callout') {
         const ctxLine = slide.ai_stat_ctx ? `
@@ -561,14 +570,17 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
         ${isDataCallout ? `
         <div style="
             position:absolute;bottom:${pad}px;left:${pad}px;right:${pad}px;
-            display:flex;align-items:center;z-index:2;
+            display:flex;align-items:center;justify-content:space-between;z-index:2;
             font-family:'Space Grotesk',sans-serif;
             font-size:${fs_ftr}px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
             color:#555;border-top:1px solid rgba(255,255,255,0.08);
             padding-top:${isPDF?Math.round(S*.013):14}px;">
-            <span style="width:${dot_sz}px;height:${dot_sz}px;border-radius:50%;
-                background:#39FF14;display:inline-block;
-                margin-right:${isPDF?Math.round(S*.007):8}px;flex-shrink:0;"></span>smability.io
+            <div style="display:flex;align-items:center;gap:${isPDF?Math.round(S*.007):8}px;">
+                <span style="width:${dot_sz}px;height:${dot_sz}px;border-radius:50%;
+                    background:#39FF14;display:inline-block;flex-shrink:0;"></span>
+                <span>smability.io</span>
+            </div>
+            ${logoFull(isPDF?Math.round(S*0.022):14, '#555555')}
         </div>` : ''}`;
 
     return el;
