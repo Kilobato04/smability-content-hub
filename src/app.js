@@ -1,53 +1,83 @@
 // src/app.js
+let masterPlan = null;
+
+// Carga inicial al cargar el DOM
+document.addEventListener('DOMContentLoaded', init);
+
+async function init() {
+    try {
+        const res = await fetch('data/master_abril.json');
+        masterPlan = await res.json();
+        populateSelector();
+        renderCalendar();
+    } catch (e) {
+        console.error("Error cargando el Plan Maestro:", e);
+    }
+}
+
+function populateSelector() {
+    const selector = document.getElementById('post-selector');
+    selector.innerHTML = '<option value="">Selecciona un post...</option>';
+    masterPlan.pipeline.forEach(post => {
+        const opt = document.createElement('option');
+        opt.value = post.id;
+        opt.textContent = `${post.fecha} - [${post.cat}] ${post.id}`;
+        selector.appendChild(opt);
+    });
+}
+
+function renderCalendar() {
+    const cal = document.getElementById('calendar-grid');
+    cal.innerHTML = '';
+    // Simulación de 30 días de Abril
+    for(let i=1; i<=30; i++) {
+        const day = document.createElement('div');
+        day.className = 'cal-day';
+        day.textContent = i;
+        const hasPost = masterPlan.pipeline.some(p => parseInt(p.fecha.split('-')[2]) === i);
+        if(hasPost) day.classList.add('has-content');
+        cal.appendChild(day);
+    }
+}
 
 document.getElementById('generate-btn').addEventListener('click', generateContent);
 
 async function generateContent() {
-    const instructionInput = document.getElementById('technical-instruction').value;
-    const goalInput = document.getElementById('post-goal').value;
+    const postId = document.getElementById('post-selector').value;
+    if (!postId) {
+        alert("Selecciona un post del calendario.");
+        return;
+    }
+
+    const postData = masterPlan.pipeline.find(p => p.id === postId);
     const postOutput = document.getElementById('linkedin-post-output');
     const carouselContainer = document.getElementById('carousel-preview-container');
     const downloadBtn = document.getElementById('download-pdf-btn');
 
-    if (!instructionInput) {
-        alert("Por favor, escribe la instrucción técnica.");
-        return;
-    }
-
-    postOutput.value = "Generando propuesta técnica (Simulada)...";
-    carouselContainer.innerHTML = '<div class="carousel-placeholder">Llamando a la API simulada...</div>';
-    downloadBtn.disabled = true;
+    postOutput.value = "Generando propuesta técnica con IA avanzada...";
+    carouselContainer.innerHTML = '<div class="carousel-placeholder">Procesando slides...</div>';
 
     try {
+        // Mañana esta llamada conectará con el Token real de GPT-4o
         const response = await fetch('/api/generate-post', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                technical_instruction: instructionInput,
-                goal: goalInput,
-                tone: "Autoridad Técnica / Enterprise"
+                post_id: postData.id,
+                technical_data: postData.datos,
+                category: postData.cat
             })
         });
 
-        if (!response.ok) {
-            throw new Error(`Error en la API: ${response.statusText}`);
-        }
-
         const data = await response.json();
-
-        // 1. Mostrar el Post de LinkedIn
         postOutput.value = data.linkedin_post;
-
-        // 2. Renderizar el Carrusel con el Estilo TEC
-        renderCarouselPreview(data.carousel_data);
+        renderCarouselPreview(postData); // Usamos la estructura definida en el JSON
         
-        // Activar botón de descarga (mañana implementamos la lógica PDF)
         downloadBtn.disabled = false;
-        downloadBtn.textContent = "Descargar PDF (Lógica Mañana)";
+        downloadBtn.textContent = "Descargar PDF para LinkedIn";
 
     } catch (error) {
         postOutput.value = `Error: ${error.message}`;
-        carouselContainer.innerHTML = '<div class="carousel-placeholder" style="color:red;">Error al generar el contenido.</div>';
     }
 }
 
