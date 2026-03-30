@@ -1,20 +1,22 @@
-/* src/style.css */
+/* --- 1. VARIABLES Y BASE --- */
 :root {
-    --smability-blue: #0047AB; /* Reemplazar con azul exacto mañana */
-    --smability-green: #39FF14; /* Reemplazar con verde exacto mañana */
+    --smability-blue: #0047AB;
+    --smability-green: #39FF14;
     --dark-bg: #1A1A1A;
     --text-on-dark: #FFFFFF;
     --text-on-light: #333333;
     --border-color: #DDDDDD;
+    --success-green: #28a745;
 }
 
 body {
     margin: 0; padding: 0;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Usaremos fuentes bold sans-serif */
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background-color: #F9F9F9;
     color: var(--text-on-light);
 }
 
+/* --- 2. LAYOUT Y COMPONENTES DE INTERFAZ --- */
 .app-container {
     max-width: 1400px; margin: 0 auto; padding: 40px;
 }
@@ -25,9 +27,16 @@ header {
 }
 
 .main-logo { 
-    height: 50px; 
-    width: auto; /* Mantiene la proporción del PNG */
-    object-fit: contain; 
+    height: 50px; width: auto; object-fit: contain; 
+}
+
+.status-badge {
+    background: var(--smability-green);
+    color: black;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
 }
 
 .content-grid {
@@ -39,216 +48,54 @@ textarea {
     border-radius: 8px; font-family: inherit; font-size: 1rem; margin-bottom: 20px; resize: vertical;
 }
 
-#linkedin-post-output { background-color: #F0F0F0; height: 300px; }
+#linkedin-post-output { background-color: #F0F0F0; height: 300px; transition: all 0.3s ease; }
 
 button {
     padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer;
     font-size: 1rem; font-weight: 600; text-transform: uppercase;
 }
 
-button.primary { background-color: var(--smability-blue); color: white; }
+button.primary, .primary-btn { background-color: var(--smability-blue); color: white; }
 button.secondary { background-color: #E0E0E0; color: #333; }
 #generate-btn { width: 100%; background-color: var(--smability-green); color: black; font-size: 1.1rem; }
 button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* Estilos de la Vista Previa del Carrusel (1:1 Aspect Ratio) */
-#carousel-preview-container {
-    width: 100%;
-    background-color: #333; /* Fondo oscuro para resaltar las tarjetas */
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Espacio entre tarjetas */
-    padding: 20px;
-    overflow-y: auto; /* Permite scroll para ver todas las tarjetas */
-    max-height: 80vh; /* Altura máxima de la sección */
+select {
+    width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);
+    margin-bottom: 20px;
 }
 
-.carousel-placeholder {
-    display: flex; justify-content: center; align-items: center; height: 100%;
-    color: #AAA; font-style: italic;
-}
-
-/* Estilos de los Slides Individuales (Replicando el look TEC) */
-.slide-preview {
-    width: 100%;
-    aspect-ratio: 1 / 1; 
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 60px; /* Padding interno generoso tipo Enterprise */
-    box-sizing: border-box;
-    background-color: white;
-    flex-shrink: 0; /* Evita que el flexbox los aplaste */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-}
-
-.slide-preview h3 {
-    font-size: 3rem; /* Tamaño impacto */
-    font-weight: 900;
-    line-height: 1.05;
-    text-transform: uppercase;
-    margin: 20px 0;
-    z-index: 2;
-}
-
-.slide-preview p {
-    font-size: 1.4rem;
-    line-height: 1.4;
-    font-weight: 400;
-    z-index: 2;
-}
-
-/* --- FIX 1: La Flecha de Navegación --- */
-.slide-nav-arrow {
-    position: absolute;
-    top: 60px;    /* Ajustado al padding superior */
-    right: 60px;  /* Forzado a la derecha */
-    font-size: 3.5rem;
-    font-weight: 300;
-    z-index: 10;
-    line-height: 1;
-}
-
-/* Flecha blanca para slides oscuros */
-.slide-cover_bold .slide-nav-arrow,
-.slide-data_callout .slide-nav-arrow {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-/* Flecha azul para slides claros */
-.slide-split_map .slide-nav-arrow {
-    color: var(--smability-blue);
-}
-
-.slide-cta_clean .slide-nav-arrow {
-    display: none !important;
-}
-
-/* --- FIX 2: El Enmarcado de Datos (Data Callout) --- */
-.slide-data_callout {
-    background-color: var(--dark-bg); /* Fondo aún más oscuro para contraste */
-    justify-content: center;
-    text-align: center;
-    padding: 80px; /* Un poco más de padding para el frame */
-}
-
-/* El Frame Técnico */
-.slide-data_callout::before {
-    content: '';
-    position: absolute;
-    top: 40px; left: 40px; right: 40px; bottom: 40px;
-    border: 8px solid var(--smability-green); /* Borde neón industrial */
-    border-radius: 12px;
-    z-index: 1;
-    pointer-events: none; /* No interfiere con clics */
-}
-
-/* Ajuste de tipografía dentro del frame */
-.slide-data_callout h3 {
-    color: var(--smability-green);
-    font-size: 4.5rem; /* Aún más grande el dato */
-    margin-bottom: 10px;
-}
-
-.slide-data_callout p {
-    color: white;
-    font-size: 1.8rem;
-    border-left: none; /* Quitamos el borde izquierdo anterior */
-    padding-left: 0;
-    max-width: 80%; /* Centrar el texto */
-    margin: 0 auto;
-}
-
-/* Tipos de Slide */
-.slide-cover_bold {
-    background-size: cover; background-position: center; color: white;
-}
-
-.slide-cover_bold .cover-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(135deg, rgba(0,71,171,0.9) 0%, rgba(0,0,0,0.7) 100%);
-    z-index: 1;
-}
-
-.slide-cover_bold * { z-index: 2; position: relative; }
-
-.slide-data_callout {
-    background-color: var(--smability-blue); color: white; justify-content: center; text-align: center;
-}
-.slide-data_callout h3 { color: var(--smability-green); }
-
-.slide-cta_clean { background-color: #F0F8FF; border: 2px solid var(--smability-blue); }
-.slide-cta_clean h3 { color: var(--smability-blue); }
-
-/* Añadir a src/style.css */
+/* --- 3. CALENDARIO DINÁMICO --- */
 .calendar-mini {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
     margin-top: 10px;
 }
+
 .cal-day {
-    padding: 8px;
+    padding: 12px 8px;
     background: #EEE;
     text-align: center;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
 }
+
+.cal-day:hover { transform: scale(1.05); }
+.cal-day.empty { background: transparent; border: none; cursor: default; }
+.cal-day.weekend { background-color: #f8f9fa; color: #ccc; }
+
 .cal-day.has-content {
-    background: var(--smability-blue);
+    background-color: var(--smability-blue);
     color: white;
     font-weight: bold;
     border: 2px solid var(--smability-green);
 }
-.status-badge {
-    background: var(--smability-green);
-    color: black;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 0.9rem;
-}
-.selector-group {
-    margin-bottom: 20px;
-}
-select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-}
 
-/* src/style.css */
-
-@media print {
-    .slide-preview {
-        margin: 0 !important;
-        border: none !important;
-        box-shadow: none !important;
-        page-break-after: always !important;
-    }
-}
-
-/* Estilo para que el contenedor de preview no interfiera con la captura */
-#carousel-preview-container {
-    padding: 0 !important;
-    background-color: transparent !important;
-}
-
-/* Color para días con post programado */
-.cal-day.has-content {
-    background-color: var(--smability-blue);
-    color: white;
-    cursor: pointer;
-}
-
-/* Color para días ya publicados (Persistencia) */
 .cal-day.published {
-    background-color: #28a745 !important; /* Verde */
+    background-color: var(--success-green) !important;
     color: white;
     position: relative;
 }
@@ -258,30 +105,103 @@ select {
     position: absolute;
     font-size: 0.7rem;
     bottom: 2px;
-    right: 2px;
+    right: 4px;
 }
 
-.calendar-mini {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr); /* 7 columnas fijas */
-    gap: 5px;
+/* --- 4. VISTA PREVIA DEL CARRUSEL (ESTILO ENTERPRISE) --- */
+#carousel-preview-container {
+    width: 100%;
+    background-color: #333;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 80vh;
 }
 
-.cal-day.empty {
-    background: transparent;
-    border: none;
+.slide-preview {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 60px;
+    box-sizing: border-box;
+    background-color: white;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
-.cal-day.weekend {
-    background-color: #f8f9fa;
-    color: #ccc; /* Gris claro para fines de semana */
+/* LOOK AND FEEL PORTADA (BLUR & OVERLAY) */
+.slide-cover_bold::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 71, 171, 0.85) 0%, rgba(0, 0, 0, 0.6) 100%);
+    backdrop-filter: blur(4px); /* Difuminado premium */
+    z-index: 1;
 }
 
-/* Limpieza de márgenes para el PDF */
+.slide-cover_bold .slide-content-wrapper {
+    position: relative;
+    z-index: 2;
+}
+
+.slide-preview h3 {
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1.05;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.slide-metric {
+    color: var(--smability-green);
+    font-size: 5.5rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.slide-nav-arrow {
+    position: absolute;
+    top: 60px; right: 60px;
+    font-size: 3.5rem;
+    z-index: 10;
+}
+
+.slide-cover_bold .slide-nav-arrow, .slide-data_callout .slide-nav-arrow { color: rgba(255,255,255,0.7); }
+
+/* DATA CALLOUT (FRAME TÉCNICO) */
+.slide-data_callout { background-color: var(--dark-bg); text-align: center; }
+.slide-data_callout::before {
+    content: '';
+    position: absolute;
+    top: 40px; left: 40px; right: 40px; bottom: 40px;
+    border: 8px solid var(--smability-green);
+    border-radius: 12px;
+}
+
+.slide-footer {
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    opacity: 0.7;
+}
+
+/* --- 5. CONFIGURACIÓN DE EXPORTACIÓN (PRINT/PDF) --- */
 @media print {
+    body { background: white; }
+    #carousel-preview-container { padding: 0 !important; }
     .slide-preview {
         margin: 0 !important;
-        page-break-after: always;
+        border: none !important;
+        box-shadow: none !important;
+        page-break-after: always !important;
+        width: 1080px !important; /* Forzar resolución LinkedIn */
+        height: 1080px !important;
     }
 }
-
