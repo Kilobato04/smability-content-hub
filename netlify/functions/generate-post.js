@@ -5,60 +5,85 @@ exports.handler = async (event) => {
         return { statusCode: 405, body: 'Method Not Allowed' };
 
     try {
-        const {
-            technical_data,
-            category,
-            headline,
-            model = 'gpt-4o',
-            temperature = 0.65
-        } = JSON.parse(event.body);
-
+        const { technical_data, category, headline, model = 'gpt-4o', temperature = 0.55 } = JSON.parse(event.body);
         const apiKey = process.env.OPENAI_API_KEY;
-        if (!apiKey)
-            return { statusCode: 500, body: JSON.stringify({ error: 'API Key no configurada.' }) };
+        if (!apiKey) return { statusCode: 500, body: JSON.stringify({ error: 'API Key no configurada.' }) };
 
-        const systemPrompt = `Eres el Director de Comunicación B2B de Smability, startup mexicana de IoT ambiental.
-Escribes para directores de planta, gerentes EHS y C-suite industrial en LinkedIn.
-Tono: experto, directo, orientado a ROI. Sin emojis excesivos. Sin hashtags genéricos.
-Cada frase debe ganar su espacio. Responde SOLO con JSON válido, sin backticks ni texto extra.`;
+        // ── Contexto de empresa — inyectado siempre ──────────
+        const companyContext = `
+Smability SAPI de CV — Ciudad de México, fundada 2017.
+Director: Horacio S. Jiménez Soto (horaciojimenez@smability.io)
+Web: smability.io
 
-        const userPrompt = `Genera contenido completo para un carrusel LinkedIn de 5 láminas sobre:
+PRODUCTOS:
+- SMAA: sensor IoT calidad del aire (PM2.5, PM10, CO, O3, Temp, HR, GPS). Precio: $8,400 USD (dispositivo $7,000 + PDN anual $1,400).
+- SMAAmicro: versión compacta co-desarrollada con Universidad Iberoamericana CDMX. Patente conjunta IMPI en proceso.
+- CHAAK: estación meteorológica IoT (viento, lluvia, presión, radiación solar). Precio: $7,600 USD.
+- SMAWA: sensor nivel de agua en cisternas. Implementado en 5 cisternas Universidad Iberoamericana CDMX.
+- AIreGPT: Agente IA en WhatsApp y Telegram. Respuesta < 3 segundos. Pruébalo en t.me/AireGPT_bot.
+- PDN: Plataforma de Datos en la Nube. API abierta para integración.
 
-Datos técnicos: ${JSON.stringify(technical_data)}
+VALIDACIÓN TÉCNICA (datos reales — NO inventar cifras distintas):
+- Calibración SMAA validada por ICAyCC UNAM (evaluación oficial microsensores 2022).
+- MAE antes de calibración: 17.8094 → después: 9.1185 (mejora: 49%).
+- RMSE antes: 20.0733 → después: 11.8960 (mejora: 41%).
+- R² sin calibrar: 0.7162 → calibrado: 0.9085 (referencia oficial CCA-SIMAT).
+- Estación SIMAT referencia: $150,000-$300,000 USD. SMAA: $8,400 USD = ~4% del costo.
+- 26 estaciones SIMAT para 22 millones de personas en la ZMVM.
+
+CLIENTES Y CREDIBILIDAD (reales — mencionar cuando sea relevante):
+- Gobierno: SEDEMA CDMX, SECTEI CDMX, Planta de Asfalto CDMX, Secretaría de Turismo BCS.
+- Academia: Universidad Iberoamericana CDMX (patente conjunta + SMAWA), UAM Azcapotzalco, Instituto de Ingeniería UNAM, ICAyCC UNAM, Universidad Anáhuac Cancún.
+- ONGs: Greenpeace México, GIZ México, GAIA Guatemala.
+- Privados: AlisBio Monterrey, SkyAlert México, Water Mappers (Países Bajos).
+- Respaldo institucional: Horacio Jiménez convocado en mayo 2022 por Claudia Sheinbaum (entonces Jefa de Gobierno CDMX) para análisis de contingencias ambientales con ICAyCC-UNAM y CAMegalópolis.
+
+REGLAS ABSOLUTAS PARA EL COPY:
+1. NUNCA inventar cifras que no estén en los datos técnicos proporcionados.
+2. NUNCA usar frases genéricas como "soluciones IoT pueden mitigar" o "implementar tecnología puede ayudar".
+3. SIEMPRE escribir en primera persona de Smability: "detectamos", "medimos", "patentamos".
+4. Tono: experto B2B, directo, con autoridad técnica. Sin corporativo vacío.
+5. Bullets: máximo 12 palabras cada uno, concretos y con dato si existe.
+6. insight_body: máximo 2 oraciones cortas. Sin párrafos largos.
+`;
+
+        const systemPrompt = `Eres el Director de Comunicación B2B de Smability.
+Escribes para directores de planta, gerentes EHS, directores de operaciones y C-suite industrial en LinkedIn.
+${companyContext}
+Responde SOLO con JSON válido. Sin backticks, sin texto extra.`;
+
+        const userPrompt = `Genera contenido para un carrusel LinkedIn de 5 láminas sobre:
+
+Datos técnicos del post: ${JSON.stringify(technical_data)}
 Categoría: ${category}
 Titular principal: "${headline}"
 
-Estructura del carrusel (fija):
-  Lámina 1 — PORTADA (cover_bold): gancho + titular
-  Lámina 2 — MÉTRICA (data_callout): número impactante + contexto
-  Lámina 3 — BULLETS (lista): 4 puntos accionables
-  Lámina 4 — INSIGHT (split): dato + argumento
-  Lámina 5 — CTA: llamada a la acción
+Estructura fija del carrusel:
+- Lámina 1 PORTADA: gancho + titular impactante
+- Lámina 2 MÉTRICA: número que golpea + contexto emocional
+- Lámina 3 BULLETS: 4 puntos accionables
+- Lámina 4 INSIGHT: dato + argumento breve
+- Lámina 5 CTA: acción concreta
 
-Devuelve este JSON exacto:
+Devuelve exactamente este JSON:
 {
-  "linkedin_post": "Copy completo del post. 4-6 párrafos. Directo. Sin hashtags genéricos. CTA al final.",
-
-  "hook": "Frase gancho máx 12 palabras para la portada. Puede ser pregunta o dato chocante. Ej: '¿Tu planta opera con datos de hace 2 horas?'",
-
-  "stat_number": "Número o valor impactante relacionado al tema. Solo el número con unidad. Ej: '48h' o '$45K' o '3.5X'",
-  "stat_ctx": "Frase que hace emocional ese número. Máx 20 palabras. Ej: 'El tiempo promedio que una planta opera sin saber que está en riesgo.'",
-
-  "bullets_title": "Titular de la lámina de bullets. Máx 6 palabras. Ej: 'Por qué las plantas líderes ya lo usan'",
+  "linkedin_post": "Copy del post. 4-5 párrafos. Primera persona Smability. Directo. CTA al final. Máx 300 palabras.",
+  "hook": "Gancho portada. Máx 10 palabras. Pregunta o dato que detiene el scroll.",
+  "stat_number": "Número o valor para la métrica. Solo el número con unidad. Usa datos reales del post.",
+  "stat_ctx": "Contexto emocional del número. Máx 18 palabras. Concreto, no genérico.",
+  "bullets_title": "Titular bullets. Máx 6 palabras. Directo.",
   "bullets": [
-    "Bullet 1: beneficio concreto con dato si es posible. Máx 12 palabras.",
-    "Bullet 2: diferenciador técnico. Máx 12 palabras.",
-    "Bullet 3: ROI o resultado medible. Máx 12 palabras.",
-    "Bullet 4: facilidad de adopción o integración. Máx 12 palabras."
+    "Bullet 1: beneficio concreto con dato real. Máx 12 palabras.",
+    "Bullet 2: diferenciador técnico específico. Máx 12 palabras.",
+    "Bullet 3: resultado medible o caso real. Máx 12 palabras.",
+    "Bullet 4: adopción fácil o integración rápida. Máx 12 palabras."
   ],
-
-  "insight_title": "Titular del insight. Máx 6 palabras. Directo. Ej: 'El modelo predice lo invisible'",
-  "insight_body": "2-3 oraciones que desarrollan el insight. Técnico pero comprensible. Máx 40 palabras.",
-  "insight_metric": "Métrica secundaria del insight si aplica. Puede ser null.",
-  "insight_metric_label": "Etiqueta de esa métrica. Ej: 'días de anticipación'. Puede ser string vacío.",
-
-  "cta_body": "1-2 oraciones de cierre que reducen la fricción. Máx 25 palabras. Ej: 'Sin hardware adicional. Sin contratos largos.'",
-  "cta_label": "Texto del botón CTA. Máx 5 palabras con verbo. Ej: 'Agenda tu demo gratis'"
+  "insight_title": "Titular insight. Máx 5 palabras. Potente.",
+  "insight_body": "Exactamente 2 oraciones cortas. Técnico pero comprensible. Sin generalismos.",
+  "insight_metric": "Métrica secundaria si aplica. Null si no hay.",
+  "insight_metric_label": "Etiqueta de la métrica. String vacío si no aplica.",
+  "cta_body": "1-2 oraciones que reducen la fricción. Máx 20 palabras. Concreto.",
+  "cta_label": "Texto botón CTA. Máx 5 palabras. Verbo de acción."
 }`;
 
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
@@ -70,10 +95,7 @@ Devuelve este JSON exacto:
                 { role: 'user',   content: userPrompt  }
             ]
         }, {
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json'
-            }
+            headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' }
         });
 
         let result;
@@ -91,7 +113,7 @@ Devuelve este JSON exacto:
                 hook:                 result.hook                 || '',
                 stat_number:          result.stat_number          || '',
                 stat_ctx:             result.stat_ctx             || '',
-                bullets_title:        result.bullets_title        || '¿Por qué importa ahora?',
+                bullets_title:        result.bullets_title        || 'Por qué importa ahora',
                 bullets:              result.bullets              || [],
                 insight_title:        result.insight_title        || '',
                 insight_body:         result.insight_body         || '',
@@ -107,10 +129,7 @@ Devuelve este JSON exacto:
         console.error('Error:', error.response?.data || error.message);
         return {
             statusCode: 500,
-            body: JSON.stringify({
-                error: 'Fallo al conectar con OpenAI',
-                details: error.response?.data || error.message
-            })
+            body: JSON.stringify({ error: 'Fallo OpenAI', details: error.response?.data || error.message })
         };
     }
 };
