@@ -148,24 +148,35 @@ document.getElementById('download-pdf-btn').addEventListener('click', async () =
     const element = document.getElementById('carousel-preview-container');
     const downloadBtn = document.getElementById('download-pdf-btn');
     
+    // Clonamos temporalmente para limpiar estilos de scroll que arruinan la captura
+    const contentToPrint = element.cloneNode(true);
+    contentToPrint.style.height = 'auto';
+    contentToPrint.style.maxHeight = 'none';
+    contentToPrint.style.overflow = 'visible';
+    
     downloadBtn.textContent = "Generando PDF...";
     
-    // Configuración para que cada .slide-preview sea una página
     const opt = {
         margin:       0,
-        filename:     `Smability_Post_${new Date().getTime()}.pdf`,
+        filename:     `Smability_Carrusel_${new Date().getTime()}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true }, // scale: 2 asegura calidad Enterprise
+        html2canvas:  { 
+            scale: 2, 
+            useCORS: true,
+            logging: false,
+            scrollY: 0,
+            scrollX: 0
+        },
         jsPDF:        { unit: 'px', format: [1080, 1080], orientation: 'portrait' },
-        pagebreak:    { mode: 'css', before: '.slide-preview' } // Fuerza el salto de página por slide
+        pagebreak:    { mode: 'css', before: '.slide-preview' } 
     };
 
     try {
-        // Genera el archivo único
-        await html2pdf().set(opt).from(element).save();
+        await html2pdf().set(opt).from(contentToPrint).save();
         downloadBtn.textContent = "Descargar PDF para LinkedIn";
     } catch (e) {
         console.error("Error generando PDF:", e);
         alert("Error al generar el PDF.");
+        downloadBtn.textContent = "Descargar PDF para LinkedIn";
     }
 });
