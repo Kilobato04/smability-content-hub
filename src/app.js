@@ -119,22 +119,30 @@ function renderCarouselPreview(postData) {
         const slideEl = document.createElement('div');
         slideEl.className = `slide-preview slide-${slide.type}`;
         
-        // Fix de imagen de fondo inmediata
+        // Forzamos el fondo desde el inicio para evitar parpadeos
         if (slide.bg) {
             slideEl.style.backgroundImage = `url(${slide.bg})`;
+            slideEl.style.backgroundSize = 'cover';
+            slideEl.style.backgroundPosition = 'center';
         }
 
         const isDark = (slide.type === 'cover_bold' || slide.type === 'data_callout');
         const logoStyle = isDark ? 'style="filter: brightness(0) invert(1);"' : '';
         const navArrow = (index === postData.slides.length - 1) ? '' : '<div class="slide-nav-arrow">→</div>';
 
+        // Estructura con z-index explícito para evitar desformateo
         slideEl.innerHTML = `
-            ${navArrow}
-            <div class="slide-branding"><img src="${logoPath}" ${logoStyle} height="50"></div>
-            <h3>${slide.headline}</h3>
-            ${slide.metric ? `<div class="slide-metric">${slide.metric}</div>` : ''}
-            ${slide.supporting_text ? `<p>${slide.supporting_text}</p>` : ''}
-            <div class="slide-footer">0${index + 1} — SMABILITY TÉCNICO</div>
+            <div class="slide-content-wrapper" style="position:relative; z-index:10; width:100%; height:100%; display:flex; flex-direction:column; justify-content:space-between;">
+                ${slide.type === 'cover_bold' ? '<div class="cover-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:-1;"></div>' : ''}
+                ${navArrow}
+                <div class="slide-branding"><img src="${logoPath}" ${logoStyle} height="50"></div>
+                <div class="slide-body">
+                    <h3 style="margin:0;">${slide.headline}</h3>
+                    ${slide.metric ? `<div class="slide-metric" style="color:var(--smability-green); font-size:5rem; font-weight:900;">${slide.metric}</div>` : ''}
+                    ${slide.supporting_text ? `<p style="font-size:1.5rem;">${slide.supporting_text}</p>` : ''}
+                </div>
+                <div class="slide-footer">0${index + 1} — SMABILITY TÉCNICO</div>
+            </div>
         `;
         container.appendChild(slideEl);
     });
@@ -146,13 +154,15 @@ async function downloadCarouselPDF() {
     if (slides.length === 0) return;
 
     const btn = document.getElementById('download-pdf-btn');
-    btn.textContent = "Preparando láminas...";
+    btn.textContent = "Renderizando láminas...";
+    btn.disabled = true;
     
-    // Contenedor temporal forzado
     const worker = document.createElement('div');
+    worker.id = "pdf-worker";
     worker.style.width = '1080px';
-    worker.style.position = 'absolute';
-    worker.style.left = '-9999px';
+    worker.style.position = 'fixed';
+    worker.style.left = '-2000px';
+    worker.style.top = '0';
     document.body.appendChild(worker);
 
     const promises = [];
@@ -162,14 +172,15 @@ async function downloadCarouselPDF() {
         clone.style.width = '1080px';
         clone.style.height = '1080px';
         clone.style.display = 'flex';
-        clone.style.flexDirection = 'column';
         clone.style.margin = '0';
         clone.style.padding = '60px';
         clone.style.boxSizing = 'border-box';
-        clone.style.backgroundImage = slide.style.backgroundImage;
-        clone.style.backgroundSize = 'cover';
+        clone.style.pageBreakAfter = 'always';
+        clone.style.position = 'relative';
         
-        // Forzar carga de imagen
+        // Asegurar que el fondo se herede correctamente en el clon
+        clone.style.backgroundImage = slide.style.backgroundImage;
+        
         if (slide.style.backgroundImage.includes('url')) {
             const url = slide.style.backgroundImage.slice(4, -1).replace(/"/g, "");
             const img = new Image();
@@ -179,22 +190,36 @@ async function downloadCarouselPDF() {
         worker.appendChild(clone);
     });
 
-    await Promise.all(promises);
-    
-    const opt = {
-        margin: 0,
-        filename: 'Smability_LinkedIn.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 1, useCORS: true, width: 1080, height: 1080 * slides.length },
-        jsPDF: { unit: 'px', format: [1080, 1080], orientation: 'portrait' },
-        pagebreak: { mode: 'css', before: '.slide-preview' }
-    };
-
     try {
+        await Promise.all(promises);
+        // Pequeña pausa para asegurar que el DOM del worker esté listo
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        btn.textContent = "Generando archivo...";
+        
+        const opt = {
+            margin: 0,
+            filename: 'Smability_LinkedIn_Carrusel.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { 
+                scale: 1, 
+                useCORS: true, 
+                width: 1080, 
+                height: 1080 * slides.length,
+                scrollY: 0,
+                windowWidth: 1080
+            },
+            jsPDF: { unit: 'px', format: [1080, 1080], orientation: 'portrait' },
+            pagebreak: { mode: 'css', before: '.slide-preview' }
+        };
+
         await html2pdf().set(opt).from(worker).save();
+    } catch (e) {
+        console.error("Error crítico en PDF:", e);
     } finally {
         document.body.removeChild(worker);
         btn.textContent = "Descargar PDF para LinkedIn";
+        btn.disabled = false;
     }
 }
 
