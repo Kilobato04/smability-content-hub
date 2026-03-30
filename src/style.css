@@ -221,3 +221,21 @@ select {
     border-radius: 8px;
     border: 1px solid var(--border-color);
 }
+
+/* src/style.css */
+
+@media print {
+    .slide-preview {
+        box-shadow: none !important;
+        margin: 0 !important;
+        page-break-before: always; /* Garantiza el corte limpio en el PDF */
+    }
+}
+
+/* Estilo para que el contenedor de preview no interfiera con la captura */
+#carousel-preview-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0; /* Sin espacio para que el PDF sea continuo antes del corte */
+    padding: 0;
+}
