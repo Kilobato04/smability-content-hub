@@ -480,9 +480,9 @@ button:disabled { opacity: .35; cursor: not-allowed; }
     /* Gradiente direccional: más opaco abajo donde está el texto */
     background: linear-gradient(
         160deg,
-        rgba(0, 0, 0, 0.72) 0%,
-        rgba(0, 71, 171, 0.55) 50%,
-        rgba(0, 0, 0, 0.85) 100%
+        rgba(0, 0, 0, 0.88) 0%,
+        rgba(0, 71, 171, 0.75) 50%,
+        rgba(0, 0, 0, 0.95) 100%
     );
     z-index: 1;
     pointer-events: none;
