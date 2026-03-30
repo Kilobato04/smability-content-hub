@@ -199,7 +199,7 @@ function buildSlideEl(slide, index, total, sidepx) {
 
     // ── Número de lámina ──────────────────────────────────────
     const numStyle = forPDF
-        ? `position:absolute;top:${Math.round(S*0.016)}px;left:${Math.round(S*0.022)}px;
+        ? `position:absolute;top:${Math.round(S*0.065)}px;left:${Math.round(S*0.022)}px;
            font-family:'Space Grotesk',sans-serif;font-size:${fs_num}px;font-weight:700;
            letter-spacing:.15em;text-transform:uppercase;color:#555;z-index:10;
            background:rgba(0,0,0,.5);padding:${Math.round(S*.004)}px ${Math.round(S*.01)}px;border-radius:4px;`
@@ -210,7 +210,7 @@ function buildSlideEl(slide, index, total, sidepx) {
     const isLast = index === total - 1;
     const arrowStyle = forPDF
         ? `position:absolute;top:${pad}px;right:${pad}px;font-size:${arrow_fs}px;
-           line-height:1;color:rgba(255,255,255,.22);z-index:10;`
+           line-height:1;color:#39FF14;z-index:10;`
         : '';
     const arrow = isLast ? '' : `<div ${forPDF?`style="${arrowStyle}"`:'class="slide-nav-arrow"'}>→</div>`;
 
@@ -341,7 +341,8 @@ async function downloadCarouselPDF() {
             stage.appendChild(clone);
 
             // Esperamos que el browser pinte completamente: fuentes + background-image
-            await new Promise(r => setTimeout(r, 120));
+            // 400ms para dar tiempo a que background-image cargue desde assets/
+            await new Promise(r => setTimeout(r, 400));
 
             const canvas = await html2canvas(clone, {
                 scale: 2,              // 2160×2160 → alta res, luego jsPDF lo reduce
