@@ -25,7 +25,7 @@
         "invento": "La invención consiste en un sistema modular y un método diseñado para monitorear y diagnosticar islas de calor urbanas de forma granular en tiempo real",
         "sistema": "El sistema utiliza dispositivos físicos equipados con sensores para medir variables como PM2.5, PM10, temperatura, humedad relativa y óxido nitroso (NO2)",
         "datos": "Los datos recopilados se transmiten a una plataforma centralizada en la nube, donde se procesan para generar mapas e índices de islas de calor.",
-        "dato_viral": "Un dispositivo de $8,000 USD reemplaza datos que antes costaban $200,000+ en estaciones fijas"
+        "dato_viral": "Una solucion de $500 USD que en conjunto con su motor de cálculo pude reemplazar datos que antes costaban $200,000+ en estaciones fijas oficiales"
       },
       "slides": [
         {
