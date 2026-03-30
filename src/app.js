@@ -155,50 +155,44 @@ async function downloadCarouselPDF() {
     if (slides.length === 0) return alert("Genera el contenido primero.");
 
     const btn = document.getElementById('download-pdf-btn');
-    btn.textContent = "Preparando motor de renderizado...";
+    btn.textContent = "Consolidando láminas...";
     btn.disabled = true;
 
-    // Crear un contenedor temporal que NO sea invisible (fuera de la vista pero en el DOM activo)
-    const worker = document.createElement('div');
-    worker.style.position = 'fixed';
-    worker.style.left = '-5000px'; 
-    worker.style.top = '0';
-    worker.style.width = '1080px';
-    worker.style.zIndex = '-9999';
-    document.body.appendChild(worker);
+    // Opciones base para cada página
+    const opt = {
+        margin: 0,
+        filename: `Smability_Carrusel_${new Date().getTime()}.pdf`,
+        image: { type: 'jpeg', quality: 1.0 },
+        html2canvas: { 
+            scale: 2, 
+            useCORS: true, 
+            logging: false,
+            letterRendering: true
+        },
+        jsPDF: { unit: 'px', format: [1080, 1080], orientation: 'portrait' }
+    };
 
     try {
-        const pdfOptions = {
-            margin: 0,
-            filename: `Smability_Carrusel_${new Date().getTime()}.pdf`,
-            image: { type: 'jpeg', quality: 1.0 },
-            html2canvas: { 
-                scale: 2, // Calidad alta
-                useCORS: true, 
-                logging: false,
-                letterRendering: true,
-                allowTaint: true
-            },
-            jsPDF: { unit: 'px', format: [1080, 1080], orientation: 'portrait' }
-        };
+        // Inicializamos el trabajador de html2pdf
+        let worker = html2pdf().set(opt).from(slides[0]).toPdf();
 
-        // Inicializar el objeto trabajador de html2pdf
-        let exporter = html2pdf().set(pdfOptions).from(slides[0]);
-
-        // Añadir cada slide individualmente asegurando el renderizado
+        // Iteramos sobre el resto de las láminas
         for (let i = 1; i < slides.length; i++) {
-            exporter = exporter.toContainer().toCanvas().toImg().get('pdf').then((pdf) => {
-                pdf.addPage();
-            }).from(slides[i]);
+            worker = worker.get('pdf').then((pdf) => {
+                // Verificación de seguridad para evitar el error de 'null'
+                if (pdf) {
+                    pdf.addPage();
+                }
+            }).from(slides[i]).toContainer().toCanvas().toPdf();
         }
 
-        await exporter.save();
+        // Guardar el archivo final
+        await worker.save();
 
     } catch (e) {
         console.error("Error en generación de PDF:", e);
-        alert("Error técnico al consolidar el PDF. Revisa la consola.");
+        alert("Error al consolidar el PDF. Revisa la consola.");
     } finally {
-        document.body.removeChild(worker);
         btn.textContent = "Descargar PDF para LinkedIn";
         btn.disabled = false;
     }
