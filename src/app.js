@@ -257,57 +257,91 @@ document.getElementById('download-pdf-btn').addEventListener('click', async () =
     const slides = container.querySelectorAll('.slide-preview');
     const downloadBtn = document.getElementById('download-pdf-btn');
     
-    downloadBtn.textContent = "Procesando...";
+    if (slides.length === 0) {
+        alert("Primero genera el contenido antes de descargar.");
+        return;
+    }
 
-    // Contenedor temporal
+    downloadBtn.textContent = "Procesando imágenes...";
+    downloadBtn.disabled = true;
+
+    // 1. Crear contenedor temporal con dimensiones fijas
     const tempContainer = document.createElement('div');
     tempContainer.style.width = '1080px';
+    tempContainer.style.background = '#FFFFFF';
     tempContainer.style.position = 'absolute';
     tempContainer.style.left = '-9999px';
+    tempContainer.style.top = '0';
     document.body.appendChild(tempContainer);
 
-    slides.forEach(slide => {
+    // Array para rastrear la carga de todas las imágenes
+    const imagePromises = [];
+
+    // 2. Clonar y limpiar cada slide
+    slides.forEach((slide, index) => {
         const clone = slide.cloneNode(true);
         clone.style.width = '1080px';
         clone.style.height = '1080px';
         clone.style.margin = '0';
+        clone.style.padding = '60px'; // Mantener el padding Enterprise
         clone.style.display = 'flex';
-    
-        // FIX CRÍTICO AMPLIADO: 
-        // 1. Eliminamos "undefined"
-        // 2. Verificamos si la imagen de fondo es válida antes de que html2canvas la procese
+        clone.style.flexDirection = 'column';
+        clone.style.justifyContent = 'space-between';
+        clone.style.position = 'relative';
+        clone.style.overflow = 'hidden';
+        clone.style.boxSizing = 'border-box';
+        clone.style.pageBreakAfter = 'always';
+
+        // Fix de imágenes de fondo para el clon
         const bg = slide.style.backgroundImage;
-        
         if (!bg || bg === 'none' || bg.includes('undefined')) {
             clone.style.backgroundImage = 'none';
         } else {
-            // Mantenemos el fondo pero forzamos a que no rompa el renderizado si falla la carga
-            clone.style.backgroundOrigin = 'content-box'; 
+            clone.style.backgroundImage = bg;
+            clone.style.backgroundSize = 'cover';
+            clone.style.backgroundPosition = 'center';
+            
+            // Extraer URL para precarga
+            const url = bg.replace(/url\(['"]?(.*?)['"]?\)/, '$1');
+            const img = new Image();
+            img.src = url;
+            imagePromises.push(new Promise(res => {
+                img.onload = res;
+                img.onerror = res;
+            }));
         }
-    
+        
         tempContainer.appendChild(clone);
     });
 
-    const opt = {
-        margin: 0,
-        filename: `Smability_Carrusel_${new Date().getTime()}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-            scale: 1, 
-            useCORS: true, // Importante para las imágenes
-            windowWidth: 1080,
-            removeContainer: true
-        },
-        jsPDF: { unit: 'px', format: [1080, 1080], orientation: 'portrait' },
-        pagebreak: { mode: 'css', before: '.slide-preview' }
-    };
-
+    // 3. Esperar a que todas las imágenes estén listas antes de convertir a PDF
     try {
+        await Promise.all(imagePromises);
+        downloadBtn.textContent = "Generando PDF...";
+
+        const opt = {
+            margin: 0,
+            filename: `Smability_Carrusel_${new Date().getTime()}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { 
+                scale: 2, // Subimos a 2 para nitidez total en LinkedIn
+                useCORS: true,
+                letterRendering: true,
+                width: 1080,
+                height: 1080 * slides.length,
+                windowWidth: 1080
+            },
+            jsPDF: { unit: 'px', format: [1080, 1080], orientation: 'portrait', hotfixes: ['px_scaling'] },
+            pagebreak: { mode: 'css', before: '.slide-preview' }
+        };
+
         await html2pdf().set(opt).from(tempContainer).save();
-        document.body.removeChild(tempContainer);
-        downloadBtn.textContent = "Descargar PDF para LinkedIn";
     } catch (e) {
         console.error("Error en PDF:", e);
-        downloadBtn.textContent = "Error al descargar";
+        alert("Hubo un problema al generar el archivo. Revisa la consola.");
+    } finally {
+        document.body.removeChild(tempContainer);
+        downloadBtn.textContent = "Descargar PDF para LinkedIn";
+        downloadBtn.disabled = false;
     }
 });
