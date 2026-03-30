@@ -142,3 +142,30 @@ function renderCarouselPreview(carouselData) {
         container.appendChild(slideEl);
     });
 }
+
+
+document.getElementById('download-pdf-btn').addEventListener('click', async () => {
+    const element = document.getElementById('carousel-preview-container');
+    const downloadBtn = document.getElementById('download-pdf-btn');
+    
+    downloadBtn.textContent = "Generando PDF...";
+    
+    // Configuración para que cada .slide-preview sea una página
+    const opt = {
+        margin:       0,
+        filename:     `Smability_Post_${new Date().getTime()}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true }, // scale: 2 asegura calidad Enterprise
+        jsPDF:        { unit: 'px', format: [1080, 1080], orientation: 'portrait' },
+        pagebreak:    { mode: 'css', before: '.slide-preview' } // Fuerza el salto de página por slide
+    };
+
+    try {
+        // Genera el archivo único
+        await html2pdf().set(opt).from(element).save();
+        downloadBtn.textContent = "Descargar PDF para LinkedIn";
+    } catch (e) {
+        console.error("Error generando PDF:", e);
+        alert("Error al generar el PDF.");
+    }
+});
