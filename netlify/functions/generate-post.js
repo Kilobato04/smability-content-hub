@@ -16,11 +16,11 @@ Director: Horacio S. Jiménez Soto (horaciojimenez@smability.io)
 Web: smability.io
 
 PRODUCTOS:
-- SMAA: sensor IoT calidad del aire (PM2.5, PM10, CO, O3, Temp, HR, GPS). Precio: $8,400 USD (dispositivo $7,000 + PDN anual $1,400).
+- SMAA: sensor IoT calidad del aire (PM2.5, PM10, CO, O3, Temp, HR, GPS). Precio: $3,600 USD (dispositivo $2,500 + PDN anual $1,100).
 - SMAAmicro: versión compacta co-desarrollada con Universidad Iberoamericana CDMX. Patente conjunta IMPI en proceso.
-- CHAAK: estación meteorológica IoT (viento, lluvia, presión, radiación solar). Precio: $7,600 USD.
-- SMAWA: sensor nivel de agua en cisternas. Implementado en 5 cisternas Universidad Iberoamericana CDMX.
-- AIreGPT: Agente IA en WhatsApp y Telegram. Respuesta < 3 segundos. Pruébalo en t.me/AireGPT_bot.
+- CHAAK: estación meteorológica IoT (viento, lluvia, presión, radiación solar). Precio: $8,000 USD.
+- SMAWA: sensor nivel de agua en cisternas. Implementado en 5 cisternas en distintas univeridades en CDMX.
+- AIreGPT: Agente IA en WhatsApp y Telegram. Respuesta < 3 segundos. Pruébalo en https://t.me/airegptcdmx_bot
 - PDN: Plataforma de Datos en la Nube. API abierta para integración.
 
 VALIDACIÓN TÉCNICA (datos reales — NO inventar cifras distintas):
