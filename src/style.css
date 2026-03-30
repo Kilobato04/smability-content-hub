@@ -183,3 +183,41 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .slide-cta_clean { background-color: #F0F8FF; border: 2px solid var(--smability-blue); }
 .slide-cta_clean h3 { color: var(--smability-blue); }
+
+/* Añadir a src/style.css */
+.calendar-mini {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-top: 10px;
+}
+.cal-day {
+    padding: 8px;
+    background: #EEE;
+    text-align: center;
+    font-size: 0.8rem;
+    border-radius: 4px;
+}
+.cal-day.has-content {
+    background: var(--smability-blue);
+    color: white;
+    font-weight: bold;
+    border: 2px solid var(--smability-green);
+}
+.status-badge {
+    background: var(--smability-green);
+    color: black;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+.selector-group {
+    margin-bottom: 20px;
+}
+select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
