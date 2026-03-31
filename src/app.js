@@ -12,10 +12,21 @@ async function preloadLogo() {
     _logoBase64 = await imgToBase64('assets/logo.png');
 }
 
+// En PDF: siempre brightness(0) invert(1) — html2canvas no procesa
+// filtros CSS complejos. La intensidad se controla con opacity.
+// En pantalla: CSS filter normal.
 function logoImg(height, isPDF, filter) {
-    const src = (isPDF && _logoBase64) ? _logoBase64 : 'assets/logo.png';
+    if (isPDF) {
+        const src      = _logoBase64 || 'assets/logo.png';
+        const isWhite  = filter && filter.includes('invert(1)');
+        const opacity  = isWhite ? '1' : '0.45';
+        return `<img src="${src}" height="${height}"
+            style="width:auto;object-fit:contain;display:block;
+            filter:brightness(0) invert(1);opacity:${opacity};" />`;
+    }
     const flt = filter ? `filter:${filter};` : '';
-    return `<img src="${src}" height="${height}" style="width:auto;object-fit:contain;display:block;${flt}" />`;
+    return `<img src="assets/logo.png" height="${height}"
+        style="width:auto;object-fit:contain;display:block;${flt}" />`;
 }
 
 // ─── 1. INIT ────────────────────────────────────────────────
@@ -62,7 +73,7 @@ function renderCalendar() {
 
     const startOffset = (new Date(year, currentSelectedMonth, 1).getDay() + 6) % 7;
     const daysInMonth = new Date(year, currentSelectedMonth + 1, 0).getDate();
-    const today = new Date();
+    const today       = new Date();
 
     for (let x = 0; x < startOffset; x++) {
         const e = document.createElement('div');
@@ -98,7 +109,9 @@ function renderCalendar() {
             });
         }
 
-        if (i === today.getDate() && currentSelectedMonth === today.getMonth() && year === today.getFullYear())
+        if (i === today.getDate() &&
+            currentSelectedMonth === today.getMonth() &&
+            year === today.getFullYear())
             day.classList.add('today');
 
         cal.appendChild(day);
@@ -165,37 +178,38 @@ async function generateContent() {
 
 // ─── 5. BUILD 5 SLIDES FIJOS ────────────────────────────────
 function build5Slides(postData, aiData) {
-    const src   = postData.slides;
-    const cover = src.find(s => s.type === 'cover_bold') || src[0];
-    const stat  = src.find(s => s.type === 'data_callout') || src[1] || src[0];
-    const cta   = src.find(s => s.type === 'cta_clean') || src[src.length - 1];
-    const cat   = postData.cat;
+    const src     = postData.slides;
+    const cover   = src.find(s => s.type === 'cover_bold') || src[0];
+    const stat    = src.find(s => s.type === 'data_callout') || src[1] || src[0];
+    const cta     = src.find(s => s.type === 'cta_clean') || src[src.length - 1];
+    const cat     = postData.cat;
+    const slideBg = cover.slide_bg || null; // imagen soporte para láminas internas
 
     return {
         ...postData,
         slides: [
             {
-                type: 'cover_bold',
-                bg: cover.bg || null,
-                cat_tag: cat,
+                type:     'cover_bold',
+                bg:       cover.bg || null,
+                cat_tag:  cat,
                 headline: cover.headline,
-                ai_hook: aiData.hook || null,
-                metric: cover.metric || null
+                ai_hook:  aiData.hook || null,
+                metric:   cover.metric || null
             },
             {
-                type: 'data_callout',
-                bg: null,
-                cat_tag: null,
-                headline: stat.headline,
-                metric: stat.metric || aiData.stat_number || '—',
+                type:        'data_callout',
+                bg:          slideBg,
+                cat_tag:     null,
+                headline:    stat.headline,
+                metric:      stat.metric || aiData.stat_number || '—',
                 ai_stat_ctx: aiData.stat_ctx || stat.supporting_text || ''
             },
             {
-                type: 'bullets',
-                bg: null,
-                cat_tag: cat,
+                type:     'bullets',
+                bg:       slideBg,
+                cat_tag:  cat,
                 headline: aiData.bullets_title || '¿Por qué importa?',
-                bullets: aiData.bullets || [
+                bullets:  aiData.bullets || [
                     'Calibración validada por ICAyCC UNAM — R²=0.9085',
                     'Datos hiperlocales: tu colonia, no el promedio',
                     'Alertas automáticas antes que el IMECA',
@@ -203,20 +217,20 @@ function build5Slides(postData, aiData) {
                 ]
             },
             {
-                type: 'split_map',
-                bg: null,
-                cat_tag: null,
-                headline: aiData.insight_title || 'El dato que cambia la decisión',
-                ai_body: aiData.insight_body || '',
-                metric: aiData.insight_metric || null,
+                type:         'split_map',
+                bg:           null,
+                cat_tag:      null,
+                headline:     aiData.insight_title || 'El dato que cambia la decisión',
+                ai_body:      aiData.insight_body || '',
+                metric:       aiData.insight_metric || null,
                 metric_label: aiData.insight_metric_label || ''
             },
             {
-                type: 'cta_clean',
-                bg: null,
-                cat_tag: null,
-                headline: cta.headline,
-                ai_body: aiData.cta_body || '',
+                type:         'cta_clean',
+                bg:           null,
+                cat_tag:      null,
+                headline:     cta.headline,
+                ai_body:      aiData.cta_body || '',
                 ai_cta_label: aiData.cta_label || 'Agenda una demo'
             }
         ]
@@ -289,10 +303,12 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
     const fc        = isPDF ? Math.round(S * 0.033) : 36;
     const bnum_sz   = isPDF ? Math.round(S * 0.018) : 11;
 
-    // Overlay cover
-    const overlayDiv = slide.type === 'cover_bold' ? `
+    // Overlay: cover_bold = gradiente; cualquier otra lámina con bg = negro semi
+    const overlayDiv = (slide.bg && slide.type !== 'cta_clean') ? `
         <div style="position:absolute;inset:0;
-            background:linear-gradient(160deg,rgba(0,0,0,0.88) 0%,rgba(0,71,171,0.75) 50%,rgba(0,0,0,0.95) 100%);
+            background:${slide.type === 'cover_bold'
+                ? 'linear-gradient(160deg,rgba(0,0,0,0.88) 0%,rgba(0,71,171,0.75) 50%,rgba(0,0,0,0.95) 100%)'
+                : 'rgba(0,0,0,0.72)'};
             z-index:1;pointer-events:none;"></div>` : '';
 
     // Marco neon data_callout
@@ -353,8 +369,8 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
         ${logoImg(ftrLogoH, isPDF, 'brightness(0) invert(0.4)')}
     </div>`;
 
-    // Contenido por tipo
-    let bodyContent = '';
+    // ── Contenido por tipo ───────────────────────────────────
+    let bodyContent  = '';
     const bodyPadTop = isPDF ? Math.round(S * 0.08) : 90;
     const isDataCallout = slide.type === 'data_callout';
 
@@ -406,7 +422,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
             ${ctxLine}`;
 
     } else if (slide.type === 'bullets') {
-        const items = (slide.bullets || []).slice(0, 4);
+        const items      = (slide.bullets || []).slice(0, 4);
         const bulletRows = items.map((b, bi) => `
             <div style="
                 display:flex;align-items:flex-start;
@@ -438,7 +454,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
             <div style="flex:1;">${bulletRows}</div>`;
 
     } else if (slide.type === 'split_map') {
-        const hasMetric  = !!slide.metric;
+        const hasMetric   = !!slide.metric;
         const insightBody = slide.ai_body || '';
 
         if (hasMetric) {
@@ -451,29 +467,39 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
             const rightPad = isPDF ? Math.round(S * .03) : 20;
 
             bodyContent = `
-                <div style="display:flex;gap:${splitGap}px;align-items:stretch;flex:1;min-height:0;width:100%;">
-                    <div style="width:${leftW}px;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;gap:${gap}px;">
+                <div style="display:flex;gap:${splitGap}px;align-items:stretch;
+                    flex:1;min-height:0;width:100%;">
+                    <div style="width:${leftW}px;flex-shrink:0;
+                        display:flex;flex-direction:column;justify-content:center;gap:${gap}px;">
                         ${catTag}
-                        <h3 style="font-family:'Space Grotesk',sans-serif;font-size:${h3SmFs}px;font-weight:900;
-                            line-height:1.0;letter-spacing:-.02em;text-transform:uppercase;color:#fff;margin:0;">
+                        <h3 style="font-family:'Space Grotesk',sans-serif;
+                            font-size:${h3SmFs}px;font-weight:900;
+                            line-height:1.0;letter-spacing:-.02em;text-transform:uppercase;
+                            color:#fff;margin:0;">
                             ${slide.headline}</h3>
-                        <p style="font-family:'Inter',sans-serif;font-size:${fs_body}px;color:#9A9A9A;
-                            line-height:1.65;margin:0;
+                        <p style="font-family:'Inter',sans-serif;font-size:${fs_body}px;
+                            color:#9A9A9A;line-height:1.65;margin:0;
                             border-left:${isPDF ? Math.round(S * .003) : 2}px solid rgba(57,255,20,0.5);
                             padding-left:${isPDF ? Math.round(S * .014) : 12}px;">
                             ${insightBody}</p>
                     </div>
-                    <div style="width:${rightW}px;flex-shrink:0;background:rgba(255,255,255,0.03);
-                        border-left:1px solid rgba(255,255,255,0.08);border-radius:0 6px 6px 0;
-                        display:flex;flex-direction:column;align-items:center;justify-content:center;
+                    <div style="width:${rightW}px;flex-shrink:0;
+                        background:rgba(255,255,255,0.03);
+                        border-left:1px solid rgba(255,255,255,0.08);
+                        border-radius:0 6px 6px 0;
+                        display:flex;flex-direction:column;
+                        align-items:center;justify-content:center;
                         padding:${rightPad}px;box-sizing:border-box;">
-                        <div style="font-family:'Space Grotesk',sans-serif;font-size:${metFs}px;font-weight:900;
+                        <div style="font-family:'Space Grotesk',sans-serif;
+                            font-size:${metFs}px;font-weight:900;
                             color:#39FF14;letter-spacing:-.04em;line-height:1;
                             text-align:center;word-break:break-word;max-width:100%;">
                             ${slide.metric}</div>
-                        <div style="font-family:'Space Grotesk',sans-serif;font-size:${metLblFs}px;font-weight:700;
+                        <div style="font-family:'Space Grotesk',sans-serif;
+                            font-size:${metLblFs}px;font-weight:700;
                             letter-spacing:.12em;text-transform:uppercase;color:#555;
-                            margin-top:${Math.round(gap * .7)}px;text-align:center;line-height:1.3;">
+                            margin-top:${Math.round(gap * .7)}px;
+                            text-align:center;line-height:1.3;">
                             ${slide.metric_label || ''}</div>
                     </div>
                 </div>`;
@@ -502,8 +528,9 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                 line-height:0.95;letter-spacing:-.03em;text-transform:uppercase;
                 color:#fff;margin:0 0 ${gap * 1.5}px;">
                 ${slide.headline}</h3>
-            ${ctaBody ? `<p style="font-family:'Inter',sans-serif;font-size:${fs_body}px;
-                color:#9A9A9A;line-height:1.6;margin:0 0 ${gap * 2}px;">${ctaBody}</p>` : ''}
+            ${ctaBody ? `<p style="font-family:'Inter',sans-serif;
+                font-size:${fs_body}px;color:#9A9A9A;line-height:1.6;
+                margin:0 0 ${gap * 2}px;">${ctaBody}</p>` : ''}
             <div style="display:inline-flex;align-items:center;
                 border:2px solid #39FF14;border-radius:6px;
                 padding:${isPDF ? Math.round(S * .016) : 17}px ${isPDF ? Math.round(S * .030) : 32}px;
@@ -513,7 +540,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                 ↗ ${ctaLabel}</div>`;
     }
 
-    // Footer absoluto para data_callout
+    // Footer absoluto para data_callout (centrada verticalmente)
     const dataCalloutFooter = isDataCallout ? `
         <div style="position:absolute;bottom:${pad}px;left:${pad}px;right:${pad}px;
             display:flex;align-items:center;justify-content:space-between;z-index:2;
@@ -554,7 +581,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
 // ─── 8. RENDER PREVIEW ──────────────────────────────────────
 function renderCarouselPreview(postData) {
     _lastEnrichedPost = postData;
-    const container = document.getElementById('carousel-preview-container');
+    const container   = document.getElementById('carousel-preview-container');
     container.innerHTML = '';
     const total = postData.slides.length;
     postData.slides.forEach((slide, i) => {
@@ -591,6 +618,9 @@ async function downloadCarouselPDF() {
 
         const slides = _lastEnrichedPost.slides;
         const total  = slides.length;
+
+        // Asegurar logo disponible aunque preloadLogo haya fallado
+        if (!_logoBase64) await preloadLogo();
 
         for (let i = 0; i < total; i++) {
             btn.textContent = `Capturando ${i + 1} / ${total}…`;
