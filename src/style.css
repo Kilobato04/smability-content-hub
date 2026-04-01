@@ -119,9 +119,8 @@ header {
 .calendar-section,
 .selector-group,
 .output-area {
-    margin-bottom: 12px;
-    padding: 16px;
-    background: var(--bg-s);
+    padding: 16px; /* Más compacto */
+    margin-bottom: 8px;
 }
 
 .calendar-section h2,
@@ -245,10 +244,8 @@ select {
 }
 
 textarea {
-    height: 140px;
-    resize: vertical;
-    line-height: 1.6;
-    margin-top: 8px;
+    height: 130px; /* Reducido para visualización dual */
+    font-size: 0.85rem;
 }
 
 select:focus,
