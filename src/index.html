@@ -7,6 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -44,10 +45,19 @@
                 </div>
             </section>
 
+            #--
             <section class="preview-panel">
-                <h2>🖼️ Vista Previa Reel (Unificado) </h2>
+                <h2>🖼️ Vista Previa Reel (Unificado)</h2>
                 <div id="carousel-preview-container"></div>
-                <button id="download-pdf-btn" disabled>↓ Descargar PDF para LinkedIn </button>
+                
+                <div class="download-group" style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button id="download-pdf-btn" class="primary-btn" disabled style="flex: 2;">
+                        ↓ Descargar PDF para LinkedIn
+                    </button>
+                    <button id="download-png-btn" class="secondary-btn" disabled style="flex: 1; background-color: var(--bg-s2); border: 1px solid var(--border); color: var(--g100);">
+                        📷 PNGs (ZIP)
+                    </button>
+                </div>
             </section>
         </main>
     </div>
