@@ -138,55 +138,54 @@ function build5Slides(postData, aiData) {
     const stat    = src.find(s => s.type === 'data_callout') || src[1] || src[0];
     const cta     = src.find(s => s.type === 'cta_clean') || src[src.length - 1];
     const cat     = postData.cat;
-    const slideBg = cover.slide_bg || null; // imagen soporte para láminas internas
+
+    // Buscamos la segunda imagen de fondo disponible para el cierre
+    // Si no hay una segunda específica, usamos la misma del cover
+    const secondBg = src[1]?.bg || cover.bg;
 
     return {
         ...postData,
         slides: [
             {
                 type:     'cover_bold',
-                bg:       cover.bg || null,
+                bg:       cover.bg || null, // FONDO 1: Portada
                 cat_tag:  cat,
                 headline: cover.headline,
                 ai_hook:  aiData.hook || null,
                 metric:   cover.metric || null
             },
             {
-                type:        'data_callout',
-                bg:          slideBg,
+                type:        'data_callout', // LÁMINA WOW: Gráfica Python
+                bg:          null,           // SIN FONDO: Para que luzca la gráfica
                 cat_tag:     null,
                 headline:    stat.headline,
                 metric:      stat.metric || aiData.stat_number || '—',
                 ai_stat_ctx: aiData.stat_ctx || stat.supporting_text || ''
+                // Aquí es donde inyectaremos la imagen generada por Python (wow_chart.png)
             },
             {
                 type:     'bullets',
-                bg:       slideBg,
+                bg:       null, // SIN FONDO: Enfoque técnico
                 cat_tag:  cat,
                 headline: aiData.bullets_title || '¿Por qué importa?',
-                bullets:  aiData.bullets || [
-                    'Calibración validada por ICAyCC UNAM — R²=0.9085',
-                    'Datos hiperlocales: tu colonia, no el promedio',
-                    'Alertas automáticas antes que el IMECA',
-                    'Desde $8,400 USD — 4% del costo de estación fija'
-                ]
+                bullets:  aiData.bullets
             },
             {
-                type:         'split_map',
-                bg:           null,
-                cat_tag:      null,
-                headline:     aiData.insight_title || 'El dato que cambia la decisión',
-                ai_body:      aiData.insight_body || '',
-                metric:       aiData.insight_metric || null,
-                metric_label: aiData.insight_metric_label || ''
+                type:          'split_map',
+                bg:            null, // SIN FONDO
+                cat_tag:       null,
+                headline:      aiData.insight_title || 'El dato que cambia la decisión',
+                ai_body:       aiData.insight_body || '',
+                metric:        aiData.insight_metric || null,
+                metric_label:  aiData.insight_metric_label || ''
             },
             {
-                type:         'cta_clean',
-                bg:           null,
-                cat_tag:      null,
-                headline:     cta.headline,
-                ai_body:      aiData.cta_body || '',
-                ai_cta_label: aiData.cta_label || 'Agenda una demo'
+                type:          'cta_clean',
+                bg:            secondBg, // FONDO 2: Cierre (Imagen soporte)
+                cat_tag:       null,
+                headline:      cta.headline,
+                ai_body:       aiData.cta_body || '',
+                ai_cta_label:  aiData.cta_label || 'Agenda una demo'
             }
         ]
     };
