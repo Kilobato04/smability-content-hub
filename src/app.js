@@ -473,41 +473,43 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
         }
 
     } else if (slide.type === 'cta_clean') {
-        const ctaLabel = slide.ai_cta_label || 'Agenda una demo';
-        const ctaBody  = slide.ai_body || '';
-        // Tamaños dinámicos para el QR (PDF vs Pantalla)
-        const qrBoxSize = isPDF ? Math.round(S * 0.13) : 100;
+    const ctaLabel = slide.ai_cta_label || 'Agenda una demo';
+    const qrUrl = "https://www.smability.io/aire/gpt.html";
+    const qrApi = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}`;
+    const qrBoxSize = isPDF ? Math.round(S * 0.13) : 100;
 
-        const qrUrl = "https://www.smability.io/aire/gpt.html";
-        const qrApi = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}`;
-
-        bodyContent = `
+    // Inyectamos el Overlay antes del contenido
+    bodyContent = `
+        <div class="cover-overlay" style="position:absolute; inset:0; 
+            background: linear-gradient(160deg, rgba(0,26,77,0.95) 0%, rgba(5,5,5,0.85) 100%); 
+            z-index:1; pointer-events:none;"></div>
+            
+        <div style="position:relative; z-index:2; width:100%;">
             <h3 style="font-family:'Space Grotesk',sans-serif;
-                font-size:${isPDF ? Math.round(S * .083) : 52}px;font-weight:900;
-                line-height:0.95;letter-spacing:-.03em;text-transform:uppercase;
-                color:#fff;margin:0 0 ${gap}px;">
+                font-size:${isPDF ? Math.round(S * .083) : 52}px; font-weight:900;
+                line-height:0.95; letter-spacing:-.03em; text-transform:uppercase;
+                color:#fff; margin:0 0 ${gap}px;">
                 ${slide.headline}</h3>
             
-            <div style="display:flex; align-items:center; gap:${isPDF ? Math.round(S * .025) : 20}px; margin-bottom:${gap * 1.8}px;">
+            <div style="display:flex; align-items:center; gap:20px; margin-bottom:${gap * 1.5}px;">
                 <div style="width:${qrBoxSize}px; height:${qrBoxSize}px; background:#fff; padding:8px; border-radius:6px; flex-shrink:0;">
-                    <img src="${qrApi}" style="width:100%; height:100%;" alt="QR Dinámico">
+                    <img src="${qrApi}" style="width:100%; height:100%;" alt="QR AIreGPT">
                 </div>
-                
-                <p style="font-family:'Inter',sans-serif;
-                    font-size:${isPDF ? Math.round(S * .024) : 16}px; color:#9A9A9A; line-height:1.4; margin:0;">
-                    Escanea para interactuar con <strong style="color:#39FF14;">AIreGPT</strong> en vivo<br>
+                <p style="font-family:'Inter',sans-serif; font-size:${isPDF ? Math.round(S * .024) : 16}px; color:#9A9A9A; line-height:1.4; margin:0;">
+                    Escanea para probar <strong style="color:#39FF14;">AIreGPT</strong> en vivo<br>
                     o visita: <span style="color:#FFFFFF; text-decoration:underline;">smability.io/aire/gpt.html</span>
                 </p>
             </div>
 
-            <div style="display:inline-flex;align-items:center;
-                border:2px solid #39FF14;border-radius:6px;
+            <div style="display:inline-flex; align-items:center;
+                border:2px solid #39FF14; border-radius:6px;
                 padding:${isPDF ? Math.round(S * .016) : 17}px ${isPDF ? Math.round(S * .030) : 32}px;
                 font-family:'Space Grotesk',sans-serif;
                 font-size:${isPDF ? Math.round(S * .024) : 15}px;
-                font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#39FF14;">
-                ↗ ${ctaLabel}</div>`;
-    }
+                font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#39FF14;">
+                ↗ ${ctaLabel}</div>
+        </div>`;
+   }
 
     // Footer absoluto para data_callout (centrada verticalmente)
     const dataCalloutFooter = isDataCallout ? `
