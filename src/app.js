@@ -475,16 +475,28 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
     } else if (slide.type === 'cta_clean') {
         const ctaLabel = slide.ai_cta_label || 'Agenda una demo';
         const ctaBody  = slide.ai_body || '';
+        // Tamaños dinámicos para el QR (PDF vs Pantalla)
+        const qrBoxSize = isPDF ? Math.round(S * 0.13) : 100;
 
         bodyContent = `
             <h3 style="font-family:'Space Grotesk',sans-serif;
                 font-size:${isPDF ? Math.round(S * .083) : 52}px;font-weight:900;
                 line-height:0.95;letter-spacing:-.03em;text-transform:uppercase;
-                color:#fff;margin:0 0 ${gap * 1.5}px;">
+                color:#fff;margin:0 0 ${gap}px;">
                 ${slide.headline}</h3>
-            ${ctaBody ? `<p style="font-family:'Inter',sans-serif;
-                font-size:${fs_body}px;color:#9A9A9A;line-height:1.6;
-                margin:0 0 ${gap * 2}px;">${ctaBody}</p>` : ''}
+            
+            <div style="display:flex; align-items:center; gap:${isPDF ? Math.round(S * .025) : 20}px; margin-bottom:${gap * 1.8}px;">
+                <div style="width:${qrBoxSize}px; height:${qrBoxSize}px; background:#fff; padding:${isPDF ? Math.round(S * .01) : 8}px; border-radius:6px; flex-shrink:0;">
+                    <img src="assets/qr_airegpt.png" style="width:100%; height:100%; object-fit:contain;" alt="QR AIreGPT">
+                </div>
+                
+                <p style="font-family:'Inter',sans-serif;
+                    font-size:${isPDF ? Math.round(S * .024) : 16}px; color:#9A9A9A; line-height:1.4; margin:0;">
+                    Escanea para interactuar con <strong style="color:#39FF14;">AIreGPT</strong> en vivo<br>
+                    o visita: <span style="color:#FFFFFF; text-decoration:underline;">smability.io/aire/gpt.html</span>
+                </p>
+            </div>
+
             <div style="display:inline-flex;align-items:center;
                 border:2px solid #39FF14;border-radius:6px;
                 padding:${isPDF ? Math.round(S * .016) : 17}px ${isPDF ? Math.round(S * .030) : 32}px;
