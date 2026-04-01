@@ -74,29 +74,31 @@ async function generateContent() {
     genBtn.disabled = true;
     genBtn.textContent = 'Generando Mix B2B...';
 
-    try {
-        // Ejecutamos ambas versiones en paralelo
-        const [resH, resS] = await Promise.all([
-            fetchPost(postData, 'horacio'),
-            fetchPost(postData, 'smability')
-        ]);
-
-        document.getElementById('linkedin-post-output').value = resH.linkedin_post;
-        document.getElementById('smability-post-output').value = resS.linkedin_post;
-
-        // Renderizamos el carrusel (basado en la respuesta de Horacio, el visual es idéntico)
-        _lastEnrichedPost = build5Slides(postData, resH);
-        renderCarouselPreview(_lastEnrichedPost);
-        document.getElementById('download-pdf-btn').disabled = false;
-
-    } catch (err) {
-        console.error(err);
-        alert("Error en generación dual.");
-    } finally {
+   // Localiza la parte de las respuestas en generateContent y asegúrate que se vea así:
+   try {
+       const [resH, resS] = await Promise.all([
+           fetchPost(postData, 'horacio'),
+           fetchPost(postData, 'smability')
+       ]);
+   
+       // Validación de seguridad para evitar el "undefined"
+       document.getElementById('linkedin-post-output').value = resH.linkedin_post || "Error en respuesta Horacio";
+       document.getElementById('smability-post-output').value = resS.linkedin_post || "Error en respuesta Smability";
+   
+       // Si hay error en los textos, al menos renderiza el reel con los datos del JSON
+       const enriched = build5Slides(postData, resH);
+       renderCarouselPreview(enriched);
+       document.getElementById('download-pdf-btn').disabled = false;
+   
+   } catch (err) {
+       console.error("Error capturado:", err);
+       alert("Hubo un error de conexión con la API (502). Revisa los logs de Netlify.");
+   } finally {
         genBtn.disabled = false;
         genBtn.textContent = '⚡ Generar Post e Imágenes';
     }
 }
+    
 
 // Función helper para la llamada a API
 async function fetchPost(postData, target) {
