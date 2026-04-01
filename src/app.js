@@ -641,7 +641,30 @@ async function downloadAssets(format) {
     }
 }
 
-// ─── 10. HELPERS ────────────────────────────────────────────
+/* ============================================================
+   10. HELPERS / UTILIDADES
+   ============================================================ */
+
+function toggleEdit(textareaId, buttonId) {
+    const area = document.getElementById(textareaId);
+    const btn = document.getElementById(buttonId);
+    
+    if (!area || !btn) return; // Seguridad por si los IDs cambian
+
+    if (area.readOnly) {
+        area.readOnly = false;
+        area.style.backgroundColor = "rgba(255,255,255,0.08)";
+        area.style.border = "1px solid var(--green)";
+        area.focus();
+        btn.textContent = "Guardar";
+    } else {
+        area.readOnly = true;
+        area.style.backgroundColor = "";
+        area.style.border = "1px solid var(--border)";
+        btn.textContent = "Editar";
+    }
+}
+
 function toggleEdit() {
     const area = document.getElementById('linkedin-post-output');
     area.readOnly = !area.readOnly;
