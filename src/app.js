@@ -30,93 +30,29 @@ function logoImg(height, isPDF, filter) {
 }
 
 // ─── 1. INIT ────────────────────────────────────────────────
+let masterPlan = null;
+let _lastEnrichedPost = null;
+
 document.addEventListener('DOMContentLoaded', () => {
     init();
-    document.getElementById('month-selector').addEventListener('change', e => {
-        currentSelectedMonth = parseInt(e.target.value);
-        renderCalendar();
-    });
+    
+    // Listeners corregidos sin el calendario 
     document.getElementById('generate-btn').addEventListener('click', generateContent);
     document.getElementById('download-pdf-btn').addEventListener('click', downloadCarouselPDF);
-    document.querySelectorAll('.action-buttons button').forEach(b => {
-        if (b.textContent.trim() === 'Editar') b.addEventListener('click', toggleEdit);
-    });
+    
+    // Botones de edición 
+    document.getElementById('edit-horacio').addEventListener('click', () => toggleEdit('linkedin-post-output', 'edit-horacio'));
+    document.getElementById('edit-smability').addEventListener('click', () => toggleEdit('smability-post-output', 'edit-smability'));
 });
 
 async function init() {
     try {
-        await preloadLogo();
         const res = await fetch('data/master_abril.json');
         masterPlan = await res.json();
         populateSelector();
-        renderCalendar();
-    } catch (e) {
-        console.error('Error cargando Plan Maestro:', e);
-        document.getElementById('post-selector').innerHTML = '<option value="">Error al cargar</option>';
-    }
+    } catch (e) { console.error('Error:', e); }
 }
 
-// ─── 2. CALENDARIO ──────────────────────────────────────────
-function renderCalendar() {
-    const cal = document.getElementById('calendar-grid');
-    if (!cal || !masterPlan) return;
-    const year = 2026;
-    cal.innerHTML = '';
-
-    ['L','M','X','J','V','S','D'].forEach(d => {
-        const wd = document.createElement('div');
-        wd.className = 'cal-day empty';
-        wd.style.cssText = 'font-size:.6rem;font-weight:700;letter-spacing:.08em;color:#555;background:transparent;cursor:default;';
-        wd.textContent = d;
-        cal.appendChild(wd);
-    });
-
-    const startOffset = (new Date(year, currentSelectedMonth, 1).getDay() + 6) % 7;
-    const daysInMonth = new Date(year, currentSelectedMonth + 1, 0).getDate();
-    const today       = new Date();
-
-    for (let x = 0; x < startOffset; x++) {
-        const e = document.createElement('div');
-        e.className = 'cal-day empty';
-        cal.appendChild(e);
-    }
-
-    for (let i = 1; i <= daysInMonth; i++) {
-        const dow = new Date(year, currentSelectedMonth, i).getDay();
-        const day = document.createElement('div');
-        day.className = 'cal-day';
-        day.textContent = i;
-
-        if (dow === 0 || dow === 6) {
-            day.classList.add('weekend');
-        } else {
-            const hasPost = masterPlan.pipeline.some(p => {
-                const d = new Date(p.fecha + 'T00:00:00');
-                return d.getMonth() === currentSelectedMonth && d.getDate() === i;
-            });
-            if (hasPost) day.classList.add('has-content');
-
-            const key = `pub_${year}_${currentSelectedMonth}_${i}`;
-            if (localStorage.getItem(key)) day.classList.add('published');
-            day.addEventListener('click', () => {
-                if (localStorage.getItem(key)) {
-                    localStorage.removeItem(key);
-                    day.classList.remove('published');
-                } else {
-                    localStorage.setItem(key, 'true');
-                    day.classList.add('published');
-                }
-            });
-        }
-
-        if (i === today.getDate() &&
-            currentSelectedMonth === today.getMonth() &&
-            year === today.getFullYear())
-            day.classList.add('today');
-
-        cal.appendChild(day);
-    }
-}
 
 // ─── 3. SELECTOR ────────────────────────────────────────────
 function populateSelector() {
@@ -137,31 +73,29 @@ async function generateContent() {
     if (!postId) return alert('Selecciona un post.');
 
     const postData = masterPlan.pipeline.find(p => p.id === postId);
-    const btn = document.getElementById('generate-btn');
+    const genBtn = document.getElementById('generate-btn');
     
-    btn.disabled = true;
-    btn.textContent = 'Generando Mix de Contenidos...';
+    genBtn.disabled = true;
+    genBtn.textContent = 'Generando Mix...';
 
     try {
-        // Ejecutamos ambas generaciones en paralelo para ahorrar tiempo
-        const [resHoracio, resSmability] = await Promise.all([
+        // Generación dual paralela 
+        const [resH, resS] = await Promise.all([
             fetchPost(postData, 'horacio'),
             fetchPost(postData, 'smability')
         ]);
 
-        document.getElementById('linkedin-post-output').value = resHoracio.linkedin_post;
-        document.getElementById('smability-post-output').value = resSmability.linkedin_post;
+        document.getElementById('linkedin-post-output').value = resH.linkedin_post;
+        document.getElementById('smability-post-output').value = resS.linkedin_post;
 
-        // El carrusel se construye con los datos de Horacio (o cualquiera, el reel es igual)
-        const enriched = build5Slides(postData, resHoracio);
-        renderCarouselPreview(enriched);
-        
+        // El reel es visual y técnico, igual para ambos 
+        renderCarouselPreview(build5Slides(postData, resH));
         document.getElementById('download-pdf-btn').disabled = false;
     } catch (err) {
-        console.error(err);
+        alert("Error en generación: " + err.message);
     } finally {
-        btn.disabled = false;
-        btn.textContent = '⚡ Generar Post e Imágenes';
+        genBtn.disabled = false;
+        genBtn.textContent = '⚡ Generar Mix de Contenidos';
     }
 }
 
@@ -174,16 +108,24 @@ async function fetchPost(postData, target) {
             technical_data: postData.datos,
             category: postData.cat,
             headline: postData.slides[0].headline,
-            target: target
+            target: target // 'horacio' o 'smability' 
         })
     });
     return res.json();
 }
 
+function toggleEdit(id, btnId) {
+    const area = document.getElementById(id);
+    const btn = document.getElementById(btnId);
+    area.readOnly = !area.readOnly;
+    area.style.backgroundColor = area.readOnly ? '' : 'rgba(255,255,255,0.05)';
+    btn.textContent = area.readOnly ? 'Editar' : 'Guardar';
+}
+
 function copyText(id) {
-    const text = document.getElementById(id).value;
-    navigator.clipboard.writeText(text);
-    alert('Copiado al portapapeles');
+    const val = document.getElementById(id).value;
+    navigator.clipboard.writeText(val);
+    alert('Copiado');
 }
 
 // ─── 5. BUILD 5 SLIDES FIJOS ────────────────────────────────
