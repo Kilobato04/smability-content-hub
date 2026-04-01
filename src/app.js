@@ -134,46 +134,56 @@ function populateSelector() {
 // ─── 4. GENERACIÓN ──────────────────────────────────────────
 async function generateContent() {
     const postId = document.getElementById('post-selector').value;
-    if (!postId) return alert('Selecciona un post del plan.');
+    if (!postId) return alert('Selecciona un post.');
 
-    const postData   = masterPlan.pipeline.find(p => p.id === postId);
-    const postOutput = document.getElementById('linkedin-post-output');
-    const container  = document.getElementById('carousel-preview-container');
-    const genBtn     = document.getElementById('generate-btn');
-
-    postOutput.value = '';
-    container.innerHTML = '<div class="carousel-placeholder">Generando con IA…</div>';
-    genBtn.disabled = true;
-    genBtn.textContent = 'Generando…';
+    const postData = masterPlan.pipeline.find(p => p.id === postId);
+    const btn = document.getElementById('generate-btn');
+    
+    btn.disabled = true;
+    btn.textContent = 'Generando Mix de Contenidos...';
 
     try {
-        const res = await fetch('/api/generate-post', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                technical_data: postData.datos,
-                category:       postData.cat,
-                headline:       postData.slides[0].headline,
-                model:          'gpt-4o',
-                temperature:    0.55
-            })
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
+        // Ejecutamos ambas generaciones en paralelo para ahorrar tiempo
+        const [resHoracio, resSmability] = await Promise.all([
+            fetchPost(postData, 'horacio'),
+            fetchPost(postData, 'smability')
+        ]);
 
-        postOutput.value = data.linkedin_post;
-        const enriched = build5Slides(postData, data);
+        document.getElementById('linkedin-post-output').value = resHoracio.linkedin_post;
+        document.getElementById('smability-post-output').value = resSmability.linkedin_post;
+
+        // El carrusel se construye con los datos de Horacio (o cualquiera, el reel es igual)
+        const enriched = build5Slides(postData, resHoracio);
         renderCarouselPreview(enriched);
+        
         document.getElementById('download-pdf-btn').disabled = false;
-
     } catch (err) {
-        postOutput.value = `Error: ${err.message}`;
-        container.innerHTML = '<div class="carousel-placeholder">Error al generar.</div>';
         console.error(err);
     } finally {
-        genBtn.disabled = false;
-        genBtn.textContent = '⚡ Generar Post e Imágenes';
+        btn.disabled = false;
+        btn.textContent = '⚡ Generar Post e Imágenes';
     }
+}
+
+// Función helper para la llamada a API
+async function fetchPost(postData, target) {
+    const res = await fetch('/api/generate-post', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            technical_data: postData.datos,
+            category: postData.cat,
+            headline: postData.slides[0].headline,
+            target: target
+        })
+    });
+    return res.json();
+}
+
+function copyText(id) {
+    const text = document.getElementById(id).value;
+    navigator.clipboard.writeText(text);
+    alert('Copiado al portapapeles');
 }
 
 // ─── 5. BUILD 5 SLIDES FIJOS ────────────────────────────────
