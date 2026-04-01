@@ -478,6 +478,9 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
         // Tamaños dinámicos para el QR (PDF vs Pantalla)
         const qrBoxSize = isPDF ? Math.round(S * 0.13) : 100;
 
+        const qrUrl = "https://www.smability.io/aire/gpt.html";
+        const qrApi = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}`;
+
         bodyContent = `
             <h3 style="font-family:'Space Grotesk',sans-serif;
                 font-size:${isPDF ? Math.round(S * .083) : 52}px;font-weight:900;
@@ -486,8 +489,8 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                 ${slide.headline}</h3>
             
             <div style="display:flex; align-items:center; gap:${isPDF ? Math.round(S * .025) : 20}px; margin-bottom:${gap * 1.8}px;">
-                <div style="width:${qrBoxSize}px; height:${qrBoxSize}px; background:#fff; padding:${isPDF ? Math.round(S * .01) : 8}px; border-radius:6px; flex-shrink:0;">
-                    <img src="assets/qr_airegpt.png" style="width:100%; height:100%; object-fit:contain;" alt="QR AIreGPT">
+                <div style="width:${qrBoxSize}px; height:${qrBoxSize}px; background:#fff; padding:8px; border-radius:6px; flex-shrink:0;">
+                    <img src="${qrApi}" style="width:100%; height:100%;" alt="QR Dinámico">
                 </div>
                 
                 <p style="font-family:'Inter',sans-serif;
