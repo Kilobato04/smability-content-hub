@@ -555,28 +555,20 @@ button:disabled { opacity: .35; cursor: not-allowed; }
     background: var(--bg-slide);
 }
 
-/* cta_clean — cierre con gradiente */
+/* cta_clean — cierre minimalista sin distracciones */
 .slide-cta_clean {
-    background: linear-gradient(145deg, #020f2a 0%, #001a5c 60%, #0a0a0a 100%);
+    background: linear-gradient(145deg, #020f2a 0%, #001a5c 60%, #0a0a0a 100%) !important;
+}
+
+/* Eliminamos cualquier rastro de imagen de fondo en esta variante */
+.slide-cta_clean .cover-overlay {
+    display: none !important;
 }
 
 .slide-cta_clean .slide-body h3 {
     font-size: 3.4rem;
     color: var(--white);
-}
-
-.slide-cta_clean .slide-body p {
-    color: var(--green);
-    font-family: var(--fd);
-    font-weight: 700;
-    font-size: 0.9rem;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    margin-top: 8px;
-    border: 2px solid var(--green);
-    border-radius: 6px;
-    padding: 12px 20px;
-    display: inline-block;
+    text-shadow: none; /* Quitamos sombras para máxima limpieza */
 }
 
 /* ============================================================
