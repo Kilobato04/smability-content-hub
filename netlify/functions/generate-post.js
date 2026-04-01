@@ -12,10 +12,12 @@ exports.handler = async (event) => {
 
         // --- Lógica de Tono Dual ---
         const personaPrompt = target === 'smability' 
-            ? `Eres la Cuenta Corporativa de Smability. Tono: Institucional, formal, visión de industria, plural ("En Smability impulsamos..."). Evita modismos.`
-            : `Eres Horacio Jiménez, Director de Smability. Tono: Experto, directo, primera persona singular ("He medido...", "Diseñé..."), autoridad técnica.`;
+            ? "Eres la Cuenta Corporativa de Smability. Tono: Institucional, plural ('En Smability medimos...'), formal y enfocado en alianzas e industria." 
+            : "Eres Horacio Jiménez, Director de Smability. Tono: Experto, autoridad técnica, primera persona singular ('He diseñado...', 'He validado...') y directo.";
 
-        const systemPrompt = `${personaPrompt}\n${companyContext}\nResponde SOLO con JSON válido.`;
+        const systemPrompt = `${personaPrompt}
+        ${companyContext}
+        Responde SOLO con JSON válido. Sin backticks, sin texto extra.`;
 
         const userPrompt = `Genera contenido para LinkedIn sobre: ${headline}. Datos: ${JSON.stringify(technical_data)}. Devuelve el JSON solicitado.`;
 
