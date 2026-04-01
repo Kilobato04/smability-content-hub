@@ -35,12 +35,10 @@ let _lastEnrichedPost = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     init();
-    
-    // Listeners corregidos sin el calendario 
     document.getElementById('generate-btn').addEventListener('click', generateContent);
     document.getElementById('download-pdf-btn').addEventListener('click', downloadCarouselPDF);
     
-    // Botones de edición 
+    // Listeners para las dos cajas de edición
     document.getElementById('edit-horacio').addEventListener('click', () => toggleEdit('linkedin-post-output', 'edit-horacio'));
     document.getElementById('edit-smability').addEventListener('click', () => toggleEdit('smability-post-output', 'edit-smability'));
 });
