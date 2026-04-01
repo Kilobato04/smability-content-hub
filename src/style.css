@@ -24,6 +24,7 @@
     --success:   #1a3d1a;
     --fd:        'Space Grotesk', sans-serif;
     --fb:        'Inter', sans-serif;
+    --smability-navy: #001A4D;
     --pad:       56px;
 }
 
@@ -119,19 +120,22 @@ header {
 .calendar-section,
 .selector-group,
 .output-area {
-    padding: 16px; /* Más compacto */
-    margin-bottom: 8px;
+    background: var(--bg-s);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px; 
+    margin-bottom: 12px; /* Un poco más de aire entre perfiles */
 }
 
 .calendar-section h2,
 .output-area h3 {
     font-family: var(--fd);
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--g400);
-    margin-bottom: 16px;
+    font-size: 0.75rem; /* Ligeramente más grande para distinguir perfiles */
+    color: var(--white); /* Nombre del perfil en blanco */
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 hr {
@@ -316,6 +320,12 @@ button:disabled { opacity: .35; cursor: not-allowed; }
 }
 
 #download-pdf-btn:hover:not(:disabled) { background: rgba(57,255,20,.06); }
+
+.secondary-btn:disabled {
+    border-color: var(--g600) !important;
+    color: var(--g600) !important;
+    opacity: 0.3;
+}
 
 /* --- 10. CAROUSEL CONTAINER --- */
 #carousel-preview-container {
@@ -573,19 +583,32 @@ button:disabled { opacity: .35; cursor: not-allowed; }
    13. PRINT / PDF — fuerza 1080×1080, oculta UI
    ============================================================ */
 @media print {
+   
     *, *::before, *::after {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+    }
+
+    .js-plotly-plot .xtick text, 
+    .js-plotly-plot .ytick text {
+        fill: var(--g400) !important;
+    }
+
+    .js-plotly-plot {
+        overflow: visible !important;
     }
 
     body { background: #0D0D0D !important; }
 
     .app-container { padding: 0; }
 
-    header,
-    .control-panel,
-    .preview-panel > h2,
-    #download-pdf-btn { display: none !important; }
+   header,
+   .control-panel,
+   .preview-panel > h2,
+   #download-pdf-btn,
+   #download-png-btn { /* <--- Agrega esto aquí */
+       display: none !important; 
+   }
 
     .content-grid { grid-template-columns: 1fr !important; }
 
