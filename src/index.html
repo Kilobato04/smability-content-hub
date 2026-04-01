@@ -24,58 +24,42 @@
         </header>
 
         <main class="content-grid">
-
-            <!-- PANEL IZQUIERDO: controles -->
             <section class="control-panel">
-
-                <div class="calendar-section">
-                    <h2>📅 Calendario de Publicación</h2>
-                    <div class="calendar-header">
-                        <select id="month-selector">
-                            <option value="0">Enero</option>
-                            <option value="1">Febrero</option>
-                            <option value="2">Marzo</option>
-                            <option value="3" selected>Abril</option>
-                            <option value="4">Mayo</option>
-                            <option value="5">Junio</option>
-                        </select>
-                        <span id="year-label">2026</span>
-                    </div>
-                    <div id="calendar-grid" class="calendar-mini"></div>
-                </div>
-
                 <div class="selector-group">
-                    <h2>🚀 Generador de Post</h2>
+                    <h2>🚀 Panel de Generación</h2>
                     <label for="post-selector">Selecciona un post del plan:</label>
                     <select id="post-selector">
                         <option value="">Cargando plan maestro…</option>
                     </select>
-                    <button id="generate-btn" class="primary-btn">⚡ Generar Post e Imágenes</button>
+                    <button id="generate-btn" class="primary-btn">⚡ Generar Estrategia Omnicanal</button>
                 </div>
-
+        
                 <div class="output-area">
-                    <h3>Copy para LinkedIn</h3>
-                    <textarea id="linkedin-post-output" readonly
-                        placeholder="El copy generado por IA aparecerá aquí…"></textarea>
+                    <h3>👤 Copy Personal (Horacio Jiménez)</h3>
+                    <textarea id="linkedin-post-output" readonly></textarea>
                     <div class="action-buttons">
-                        <button class="secondary">Editar</button>
-                        <button class="primary" onclick="copyText()">Copiar Texto</button>
+                        <button class="secondary" onclick="toggleEdit('linkedin-post-output')">Editar</button>
+                        <button class="primary" onclick="copyText('linkedin-post-output')">Copiar</button>
                     </div>
                 </div>
-
-            </section>
-
-            <!-- PANEL DERECHO: carrusel -->
-            <section class="preview-panel">
-                <h2>🖼️ Vista Previa Carrusel</h2>
-                <div id="carousel-preview-container">
-                    <div class="carousel-placeholder">
-                        Selecciona un post para visualizar el carrusel…
+        
+                <div class="output-area">
+                    <h3>🏢 Copy Institucional (Smability)</h3>
+                    <textarea id="smability-post-output" readonly></textarea>
+                    <div class="action-buttons">
+                        <button class="secondary" onclick="toggleEdit('smability-post-output')">Editar</button>
+                        <button class="primary" onclick="copyText('smability-post-output')">Copiar</button>
                     </div>
+                </div>
+            </section>
+        
+            <section class="preview-panel">
+                <h2>🖼️ Carrusel PDF (Unificado)</h2>
+                <div id="carousel-preview-container">
+                    <div class="carousel-placeholder">El reel visual aparecerá aquí…</div>
                 </div>
                 <button id="download-pdf-btn" disabled>↓ Descargar PDF para LinkedIn</button>
             </section>
-
         </main>
     </div>
 
