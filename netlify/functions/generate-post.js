@@ -1,13 +1,43 @@
 const axios = require('axios');
 
 exports.handler = async (event) => {
-    if (event.httpMethod !== 'POST')
-        return { statusCode: 405, body: 'Method Not Allowed' };
+    if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
 
     try {
-        const { technical_data, category, headline, model = 'gpt-4o', temperature = 0.55 } = JSON.parse(event.body);
+        const { technical_data, category, headline, target = 'horacio', model = 'gpt-4o', temperature = 0.55 } = JSON.parse(event.body);
         const apiKey = process.env.OPENAI_API_KEY;
-        if (!apiKey) return { statusCode: 500, body: JSON.stringify({ error: 'API Key no configurada.' }) };
+
+        // --- Contexto de empresa (Resumido para brevedad, mantener el tuyo completo) ---
+        const companyContext = `Smability SAPI de CV — Ciudad de México...`; //
+
+        // --- Lógica de Tono Dual ---
+        const personaPrompt = target === 'smability' 
+            ? `Eres la Cuenta Corporativa de Smability. Tono: Institucional, formal, visión de industria, plural ("En Smability impulsamos..."). Evita modismos.`
+            : `Eres Horacio Jiménez, Director de Smability. Tono: Experto, directo, primera persona singular ("He medido...", "Diseñé..."), autoridad técnica.`;
+
+        const systemPrompt = `${personaPrompt}\n${companyContext}\nResponde SOLO con JSON válido.`;
+
+        const userPrompt = `Genera contenido para LinkedIn sobre: ${headline}. Datos: ${JSON.stringify(technical_data)}. Devuelve el JSON solicitado.`;
+
+        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+            model,
+            temperature,
+            response_format: { type: 'json_object' },
+            messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: userPrompt }
+            ]
+        }, { headers: { 'Authorization': `Bearer ${apiKey}` } });
+
+        return {
+            statusCode: 200,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(JSON.parse(response.data.choices[0].message.content))
+        };
+    } catch (error) {
+        return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
+    }
+};
 
         // ── Contexto de empresa — inyectado siempre ──────────
         const companyContext = `
