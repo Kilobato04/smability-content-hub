@@ -35,7 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
     document.getElementById('generate-btn').addEventListener('click', generateContent);
     document.getElementById('download-pdf-btn').addEventListener('click', downloadCarouselPDF);
-    
+    document.getElementById('download-pdf-btn').addEventListener('click', () => downloadAssets('pdf'));
+    document.getElementById('download-png-btn').addEventListener('click', () => downloadAssets('png'));
+
     // Listeners para las dos cajas de edición
     document.getElementById('edit-horacio').addEventListener('click', () => toggleEdit('linkedin-post-output', 'edit-horacio'));
     document.getElementById('edit-smability').addEventListener('click', () => toggleEdit('smability-post-output', 'edit-smability'));
@@ -89,6 +91,7 @@ async function generateContent() {
        const enriched = build5Slides(postData, resH);
        renderCarouselPreview(enriched);
        document.getElementById('download-pdf-btn').disabled = false;
+       document.getElementById('download-png-btn').disabled = false;
    
    } catch (err) {
        console.error("Error capturado:", err);
@@ -549,81 +552,75 @@ function renderCarouselPreview(postData) {
     });
 }
 
-// ─── 9. DESCARGA PDF ────────────────────────────────────────
-async function downloadCarouselPDF() {
-    if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
-        alert('Librerías no cargadas. Recarga la página.');
-        return;
-    }
-    if (!_lastEnrichedPost) return alert('Genera el contenido primero.');
+// ─── 9. DESCARGA PDF-PNG ────────────────────────────────────────
+async function downloadAssets(format) {
+    const container = document.getElementById('carousel-preview-container');
+    const slides = container.querySelectorAll('.slide-preview');
+    if (slides.length === 0) return;
 
-    const btn = document.getElementById('download-pdf-btn');
+    const btn = format === 'pdf' ? document.getElementById('download-pdf-btn') : document.getElementById('download-png-btn');
+    const originalText = btn.textContent;
+    btn.textContent = "Procesando...";
     btn.disabled = true;
-    const SIDE = 1080;
 
-    const stage = document.createElement('div');
-    stage.style.cssText = [
-        'position:fixed', 'top:0', `left:-${SIDE + 100}px`,
-        `width:${SIDE}px`, `height:${SIDE}px`,
-        'overflow:hidden', 'z-index:99999', 'pointer-events:none'
-    ].join(';');
-    document.body.appendChild(stage);
+    const zip = format === 'png' ? new JSZip() : null;
+    const { jsPDF } = window.jspdf;
+    const pdf = format === 'pdf' ? new jsPDF({ orientation: 'p', unit: 'px', format: [1080, 1080] }) : null;
 
     try {
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF({
-            orientation: 'portrait', unit: 'px',
-            format: [SIDE, SIDE], hotfixes: ['px_scaling'], compress: true
-        });
+        for (let i = 0; i < slides.length; i++) {
+            btn.textContent = `Capturando ${i + 1}/${slides.length}...`;
+            
+            // Forzar renderizado de Plotly antes de capturar
+            const chartDiv = slides[i].querySelector('[id^="wowChart-"]');
+            if (chartDiv) {
+                await Plotly.Plots.resize(chartDiv);
+            }
 
-        const slides = _lastEnrichedPost.slides;
-        const total  = slides.length;
-
-        // Asegurar logo disponible aunque preloadLogo haya fallado
-        if (!_logoBase64) await preloadLogo();
-
-        for (let i = 0; i < total; i++) {
-            btn.textContent = `Capturando ${i + 1} / ${total}…`;
-            const slideData = slides[i];
-
-            let bgBase64 = null;
-            if (slideData.bg) bgBase64 = await imgToBase64(slideData.bg);
-
-            const clone = buildSlideEl(slideData, i, total, SIDE, bgBase64);
-            stage.innerHTML = '';
-            stage.appendChild(clone);
-
-            await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-
-            const canvas = await html2canvas(clone, {
-                scale: 2,
-                useCORS: true, allowTaint: false, logging: false,
-                width: SIDE, height: SIDE,
-                windowWidth: SIDE, windowHeight: SIDE,
-                x: 0, y: 0, scrollX: 0, scrollY: 0,
-                backgroundColor: '#0D0D0D',
-                onclone: doc => {
-                    const lnk = doc.createElement('link');
-                    lnk.rel  = 'stylesheet';
-                    lnk.href = 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;900&family=Inter:wght@400;600&display=swap';
-                    doc.head.appendChild(lnk);
+            const canvas = await html2canvas(slides[i], {
+                scale: 2, // Calidad Retina
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#001A4D',
+                logging: false,
+                onclone: (clonedDoc) => {
+                    // FORZAR LOGOS BLANCOS EN EL RENDERIZADO DE CAPTURA
+                    const logos = clonedDoc.querySelectorAll('img');
+                    logos.forEach(img => {
+                        if(img.src.includes('logo')) {
+                            img.style.filter = 'brightness(0) invert(1)';
+                            img.style.opacity = '1';
+                        }
+                    });
                 }
             });
 
-            const imgData = canvas.toDataURL('image/jpeg', 0.95);
-            if (i > 0) pdf.addPage([SIDE, SIDE], 'portrait');
-            pdf.addImage(imgData, 'JPEG', 0, 0, SIDE, SIDE, `s${i}`, 'FAST');
+            const imgData = canvas.toDataURL('image/png');
+
+            if (format === 'png') {
+                const b64Data = imgData.replace(/^data:image\/(png|jpg);base64,/, "");
+                zip.file(`Smability_Slide_${i + 1}.png`, b64Data, {base64: true});
+            } else {
+                if (i > 0) pdf.addPage([1080, 1080], 'p');
+                pdf.addImage(imgData, 'PNG', 0, 0, 1080, 1080);
+            }
         }
 
-        btn.textContent = 'Guardando…';
-        pdf.save(`Smability_Carrusel_${Date.now()}.pdf`);
+        if (format === 'png') {
+            const content = await zip.generateAsync({type:"blob"});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(content);
+            link.download = `Smability_Post_Imágenes_${Date.now()}.zip`;
+            link.click();
+        } else {
+            pdf.save(`Smability_Reel_LinkedIn_${Date.now()}.pdf`);
+        }
 
-    } catch (e) {
-        console.error('PDF error:', e);
-        alert(`Error: ${e.message}`);
+    } catch (err) {
+        console.error("Error en captura:", err);
+        alert("Error al procesar las láminas.");
     } finally {
-        if (document.body.contains(stage)) document.body.removeChild(stage);
-        btn.textContent = '↓ Descargar PDF para LinkedIn';
+        btn.textContent = originalText;
         btn.disabled = false;
     }
 }
