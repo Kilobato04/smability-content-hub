@@ -70,16 +70,16 @@ function populateSelector() {
 // ─── 4. GENERACIÓN ──────────────────────────────────────────
 async function generateContent() {
     const postId = document.getElementById('post-selector').value;
-    if (!postId) return alert('Selecciona un post.');
+    if (!postId) return alert('Selecciona un post del plan.');
 
     const postData = masterPlan.pipeline.find(p => p.id === postId);
     const genBtn = document.getElementById('generate-btn');
     
     genBtn.disabled = true;
-    genBtn.textContent = 'Generando Mix...';
+    genBtn.textContent = 'Generando Mix B2B...';
 
     try {
-        // Generación dual paralela 
+        // Ejecutamos ambas versiones en paralelo
         const [resH, resS] = await Promise.all([
             fetchPost(postData, 'horacio'),
             fetchPost(postData, 'smability')
@@ -88,14 +88,17 @@ async function generateContent() {
         document.getElementById('linkedin-post-output').value = resH.linkedin_post;
         document.getElementById('smability-post-output').value = resS.linkedin_post;
 
-        // El reel es visual y técnico, igual para ambos 
-        renderCarouselPreview(build5Slides(postData, resH));
+        // Renderizamos el carrusel (basado en la respuesta de Horacio, el visual es idéntico)
+        _lastEnrichedPost = build5Slides(postData, resH);
+        renderCarouselPreview(_lastEnrichedPost);
         document.getElementById('download-pdf-btn').disabled = false;
+
     } catch (err) {
-        alert("Error en generación: " + err.message);
+        console.error(err);
+        alert("Error en generación dual.");
     } finally {
         genBtn.disabled = false;
-        genBtn.textContent = '⚡ Generar Mix de Contenidos';
+        genBtn.textContent = '⚡ Generar Post e Imágenes';
     }
 }
 
