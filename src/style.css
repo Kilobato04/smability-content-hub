@@ -119,10 +119,9 @@ header {
 .calendar-section,
 .selector-group,
 .output-area {
+    margin-bottom: 12px;
+    padding: 16px;
     background: var(--bg-s);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px;
 }
 
 .calendar-section h2,
@@ -234,7 +233,7 @@ textarea {
     border-radius: 8px;
     color: var(--white);
     font-family: var(--fb);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     padding: 12px 14px;
     transition: border-color .2s;
 }
@@ -246,7 +245,7 @@ select {
 }
 
 textarea {
-    height: 120px;
+    height: 140px;
     resize: vertical;
     line-height: 1.6;
     margin-top: 8px;
@@ -330,7 +329,7 @@ button:disabled { opacity: .35; cursor: not-allowed; }
     display: flex;
     flex-direction: column;
     gap: 14px;
-    max-height: 88vh;
+    max-height: 85vh;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--bg-s2) transparent;
