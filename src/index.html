@@ -2,67 +2,54 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smability Content Hub</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Chart.js para láminas científicas -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-    <!-- html2canvas: captura cada slide como imagen -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- jsPDF: ensambla las imágenes en un solo PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="app-container">
-
         <header>
             <img src="assets/logo.png" alt="Smability" class="main-logo">
-            <div class="header-info">
-                <h1>Hub de Contenidos</h1>
-                <div class="status-badge">Meta Abril: $40k USD</div>
-            </div>
+            <div class="status-badge">Meta Abril: $40k USD </div>
         </header>
 
         <main class="content-grid">
             <section class="control-panel">
                 <div class="selector-group">
-                    <h2>🚀 Panel de Generación</h2>
-                    <label for="post-selector">Selecciona un post del plan:</label>
+                    <h2>🚀 Panel de Generación </h2>
                     <select id="post-selector">
-                        <option value="">Cargando plan maestro…</option>
+                        <option value="">Cargando plan maestro...</option>
                     </select>
-                    <button id="generate-btn" class="primary-btn">⚡ Generar Estrategia Omnicanal</button>
+                    <button id="generate-btn" class="primary-btn">⚡ Generar Mix de Contenidos </button>
                 </div>
-        
+
                 <div class="output-area">
-                    <h3>👤 Copy Personal (Horacio Jiménez)</h3>
+                    <h3>👤 Copy Personal (Horacio) </h3>
                     <textarea id="linkedin-post-output" readonly></textarea>
                     <div class="action-buttons">
-                        <button class="secondary" onclick="toggleEdit('linkedin-post-output')">Editar</button>
+                        <button class="secondary" id="edit-horacio">Editar</button>
                         <button class="primary" onclick="copyText('linkedin-post-output')">Copiar</button>
                     </div>
                 </div>
-        
+
                 <div class="output-area">
-                    <h3>🏢 Copy Institucional (Smability)</h3>
+                    <h3>🏢 Copy Corporativo (Smability) </h3>
                     <textarea id="smability-post-output" readonly></textarea>
                     <div class="action-buttons">
-                        <button class="secondary" onclick="toggleEdit('smability-post-output')">Editar</button>
+                        <button class="secondary" id="edit-smability">Editar</button>
                         <button class="primary" onclick="copyText('smability-post-output')">Copiar</button>
                     </div>
                 </div>
             </section>
-        
+
             <section class="preview-panel">
-                <h2>🖼️ Carrusel PDF (Unificado)</h2>
-                <div id="carousel-preview-container">
-                    <div class="carousel-placeholder">El reel visual aparecerá aquí…</div>
-                </div>
-                <button id="download-pdf-btn" disabled>↓ Descargar PDF para LinkedIn</button>
+                <h2>🖼️ Vista Previa Reel (Unificado) </h2>
+                <div id="carousel-preview-container"></div>
+                <button id="download-pdf-btn" disabled>↓ Descargar PDF para LinkedIn </button>
             </section>
         </main>
     </div>
-
     <script src="app.js"></script>
 </body>
 </html>
