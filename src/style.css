@@ -599,6 +599,8 @@ button:disabled { opacity: .35; cursor: not-allowed; }
     }
 
     .slide-preview {
+        background-color: var(--smability-navy) !important;
+        box-sizing: border-box;
         width: 1080px !important;
         height: 1080px !important;
         aspect-ratio: unset !important;
@@ -608,4 +610,16 @@ button:disabled { opacity: .35; cursor: not-allowed; }
         page-break-after: always !important;
         break-after: page !important;
     }
+
+   /* Forzar que los logos sean blancos */
+   .slide-branding img, .slide-footer img {
+       display: block;
+       filter: brightness(0) invert(1) !important;
+       -webkit-filter: brightness(0) invert(1) !important;
+   }
+   
+   /* Fix para la gráfica de Plotly */
+   .js-plotly-plot .main-svg {
+       background: transparent !important;
+   }
 }
