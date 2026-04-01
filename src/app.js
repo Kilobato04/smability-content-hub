@@ -31,14 +31,14 @@ function logoImg(height, isPDF, filter) {
 
 // ─── 1. INIT ────────────────────────────────────────────────
 
+#--
 document.addEventListener('DOMContentLoaded', () => {
     init();
     document.getElementById('generate-btn').addEventListener('click', generateContent);
-    document.getElementById('download-pdf-btn').addEventListener('click', downloadCarouselPDF);
+    // Solo estas dos para descargas:
     document.getElementById('download-pdf-btn').addEventListener('click', () => downloadAssets('pdf'));
     document.getElementById('download-png-btn').addEventListener('click', () => downloadAssets('png'));
 
-    // Listeners para las dos cajas de edición
     document.getElementById('edit-horacio').addEventListener('click', () => toggleEdit('linkedin-post-output', 'edit-horacio'));
     document.getElementById('edit-smability').addEventListener('click', () => toggleEdit('smability-post-output', 'edit-smability'));
 });
@@ -127,10 +127,13 @@ function toggleEdit(id, btnId) {
 }
 
 function copyText(id) {
-    const text = document.getElementById(id).value; // Cambia 'linkedin-post-output' por id
-    if (!text) return;
-    navigator.clipboard.writeText(text).then(() => {
-        alert('Texto copiado');
+    const area = document.getElementById(id);
+    if (!area || !area.value) return;
+    
+    navigator.clipboard.writeText(area.value).then(() => {
+        alert('Texto copiado al portapapeles');
+    }).catch(err => {
+        console.error('Error al copiar:', err);
     });
 }
 
