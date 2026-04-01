@@ -31,24 +31,37 @@ function logoImg(height, isPDF, filter) {
 
 // ─── 1. INIT ────────────────────────────────────────────────
 
-#--
 document.addEventListener('DOMContentLoaded', () => {
     init();
-    document.getElementById('generate-btn').addEventListener('click', generateContent);
-    // Solo estas dos para descargas:
-    document.getElementById('download-pdf-btn').addEventListener('click', () => downloadAssets('pdf'));
-    document.getElementById('download-png-btn').addEventListener('click', () => downloadAssets('png'));
+    
+    // Listeners de Generación y Descarga
+    const genBtn = document.getElementById('generate-btn');
+    const pdfBtn = document.getElementById('download-pdf-btn');
+    const pngBtn = document.getElementById('download-png-btn');
 
-    document.getElementById('edit-horacio').addEventListener('click', () => toggleEdit('linkedin-post-output', 'edit-horacio'));
-    document.getElementById('edit-smability').addEventListener('click', () => toggleEdit('smability-post-output', 'edit-smability'));
+    if (genBtn) genBtn.addEventListener('click', generateContent);
+    if (pdfBtn) pdfBtn.addEventListener('click', () => downloadAssets('pdf'));
+    if (pngBtn) pngBtn.addEventListener('click', () => downloadAssets('png'));
+
+    // Listeners de Edición
+    const editH = document.getElementById('edit-horacio');
+    const editS = document.getElementById('edit-smability');
+
+    if (editH) editH.addEventListener('click', () => toggleEdit('linkedin-post-output', 'edit-horacio'));
+    if (editS) editS.addEventListener('click', () => toggleEdit('smability-post-output', 'edit-smability'));
 });
 
 async function init() {
     try {
         const res = await fetch('data/master_abril.json');
+        if (!res.ok) throw new Error("Error cargando JSON");
         masterPlan = await res.json();
         populateSelector();
-    } catch (e) { console.error('Error:', e); }
+    } catch (e) { 
+        console.error('Error en init:', e);
+        const sel = document.getElementById('post-selector');
+        if (sel) sel.innerHTML = '<option value="">Error al cargar posts</option>';
+    }
 }
 
 
