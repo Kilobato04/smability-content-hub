@@ -353,28 +353,17 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
             ${hookLine}`;
 
     } else if (slide.type === 'data_callout') {
-        const ctxLine = slide.ai_stat_ctx ? `
-            <p style="
-                font-family:'Inter',sans-serif;font-size:${fs_ctx}px;
-                color:#9A9A9A;line-height:1.5;
-                margin:${gap * 1.2}px 0 0;
-                max-width:78%;margin-left:auto;margin-right:auto;">
-                ${slide.ai_stat_ctx}</p>` : '';
-
-        bodyContent = `
-            <p style="
-                font-family:'Space Grotesk',sans-serif;
-                font-size:${isPDF ? Math.round(S * .030) : 19}px;
-                font-weight:700;color:#fff;
-                margin:0 0 ${gap}px;text-align:center;">
-                ${slide.headline}</p>
-            <div style="
-                font-family:'Space Grotesk',sans-serif;
-                font-size:${fs_met}px;font-weight:900;line-height:1;
-                color:#39FF14;letter-spacing:-.05em;text-align:center;">
-                ${slide.metric || ''}</div>
-            ${ctxLine}`;
-
+    const chartId = `wowChart-${index}`;
+    bodyContent = `
+        <div style="text-align:left; width:100%;">
+            <p style="font-family:'Space Grotesk',sans-serif; font-size:14px; color:#39FF14; font-weight:700; letter-spacing:2px; margin-bottom:10px;">ANÁLISIS TÉCNICO // 2026</p>
+            <h3 style="font-size:24px; margin-bottom:15px;">${slide.headline}</h3>
+            <div id="${chartId}" style="width:100%; height:320px;"></div>
+            <p style="font-family:'Inter',sans-serif; font-size:14px; color:#9A9A9A; margin-top:15px; line-height:1.5;">${slide.ai_stat_ctx}</p>
+        </div>`;
+    
+    // Ejecutamos Plotly después de que el elemento exista en el DOM
+    setTimeout(() => renderWowPlotly(chartId), 100);
     } else if (slide.type === 'bullets') {
         const items      = (slide.bullets || []).slice(0, 4);
         const bulletRows = items.map((b, bi) => `
@@ -657,4 +646,37 @@ function copyText() {
             setTimeout(() => b.textContent = orig, 2000);
         });
     });
+}
+
+function renderWowPlotly(elementId) {
+    const trace1 = {
+        x: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00'],
+        y: [15, 22, 18, 45, 38, 42],
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: 'SMAA IoT',
+        line: { color: '#39FF14', width: 4, shape: 'spline' },
+        marker: { size: 10, color: '#001A4D', line: { color: '#39FF14', width: 2 } }
+    };
+
+    const layout = {
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        margin: { l: 30, r: 10, t: 10, b: 30 },
+        showlegend: false,
+        xaxis: {
+            gridcolor: 'rgba(255,255,255,0.05)',
+            tickfont: { color: '#555', size: 10 },
+            showline: false
+        },
+        yaxis: {
+            gridcolor: 'rgba(255,255,255,0.05)',
+            tickfont: { color: '#555', size: 10 },
+            showline: false
+        }
+    };
+
+    const config = { responsive: true, displayModeBar: false };
+
+    Plotly.newPlot(elementId, [trace1], layout, config);
 }
