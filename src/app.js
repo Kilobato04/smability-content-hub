@@ -30,8 +30,6 @@ function logoImg(height, isPDF, filter) {
 }
 
 // ─── 1. INIT ────────────────────────────────────────────────
-let masterPlan = null;
-let _lastEnrichedPost = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     init();
@@ -124,9 +122,11 @@ function toggleEdit(id, btnId) {
 }
 
 function copyText(id) {
-    const val = document.getElementById(id).value;
-    navigator.clipboard.writeText(val);
-    alert('Copiado');
+    const text = document.getElementById(id).value; // Cambia 'linkedin-post-output' por id
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+        alert('Texto copiado');
+    });
 }
 
 // ─── 5. BUILD 5 SLIDES FIJOS ────────────────────────────────
