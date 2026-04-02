@@ -1,6 +1,6 @@
 {
-  "mes": "Abril 2026",
-  "meta_ingresos": "$40,000 USD",
+  "mes": "Año 2026",
+  "meta_ingresos": "$200,000 USD",
   "empresa": {
     "nombre": "Smability SAPI de CV",
     "fundacion": 2017,
@@ -8,7 +8,7 @@
     "director": "Horacio S. Jiménez Soto",
     "web": "smability.io",
     "mision": "Democratizamos el acceso a la información crítica medioambiental",
-    "productos": ["SMAA", "SMAAmicro", "CHAAK", "SMAWA", "AireGPT", "PDN"]
+    "productos": ["SMAA", "SMAAmicro", "CHAAK", "SMAWA", "AIreGPT", "PDN"]
   },
   "pipeline": [
     {
@@ -18,26 +18,26 @@
       "datos": {
         "titulo": "Sistema modular y método para determinación de islas de calor",
         "registro_impi": "MX/a/2024/088166",
-        "co_desarrollador": "IBERO - Universidad Iberoamericana CDMX",
-        "tipo": "Patente de sistema IoT para determinación de islas de calor",
-        "alcance": "Exclusividad técnica en México — Solicitud de Patente activa ante IMPI",
+        "co_desarrollador": "IBERO Universidad Iberoamericana CDMX",
+        "tipo": "Patente de sistema IoT para determinación de islas de calor en zonas urbanas",
+        "alcance": "Exclusividad técnica en México. Solicitud de Patente activa ante IMPI",
         "diferenciador": "No es hardware genérico: patente de algoritmo de isla de calor a través del desarrollo de dispositivos IoT accesibles",
         "invento": "Sistema modular y método diseñado para monitorear y diagnosticar islas de calor urbanas de forma granular en tiempo real",
-        "sistema": "Dispositivos IoT con sensores de PM2.5, PM10, temperatura, humedad relativa y NO2, transmitiendo a plataforma centralizada en la nube",
+        "sistema": "Dispositivos IoT con sensores de PM2.5, PM10, temperatura, humedad relativa y NO2, transmitiendo a la nube con tecnología AWS",
         "datos": "Los datos se procesan para generar mapas e índices de islas de calor hiperlocales",
-        "precio_referencia": "$500 USD por dispositivo",
-        "dato_viral": "Una solución de $500 USD que en conjunto con su motor de cálculo puede reemplazar datos que antes costaban $200,000+ en estaciones fijas oficiales"
+        "precio_referencia": "SMAA Micro un dispositivo de $500 USD",
+        "dato_viral": "Una solución de $500 USD que en conjunto con su motor de cálculo puede reemplazar análisis y evaluaciones con baja confiabilidad y alto costo"
       },
       "slides": [
         { "type": "cover_bold",   "headline": "PATENTAMOS EL SISTEMA QUE OTROS NO TIENEN.",    "metric": "MX/a/2024/088166", "bg": "assets/covers/post_01_patente_mx.jpg",          "slide_bg": "assets/slides/post_01_patente_mx.jpg" },
-        { "type": "data_callout", "headline": "NO CALCULAMOS ISLAS DE CALOR. LAS MEDIMOS.",    "metric": "$500 USD",         "supporting_text": "Un dispositivo IoT de $500 USD genera mapas de islas de calor que antes requerían $200,000+ en infraestructura fija." },
+        { "type": "data_callout", "headline": "NO CALCULAMOS ISLAS DE CALOR. LAS MEDIMOS.",    "metric": "$500 USD",         "supporting_text": "Un dispositivo IoT de $500 USD genera mapas de islas de calor que antes requerían $50,000 USD + en esfuerzo de análisis e infraestructura fija." },
         { "type": "cta_clean",    "headline": "TRABAJA CON LOS CREADORES.",                    "supporting_text": "Co-desarrollado con la IBERO CDMX. Patente MX/a/2024/088166 activa. Agenda demo técnica." }
       ]
     },
     {
       "id": "post_02_caso_ibero",
       "fecha": "2026-04-07",
-      "cat": "CASO_B2B",
+      "cat": "CASO B2B",
       "datos": {
         "cliente": "Universidad Iberoamericana CDMX",
         "proyecto": "Monitoreo de calidad del aire en campus + co-desarrollo SMAAmicro",
@@ -57,7 +57,7 @@
     {
       "id": "post_03_contingencia_cdmx",
       "fecha": "2026-04-09",
-      "cat": "SALUD_ONG",
+      "cat": "SALUD",
       "datos": {
         "evento": "Contingencia ambiental CDMX",
         "pm25_pico": "150+ µg/m³",
@@ -143,7 +143,7 @@
     {
       "id": "post_07_smawa_ibero",
       "fecha": "2026-04-23",
-      "cat": "CASO_B2B",
+      "cat": "CASO B2B",
       "datos": {
         "producto": "SMAWA",
         "cliente": "Universidad Iberoamericana CDMX",
@@ -163,7 +163,7 @@
     {
       "id": "post_08_contingencia_inversion",
       "fecha": "2026-04-28",
-      "cat": "SALUD_ONG",
+      "cat": "SALUD",
       "datos": {
         "fenomeno": "Inversión térmica",
         "mecanismo": "Capa de aire caliente atrapa contaminantes a nivel de piso",
@@ -182,7 +182,7 @@
     {
       "id": "post_09_smaa_precio",
       "fecha": "2026-04-29",
-      "cat": "B2B_VENTA",
+      "cat": "CASO B2B",
       "datos": {
         "producto": "SMAA v22025",
         "precio_dispositivo": "$7,000 USD",
