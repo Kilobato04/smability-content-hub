@@ -43,12 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (pdfBtn) pdfBtn.addEventListener('click', () => downloadAssets('pdf'));
     if (pngBtn) pngBtn.addEventListener('click', () => downloadAssets('png'));
 
-    // Listeners de Edición
-    const editH = document.getElementById('edit-horacio');
-    const editS = document.getElementById('edit-smability');
-
-    if (editH) editH.addEventListener('click', () => toggleEdit('linkedin-post-output', 'edit-horacio'));
-    if (editS) editS.addEventListener('click', () => toggleEdit('smability-post-output', 'edit-smability'));
 });
 
 async function init() {
