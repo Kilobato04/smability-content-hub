@@ -198,7 +198,7 @@ function build5Slides(postData, aiData) {
             },
             {
                 type:     'cta_clean',
-                bg:       null, // Limpieza total en el cierre
+                bg:       null, // FORZAMOS NULL para que use el color de la sesión
                 headline: src[src.length - 1].headline,
                 ai_body:  aiData.cta_body || '',
                 ai_cta_label: aiData.cta_label || 'Probar AIreGPT'
@@ -262,8 +262,10 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
             padding:${Math.round(S * 0.052)}px;
             overflow:hidden;box-sizing:border-box;
             border-radius:0;box-shadow:none;`;
-        if (slide.type === 'cta_clean')
-            el.style.background = 'linear-gradient(145deg,#020f2a 0%,#001a5c 60%,#0a0a0a 100%)';
+        if (slide.type === 'cta_clean') {
+          el.style.backgroundColor = sessionBg; // Color aleatorio del reel
+          el.style.backgroundImage = 'none';    // Sin gradiente azul
+      }
     }
 
     // Escala tipográfica
@@ -503,9 +505,6 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
 
     // Inyectamos el Overlay antes del contenido
     bodyContent = `
-        <div class="cover-overlay" style="position:absolute; inset:0; 
-            background: linear-gradient(160deg, rgba(0,26,77,0.95) 0%, rgba(5,5,5,0.85) 100%); 
-            z-index:1; pointer-events:none;"></div>
             
         <div style="position:relative; z-index:2; width:100%;">
             <h3 style="font-family:'Space Grotesk',sans-serif;
