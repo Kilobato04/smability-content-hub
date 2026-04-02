@@ -389,8 +389,6 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
             <p style="font-family:'Inter',sans-serif; font-size:14px; color:#9A9A9A; margin-top:15px; line-height:1.5;">${slide.ai_stat_ctx}</p>
         </div>`;
     
-    // Ejecutamos Plotly después de que el elemento exista en el DOM
-    setTimeout(() => renderWowPlotly(chartId), 100);
     } else if (slide.type === 'bullets') {
         const items      = (slide.bullets || []).slice(0, 4);
         const bulletRows = items.map((b, bi) => `
@@ -690,37 +688,4 @@ function copyText() {
             setTimeout(() => b.textContent = orig, 2000);
         });
     });
-}
-
-function renderWowPlotly(elementId) {
-    const trace1 = {
-        x: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00'],
-        y: [15, 22, 18, 45, 38, 42],
-        type: 'scatter',
-        mode: 'lines+markers',
-        name: 'SMAA IoT',
-        line: { color: '#39FF14', width: 4, shape: 'spline' },
-        marker: { size: 10, color: '#001A4D', line: { color: '#39FF14', width: 2 } }
-    };
-
-    const layout = {
-        paper_bgcolor: 'rgba(0,0,0,0)',
-        plot_bgcolor: 'rgba(0,0,0,0)',
-        margin: { l: 30, r: 10, t: 10, b: 30 },
-        showlegend: false,
-        xaxis: {
-            gridcolor: 'rgba(255,255,255,0.05)',
-            tickfont: { color: '#555', size: 10 },
-            showline: false
-        },
-        yaxis: {
-            gridcolor: 'rgba(255,255,255,0.05)',
-            tickfont: { color: '#555', size: 10 },
-            showline: false
-        }
-    };
-
-    const config = { responsive: true, displayModeBar: false };
-
-    Plotly.newPlot(elementId, [trace1], layout, config);
 }
