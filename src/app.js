@@ -251,21 +251,23 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
         el.style.backgroundImage = 'none'; // Limpieza total para las demás láminas
     }
 
-    if (isPDF) {
+   if (isPDF) {
         el.style.cssText = `
             background-image:${bgUrl ? `url(${bgUrl})` : 'none'};
             background-size:cover;background-position:center;
-            background-color:#0D0D0D;
+            background-color:${sessionBg}; /* <--- CAMBIO: Usamos el color de la sesión */
             width:${S}px;height:${S}px;aspect-ratio:unset;
             position:relative;display:flex;flex-direction:column;
             justify-content:space-between;
             padding:${Math.round(S * 0.052)}px;
             overflow:hidden;box-sizing:border-box;
             border-radius:0;box-shadow:none;`;
+        
+        // CAMBIO: Eliminamos el gradiente hardcoded y forzamos el color aleatorio
         if (slide.type === 'cta_clean') {
-          el.style.backgroundColor = sessionBg; // Color aleatorio del reel
-          el.style.backgroundImage = 'none';    // Sin gradiente azul
-      }
+            el.style.backgroundColor = sessionBg; 
+            el.style.background = sessionBg; // Asegura que el gradiente previo se borre
+        }
     }
 
     // Escala tipográfica
@@ -503,9 +505,8 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
     const qrApi = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}`;
     const qrBoxSize = isPDF ? Math.round(S * 0.13) : 100;
 
-    // Inyectamos el Overlay antes del contenido
+    // YA NO HAY OVERLAY AQUÍ. El fondo será el sessionBg puro.
     bodyContent = `
-            
         <div style="position:relative; z-index:2; width:100%;">
             <h3 style="font-family:'Space Grotesk',sans-serif;
                 font-size:${isPDF ? Math.round(S * .083) : 52}px; font-weight:900;
@@ -517,7 +518,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                 <div style="width:${qrBoxSize}px; height:${qrBoxSize}px; background:#fff; padding:8px; border-radius:6px; flex-shrink:0;">
                     <img src="${qrApi}" style="width:100%; height:100%;" alt="QR AIreGPT">
                 </div>
-                <p style="font-family:'Inter',sans-serif; font-size:${isPDF ? Math.round(S * .024) : 16}px; color:#9A9A9A; line-height:1.4; margin:0;">
+                <p style="font-family:'Inter',sans-serif; font-size:${isPDF ? Math.round(S * .024) : 16}px; color:rgba(255,255,255,0.7); line-height:1.4; margin:0;">
                     Escanea para probar <strong style="color:#39FF14;">AIreGPT</strong> en vivo<br>
                     o visita: <span style="color:#FFFFFF; text-decoration:underline;">smability.io/aire/gpt.html</span>
                 </p>
@@ -532,7 +533,6 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                 ↗ ${ctaLabel}</div>
         </div>`;
    }
-
     // Footer absoluto para data_callout (centrada verticalmente)
     const dataCalloutFooter = isDataCallout ? `
         <div style="position:absolute;bottom:${pad}px;left:${pad}px;right:${pad}px;
@@ -567,6 +567,13 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
             ${isDataCallout ? '' : footer}
         </div>
         ${dataCalloutFooter}`;
+
+   const coloresClaros = ['#F5F5F5', '#FFFFFF', '#EAEAEA']; 
+    if (coloresClaros.includes(sessionBg)) {
+        el.style.color = '#111111'; // Forzamos texto oscuro
+        // Opcional: Si tienes iconos o líneas neón que se pierdan, 
+        // podrías añadir lógica extra aquí.
+    }
 
     return el;
 }
