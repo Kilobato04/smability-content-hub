@@ -7,6 +7,17 @@ let currentSelectedMonth = 3;
 let _lastEnrichedPost    = null;
 let _logoBase64          = null;
 
+// ─── CONFIGURACIÓN VISUAL ────────────────────────────────────
+const SMABILITY_PALETTE = [
+    '#001A4D', // Navy Original
+    '#050505', // Black Industrial
+    '#002366', // Royal Navy
+    '#0D0D0D', // Jet Black
+    '#000B1A', // Deep Midnight
+    '#1A1A1A', // Graphite
+    '#00153D'  // Space Navy
+];
+
 // ─── LOGO ────────────────────────────────────────────────────
 async function preloadLogo() {
     _logoBase64 = await imgToBase64('assets/logo.png');
@@ -146,59 +157,51 @@ function copyText(id) {
 
 // ─── 5. BUILD 5 SLIDES FIJOS ────────────────────────────────
 function build5Slides(postData, aiData) {
-    const src     = postData.slides;
-    const cover   = src.find(s => s.type === 'cover_bold') || src[0];
-    const stat    = src.find(s => s.type === 'data_callout') || src[1] || src[0];
-    const cta     = src.find(s => s.type === 'cta_clean') || src[src.length - 1];
-    const cat     = postData.cat;
-
-    // Buscamos la segunda imagen de fondo disponible para el cierre
-    // Si no hay una segunda específica, usamos la misma del cover
-    const secondBg = src[1]?.bg || cover.bg;
+    const src = postData.slides;
+    const cat = postData.cat;
+    
+    // 1. Escogemos un color aleatorio para este post específico
+    const randomBg = SMABILITY_PALETTE[Math.floor(Math.random() * SMABILITY_PALETTE.length)];
 
     return {
         ...postData,
+        sessionBg: randomBg, // Guardamos el color para usarlo en el render
         slides: [
             {
                 type:     'cover_bold',
-                bg:       cover.bg || null, // FONDO 1: Portada
+                bg:       null, // Quitamos imagen de fondo
                 cat_tag:  cat,
-                headline: cover.headline,
-                ai_hook:  aiData.hook || null,
-                metric:   cover.metric || null
+                headline: src[0].headline,
+                ai_hook:  aiData.hook || null
             },
             {
-                type:        'data_callout', // LÁMINA WOW: Gráfica Python
-                bg:          null,           // SIN FONDO: Para que luzca la gráfica
-                cat_tag:     null,
-                headline:    stat.headline,
-                metric:      stat.metric || aiData.stat_number || '—',
-                ai_stat_ctx: aiData.stat_ctx || stat.supporting_text || ''
-                // Aquí es donde inyectaremos la imagen generada por Python (wow_chart.png)
+                type:        'data_callout',
+                bg:          'assets/analysis/heatmap_ibero_1.jpg', // TU NUEVA IMAGEN
+                isAnalysis:  true, // Flag para manejo especial
+                headline:    'ISLA DE CALOR: FOCO IBERO CDMX',
+                ai_stat_ctx: aiData.stat_ctx || 'Análisis micro-climático SMAA v2.6'
             },
             {
                 type:     'bullets',
-                bg:       null, // SIN FONDO: Enfoque técnico
+                bg:       null,
                 cat_tag:  cat,
-                headline: aiData.bullets_title || '¿Por qué importa?',
+                headline: aiData.bullets_title || 'Impacto en la Infraestructura',
                 bullets:  aiData.bullets
             },
             {
-                type:          'split_map',
-                bg:            null, // SIN FONDO
-                cat_tag:       null,
-                headline:      aiData.insight_title || 'El dato que cambia la decisión',
-                ai_body:       aiData.insight_body || '',
-                metric:        aiData.insight_metric || null,
-                metric_label:  aiData.insight_metric_label || ''
+                type:     'split_map',
+                bg:       null,
+                headline: aiData.insight_title || 'Eficiencia Energética',
+                ai_body:  aiData.insight_body || '',
+                metric:   aiData.insight_metric || null,
+                metric_label: aiData.insight_metric_label || ''
             },
             {
-                type:          'cta_clean',
-                bg:            secondBg, // FONDO 2: Cierre (Imagen soporte)
-                cat_tag:       null,
-                headline:      cta.headline,
-                ai_body:       aiData.cta_body || '',
-                ai_cta_label:  aiData.cta_label || 'Agenda una demo'
+                type:     'cta_clean',
+                bg:       null, // Limpieza total en el cierre
+                headline: src[src.length - 1].headline,
+                ai_body:  aiData.cta_body || '',
+                ai_cta_label: aiData.cta_label || 'Probar AIreGPT'
             }
         ]
     };
@@ -229,12 +232,23 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
     const el = document.createElement('div');
     el.className = `slide-preview slide-${slide.type}`;
 
-    // Fondo
-    const bgUrl = isPDF ? bgBase64 : (slide.bg || null);
+    // --- EL FIX: COLOR ALEATORIO + FILTRO DE IMÁGENES ---
+    
+    // 1. Aplicamos el color de fondo de la sesión (el que elegimos en build5Slides)
+    const sessionBg = _lastEnrichedPost.sessionBg || '#001A4D';
+    el.style.backgroundColor = sessionBg;
+
+    // 2. Lógica de imagen: SOLO permitimos imagen si es la lámina de análisis
+    // o si el PDF trae el base64 específico (para exportación)
+    const isAnalysisSlide = slide.bg && slide.bg.includes('analysis');
+    const bgUrl = isPDF ? bgBase64 : (isAnalysisSlide ? slide.bg : null);
+
     if (bgUrl) {
         el.style.backgroundImage    = `url(${bgUrl})`;
         el.style.backgroundSize     = 'cover';
         el.style.backgroundPosition = 'center';
+    } else {
+        el.style.backgroundImage = 'none'; // Limpieza total para las demás láminas
     }
 
     if (isPDF) {
