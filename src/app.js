@@ -9,13 +9,13 @@ let _logoBase64          = null;
 
 // ─── CONFIGURACIÓN VISUAL ────────────────────────────────────
 const SMABILITY_PALETTE = [
-    '#001A4D', // Navy Original
-    '#050505', // Black Industrial
-    '#002366', // Royal Navy
-    '#0D0D0D', // Jet Black
-    '#000B1A', // Deep Midnight
-    '#1A1A1A', // Graphite
-    '#00153D'  // Space Navy
+    '#001A4D', // Navy Original (Tu marca)
+    '#0047AB', // Azul Cobalto (Energía técnica)
+    '#2E0854', // Púrpura Profundo (Innovación/Deep Tech)
+    '#4A0404', // Rojo Óxido (Alerta/Calor)
+    '#013220', // Verde Bosque Muy Oscuro (Sostenibilidad)
+    '#5C2B00', // Naranja Quemado (Infraestructura)
+    '#1A1A1B'  // Grafito Mate (El toque sobrio)
 ];
 
 // ─── LOGO ────────────────────────────────────────────────────
