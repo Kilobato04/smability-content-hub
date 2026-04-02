@@ -284,13 +284,19 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
     const fc        = isPDF ? Math.round(S * 0.033) : 36;
     const bnum_sz   = isPDF ? Math.round(S * 0.018) : 11;
 
-    // Overlay: cover_bold = gradiente; cualquier otra lámina con bg = negro semi
-    const overlayDiv = (slide.bg && slide.type !== 'cta_clean') ? `
-        <div style="position:absolute;inset:0;
-            background:${slide.type === 'cover_bold'
-                ? 'linear-gradient(160deg,rgba(0,0,0,0.88) 0%,rgba(0,71,171,0.75) 50%,rgba(0,0,0,0.95) 100%)'
-                : 'rgba(0,0,0,0.72)'};
-            z-index:1;pointer-events:none;"></div>` : '';
+    // Overlay: 
+    // 1. Si es la lámina de análisis (Lámina 2), NO hay overlay (transparencia total).
+    // 2. Si es cover_bold, mantenemos el gradiente azul/negro.
+    // 3. Si tiene imagen pero no es análisis, aplicamos el negro semi estándar.
+   
+    const isAnalysis = slide.bg && slide.bg.includes('analysis');
+   
+    const overlayDiv = (slide.bg && slide.type !== 'cta_clean' && !isAnalysis) ? `
+       <div style="position:absolute;inset:0;
+           background:${slide.type === 'cover_bold'
+               ? 'linear-gradient(160deg,rgba(0,0,0,0.88) 0%,rgba(0,71,171,0.75) 50%,rgba(0,0,0,0.95) 100%)'
+               : 'rgba(0,0,0,0.72)'};
+           z-index:1;pointer-events:none;"></div>` : '';
 
     // Marco neon data_callout
     const bw = isPDF ? 4 : 3;
@@ -380,16 +386,19 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
             ${hookLine}`;
 
     } else if (slide.type === 'data_callout') {
-    const chartId = `wowChart-${index}`;
     bodyContent = `
-        <div style="text-align:left; width:100%;">
-            <p style="font-family:'Space Grotesk',sans-serif; font-size:14px; color:#39FF14; font-weight:700; letter-spacing:2px; margin-bottom:10px;">ANÁLISIS TÉCNICO // 2026</p>
-            <h3 style="font-size:24px; margin-bottom:15px;">${slide.headline}</h3>
-            <div id="${chartId}" style="width:100%; height:320px;"></div>
-            <p style="font-family:'Inter',sans-serif; font-size:14px; color:#9A9A9A; margin-top:15px; line-height:1.5;">${slide.ai_stat_ctx}</p>
+        <div style="text-align:left; width:100%; position:relative; z-index:5;">
+            <p style="font-family:'Space Grotesk',sans-serif; font-size:14px; color:#0047AB; font-weight:800; letter-spacing:2px; margin-bottom:10px; text-shadow: 0 1px 2px rgba(255,255,255,0.8);">
+                ANÁLISIS TÉCNICO // 2026
+            </p>
+            <h3 style="font-size:28px; margin-bottom:15px; color:#1A1A1A; font-weight:900; line-height:1.1;">
+                ${slide.headline}
+            </h3>
+            <div style="height:350px;"></div> <p style="font-family:'Inter',sans-serif; font-size:15px; color:#333; margin-top:15px; line-height:1.5; background:rgba(255,255,255,0.7); padding:10px; border-radius:4px; display:inline-block;">
+                ${slide.ai_stat_ctx}
+            </p>
         </div>`;
-    
-    } else if (slide.type === 'bullets') {
+   } else if (slide.type === 'bullets') {
         const items      = (slide.bullets || []).slice(0, 4);
         const bulletRows = items.map((b, bi) => `
             <div style="
