@@ -605,7 +605,7 @@ async function downloadAssets(format) {
                 scale: 2, // Calidad Retina
                 useCORS: true,
                 allowTaint: true,
-                backgroundColor: '#001A4D',
+                backgroundColor: _lastEnrichedPost.sessionBg,
                 logging: false,
                 onclone: (clonedDoc) => {
                     // FORZAR LOGOS BLANCOS EN EL RENDERIZADO DE CAPTURA
