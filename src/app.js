@@ -10,6 +10,7 @@ let _logoBase64          = null;
 // ─── CONFIGURACIÓN VISUAL ────────────────────────────────────
 const SMABILITY_PALETTE = [
     '#001A4D', // Navy Original (Tu marca)
+    '#2E0854', // MORADO (Contingencia - IAS Máximo)
     '#0047AB', // Azul Cobalto (Energía técnica)
     '#2E0854', // Púrpura Profundo (Innovación/Deep Tech)
     '#4A0404', // Rojo Óxido (Alerta/Calor)
@@ -160,45 +161,53 @@ function build5Slides(postData, aiData) {
     const src = postData.slides;
     const cat = postData.cat;
     
-    // 1. Escogemos un color aleatorio para este post específico
-    const randomBg = SMABILITY_PALETTE[Math.floor(Math.random() * SMABILITY_PALETTE.length)];
+    // 1. LÓGICA DE COLOR: Si es Contingencia forzamos Morado (#2E0854), sino aleatorio
+    const isContingencia = cat === 'CONTINGENCIA';
+    const sessionColor = isContingencia 
+        ? '#2E0854' 
+        : SMABILITY_PALETTE[Math.floor(Math.random() * SMABILITY_PALETTE.length)];
 
     return {
         ...postData,
-        sessionBg: randomBg, // Guardamos el color para usarlo en el render
+        sessionBg: sessionColor, // Inyectamos el color para que buildSlideEl lo use
         slides: [
             {
                 type:     'cover_bold',
-                bg:       null, // Quitamos imagen de fondo
+                bg:       null,
                 cat_tag:  cat,
                 headline: src[0].headline,
                 ai_hook:  aiData.hook || null
             },
             {
                 type:        'data_callout',
-                bg:          'assets/analysis/heatmap_ibero_1.jpg', // TU NUEVA IMAGEN
-                isAnalysis:  true, // Flag para manejo especial
-                headline:    'ISLA DE CALOR: FOCO IBERO CDMX',
-                ai_stat_ctx: aiData.stat_ctx || 'Análisis micro-climático SMAA v2.6'
+                // Jala el JPG del análisis técnico
+                bg:          src[1].bg || 'assets/analysis/heatmap_ibero_1.jpg', 
+                isAnalysis:  true,
+                device_tag:  src[1].device_tag || 'SMAA', // Para el círculo del sensor
+                headline:    src[1].headline,
+                // Jala la Ficha Técnica directamente del JSON (Hardcoded)
+                technical_specs: postData.datos.technical_specs || '', 
+                ai_stat_ctx: aiData.stat_ctx || src[1].supporting_text || ''
             },
             {
                 type:     'bullets',
                 bg:       null,
                 cat_tag:  cat,
-                headline: aiData.bullets_title || 'Impacto en la Infraestructura',
+                headline: aiData.bullets_title || 'Protocolo Técnico',
                 bullets:  aiData.bullets
             },
             {
                 type:     'split_map',
                 bg:       null,
-                headline: aiData.insight_title || 'Eficiencia Energética',
-                ai_body:  aiData.insight_body || '',
-                metric:   aiData.insight_metric || null,
-                metric_label: aiData.insight_metric_label || ''
+                headline: src[3]?.headline || 'Dato Crítico',
+                // Jala el Insight directamente del JSON (Hardcoded) para control total
+                ai_body:  postData.datos.datos_hardcoded || aiData.insight_body || '',
+                metric:   src[3]?.metric || aiData.insight_metric || null,
+                metric_label: src[3]?.metric_label || ''
             },
             {
                 type:     'cta_clean',
-                bg:       null, // FORZAMOS NULL para que use el color de la sesión
+                bg:       null,
                 headline: src[src.length - 1].headline,
                 ai_body:  aiData.cta_body || '',
                 ai_cta_label: aiData.cta_label || 'Probar AIreGPT'
