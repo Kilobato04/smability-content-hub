@@ -17,7 +17,7 @@
       "cat": "PATENTE",
       "datos": {
         "titulo": "Patente: Sistema modular de islas de calor",
-        "technical_specs": "MX/a/2024/088166\n Smability & IBERO\n SMAAmicro\n Isla de Calor en tiempo real",
+        "technical_specs": "MX/a/2024/088166\n Smability & IBERO\n SMAAmicro para isla de calor",
         "datos_hardcoded": "Sistema modular diseñado para monitorear y diagnosticar islas de calor urbanas de forma granular en tiempo real. Algoritmo propio procesado en AWS para mapas hiperlocales.",
         "dato_viral": "Una solución de $500 USD que habilita decisiones de hasta $50,000 USD."
       },
