@@ -283,34 +283,44 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
     // --- PREPARACIÓN DE CONTENIDO (Masivo/LinkedIn Like) ---
     let bodyContent = '';
 
-    if (slide.type === 'cover_bold') {
-        const coverLogoH = isPDF ? Math.round(S * 0.050) : 32;
+   if (slide.type === 'cover_bold') {
+        // AJUSTE: Logo 50% más grande (de 0.050 a 0.075)
+        const coverLogoH = isPDF ? Math.round(S * 0.075) : 48;
         bodyContent = `
             <div style="position:absolute; top:${pad}px; right:${pad}px; z-index:10; text-align:right;">
                 ${logoImg(coverLogoH, isPDF, 'brightness(0) invert(1)')}
             </div>
             <div style="margin-top: auto;">
-                ${slide.cat_tag ? `<div class="status-badge" style="display:inline-block; margin-bottom:${gap}px; background:#39FF14; color:#000; padding:6px 14px; border-radius:100px; font-weight:800; font-size:12px;">${slide.cat_tag}</div>` : ''}
-                <h3 style="font-family:'Space Grotesk'; font-size:${fs_h3}px; font-weight:900; line-height:0.95; color:#fff; text-transform:uppercase; margin:0; letter-spacing:-0.03em;">${slide.headline}</h3>
-                ${slide.ai_hook ? `<p style="border-left:3px solid #39FF14; padding-left:20px; margin-top:30px; color:#9A9A9A; font-weight:600; font-size:20px;">${slide.ai_hook}</p>` : ''}
+                ${slide.cat_tag ? `<div class="status-badge" style="display:inline-block; margin-bottom:${gap}px; background:#39FF14; color:#000; padding:6px 14px; border-radius:100px; font-weight:800; font-size:12px; font-family:'Space Grotesk';">${slide.cat_tag}</div>` : ''}
+                <h3 style="font-family:'Space Grotesk'; font-size:${fs_h3}px; font-weight:900; line-height:0.95; color:#fff; text-transform:uppercase; margin:0;">${slide.headline}</h3>
+                ${slide.ai_hook ? `<p style="border-left:4px solid #39FF14; padding-left:20px; margin-top:30px; color:#9A9A9A; font-weight:600; font-size:20px; line-height:1.4;">${slide.ai_hook}</p>` : ''}
             </div>`;
 
-    } else if (slide.type === 'data_callout') {
-        const deviceCircleSize = isPDF ? Math.round(S * 0.12) : 90; // Grande
+   } else if (slide.type === 'data_callout') {
+        const deviceCircleSize = isPDF ? Math.round(S * 0.12) : 90;
+        // Nombre del dispositivo para el fallback
+        const deviceName = slide.device_tag || 'SMAA(m)';
+        
         bodyContent = `
             <div style="text-align:left; width:100%; height:100%; position:relative; padding-top:60px;">
+                <div style="position:absolute; top:-25px; right:0; text-align:right; z-index:12;">
+                    <span style="font-family:'Space Grotesk'; font-size:12px; color:#39FF14; font-weight:700; letter-spacing:1px; text-transform:uppercase;">
+                        ${deviceName}
+                    </span>
+                </div>
+
                 <div class="device-circle" style="position:absolute; top:0; right:0; width:${deviceCircleSize}px; height:${deviceCircleSize}px; background:#222; border:2px solid #39FF14; border-radius:50%; display:flex; align-items:center; justify-content:center; overflow:hidden; z-index:11;">
-                    <img src="assets/devices/${(slide.device_tag || 'SMAA').toLowerCase()}.png" style="width:70%;" onerror="this.style.display='none'">
+                    <img src="assets/devices/${(slide.device_tag || 'SMAA').toLowerCase()}.png" style="width:70%; filter: brightness(1.5);" onerror="this.style.display='none'">
                 </div>
                 
-                <p style="font-family:'Space Grotesk'; font-size:14px; color:#0047AB; font-weight:800; letter-spacing:2px; margin-bottom:10px;">ANÁLISIS TÉCNICO // 2026</p>
+                <p style="font-family:'Space Grotesk'; font-size:14px; color:#0047AB; font-weight:800; letter-spacing:2px; margin-bottom:10px; text-shadow: 0 1px 2px rgba(255,255,255,0.5);">ANÁLISIS TÉCNICO // 2026</p>
                 <h3 style="font-size:32px; color:#111; font-weight:900; line-height:1.1; margin-bottom:20px; text-transform:uppercase;">${slide.headline}</h3>
                 
                 <div style="flex:1;"></div>
 
-                <div class="tech-specs-box" style="position:absolute; bottom:20px; right:0; width:220px; background:rgba(255,255,255,0.92); border-left:5px solid #39FF14; padding:15px; color:#111; box-shadow: -10px 10px 30px rgba(0,0,0,0.15);">
-                    <b style="font-family:'Space Grotesk'; font-size:10px; color:#0047AB; text-transform:uppercase; display:block; margin-bottom:5px;">Ficha Técnica:</b>
-                    <p style="font-family:'Inter'; font-size:12px; font-weight:700; line-height:1.3; margin:0;">${(slide.technical_specs || '').replace(/\n/g, '<br>')}</p>
+                <div class="tech-specs-box" style="position:absolute; bottom:20px; right:0; width:220px; background:rgba(255,255,255,0.95); border-left:6px solid #39FF14; padding:18px; color:#111; box-shadow: -10px 10px 30px rgba(0,0,0,0.15);">
+                    <b style="font-family:'Space Grotesk'; font-size:11px; color:#0047AB; text-transform:uppercase; display:block; margin-bottom:8px; letter-spacing:1px;">Ficha Técnica:</b>
+                    <p style="font-family:'Inter'; font-size:13px; font-weight:700; line-height:1.4; margin:0; color:#333;">${(slide.technical_specs || '').replace(/\n/g, '<br>')}</p>
                 </div>
             </div>`;
 
