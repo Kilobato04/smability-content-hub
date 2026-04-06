@@ -113,75 +113,86 @@ textarea { height: 130px; resize: none; margin-bottom: 10px; }
 
 .primary-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(57,255,20,0.3); }
 
-/* --- 5. SLIDE ENGINE (VISUAL HUB) --- */
+/* --- 5. SLIDE ENGINE (VISUAL HUB - LINKEDIN FORMAT) --- */
 #carousel-preview-container {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 50px;
     max-height: 85vh;
     overflow-y: auto;
-    padding: 30px;
-    background: #080808;
+    padding: 40px;
+    background: #0a0a0a;
     border-radius: 16px;
     border: 1px solid var(--border);
     align-items: center;
 }
 
 .slide-preview {
-    /* FIX: Dimensiones fijas para evitar colapso de "tira" */
+    /* Mantenemos 650px para visualización, pero con padding "LinkedIn Style" */
     width: 650px; 
     height: 650px;
     flex-shrink: 0; 
-    
     position: relative;
-    padding: var(--pad-slide);
+    
+    /* Aumentamos el padding para centrar visualmente el mensaje */
+    padding: 60px; 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-radius: 4px;
+    
+    border-radius: 0; /* LinkedIn Style: Bordes rectos son más pro */
     overflow: hidden;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.7);
     background-size: cover;
     background-position: center;
 }
 
+/* Tipografía Masiva: Clave para el look de LinkedIn */
 .slide-preview h3 {
     font-family: var(--fd);
-    font-size: 2.8rem;
+    font-size: 3rem; /* Título grande y con peso */
     font-weight: 900;
-    line-height: 1;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
     color: var(--white);
     text-transform: uppercase;
     margin: 0;
     position: relative;
     z-index: 5;
+    max-width: 95%;
 }
 
+/* Subtextos ajustados para no saturar */
+.slide-preview p {
+    font-family: var(--fb);
+    font-size: 1.1rem;
+    line-height: 1.4;
+    color: var(--g400);
+}
+
+/* Elementos Técnicos Flotantes */
 .device-circle {
-    background: #333;
-    border: 2px solid var(--green);
+    width: 90px;
+    height: 90px;
+    background: #111;
+    border: 3px solid var(--green);
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    z-index: 10;
 }
 
 .tech-specs-box {
-    background: rgba(255,255,255,0.95);
+    width: 210px;
+    background: rgba(255,255,255,0.96);
     border-left: 6px solid var(--green);
     padding: 15px;
-    color: #111;
+    color: #000;
+    font-family: var(--fb);
+    box-shadow: -10px 10px 30px rgba(0,0,0,0.2);
 }
 
-/* --- 6. EXPORT FIXES (PUNTO 6 RESTAURADO) --- */
+/* --- 6. EXPORT FIXES (LINKEDIN PDF READY) --- */
 @media print {
-    /* Ocultar toda la interfaz del Hub */
-    .control-panel, 
-    header, 
-    .status-badge, 
-    .preview-header,
-    .download-group,
-    .footer-note { 
+    .control-panel, header, .status-badge, .preview-header, .download-group { 
         display: none !important; 
     }
     
@@ -190,22 +201,29 @@ textarea { height: 130px; resize: none; margin-bottom: 10px; }
     .content-grid { display: block; }
     
     #carousel-preview-container { 
-        overflow: visible; 
-        max-height: none; 
-        padding: 0; 
-        background: none; 
-        border: none;
+        overflow: visible; max-height: none; padding: 0; background: none; border: none;
     }
     
-    /* Forzar que cada lámina sea un cuadrado perfecto en el PDF */
     .slide-preview { 
         width: 1080px !important; 
         height: 1080px !important; 
+        padding: 100px !important; /* Margen de seguridad para PDF */
         page-break-after: always; 
         break-after: page;
         border-radius: 0;
         box-shadow: none;
         margin: 0 !important;
         position: relative !important;
+    }
+
+    /* Escalamos la fuente masivamente para el PDF de 1080px */
+    .slide-preview h3 {
+        font-size: 5.5rem !important; 
+        line-height: 0.9 !important;
+    }
+    
+    .slide-preview p {
+        font-size: 2rem !important;
+        line-height: 1.3 !important;
     }
 }
