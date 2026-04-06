@@ -20,6 +20,35 @@
     --pad-slide: 56px;
 }
 
+/* --- BOTONES CONSOLIDADOS --- */
+.copy-btn, .primary-btn, .secondary-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    font-family: var(--fd);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.copy-btn, .primary-btn {
+    background: var(--green) !important;
+    color: #000 !important;
+}
+
+.copy-btn:hover {
+    background: #32e612 !important;
+    transform: translateY(-1px);
+}
+
 /* --- 2. RESET & BASE --- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -137,17 +166,23 @@ textarea { height: 110px; resize: none; margin-bottom: 10px; }
 }
 
 .slide-preview {
+    /* DIMENSIONES FIJAS PARA EVITAR COLAPSO */
     width: 100%;
-    aspect-ratio: 1 / 1;
+    max-width: 600px; /* Ajusta según tu pantalla para que no sea gigante */
+    aspect-ratio: 1 / 1; /* Fuerza el cuadrado */
+    min-height: 500px; /* Altura mínima de seguridad para el Hub */
+    flex-shrink: 0; /* Prohíbe que el flexbox la aplaste */
+    
     position: relative;
-    background-color: var(--bg-dark);
     padding: var(--pad-slide);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-radius: 0; /* Bordes rectos LinkedIn */
+    border-radius: 0;
     overflow: hidden;
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    background-color: var(--bg-dark);
+    margin: 0 auto;
 }
 
 /* Tipografía Masiva Editorial */
