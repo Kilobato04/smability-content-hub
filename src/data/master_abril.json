@@ -25,6 +25,8 @@
         { "type": "cover_bold", "headline": "PATENTAMOS EL SISTEMA QUE OTROS NO TIENEN.", "metric": "MX/a/2024/088166", "bg": null },
         { "type": "data_callout", "headline": "NO CALCULAMOS ISLAS DE CALOR. LAS MEDIMOS.", "metric": "$500 USD", "device_tag": "SMAAmicro", "bg": "assets/analysis/heatmap_ibero_1.jpg" },
         { "type": "cta_clean", "headline": "TRABAJA CON LOS CREADORES.", "supporting_text": "Co-desarrollado con la IBERO CDMX. Patente activa. Agenda demo técnica.", "bg": null }
+        { "type": "split_map", "headline": "INNOVACIÓN EN EL ANÁLISIS URBANO", "metric": "50%", "metric_label": "MEJORA EN PRECISIÓN VS MÉTODOS TRADICIONALES"},
+        { "type": "cta_clean", "headline": "TRABAJA CON LOS CREADORES." }
       ]
     },
     {
