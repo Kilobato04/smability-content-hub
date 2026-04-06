@@ -1,52 +1,43 @@
 /* ============================================================
    SMABILITY CONTENT HUB — style.css
-   Reconciliado con index.html · app.js · master_abril.json
-   Editorial Dark · LinkedIn Carousel · PDF-ready
+   Estrategia: Lean Mode | High-Contrast | 12-Post Campaign
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Space+Grotesk:wght@400;700;900&display=swap');
 
 /* --- 1. VARIABLES --- */
 :root {
-    --blue:      #0047AB;
-    --blue-l:    #1A6BFF;
-    --green:     #39FF14;
-    --green-d:   #1fcc00;
-    --bg:        #111111;
-    --bg-s:      #1C1C1C;
-    --bg-s2:     #252525;
-    --bg-slide:  #0D0D0D;
-    --white:     #FFFFFF;
-    --g100:      #F0F0F0;
-    --g400:      #9A9A9A;
-    --g600:      #555555;
+    --green:     #39FF14; /* Neon Smability */
+    --blue-tech: #0047AB; /* Azul Cobalto */
+    --bg-dark:   #111111;
+    --bg-panel:  #1C1C1C;
+    --bg-input:  #252525;
     --border:    rgba(255,255,255,0.08);
-    --success:   #1a3d1a;
+    --white:     #FFFFFF;
+    --g400:      #9A9A9A;
     --fd:        'Space Grotesk', sans-serif;
     --fb:        'Inter', sans-serif;
-    --smability-navy: #001A4D;
-    --pad:       56px;
+    --pad-slide: 56px;
 }
 
 /* --- 2. RESET & BASE --- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    background-color: var(--bg);
+    background-color: var(--bg-dark);
     color: var(--white);
     font-family: var(--fb);
     -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
+    overflow-x: hidden;
 }
 
-/* --- 3. APP SHELL — .app-container (clase real del HTML) --- */
 .app-container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 32px 40px;
 }
 
-/* --- 4. HEADER --- */
+/* --- 3. UI COMPONENTS (Panel de Control) --- */
 header {
     display: flex;
     align-items: center;
@@ -56,27 +47,7 @@ header {
     margin-bottom: 36px;
 }
 
-.main-logo {
-    height: 44px;
-    width: auto;
-    object-fit: contain;
-    filter: brightness(0) invert(1); /* fuerza blanco sobre fondo oscuro */
-}
-
-.header-info {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.header-info h1 {
-    font-family: var(--fd);
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--g400);
-}
+.main-logo { height: 40px; filter: brightness(0) invert(1); }
 
 .status-badge {
     background: var(--green);
@@ -85,556 +56,164 @@ header {
     border-radius: 100px;
     font-family: var(--fd);
     font-weight: 700;
-    font-size: 0.78rem;
-    letter-spacing: 0.06em;
+    font-size: 0.75rem;
     text-transform: uppercase;
 }
 
-/* --- 5. LAYOUT — .content-grid (clase real del HTML) --- */
 .content-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 36px;
-    align-items: start;
+    grid-template-columns: 420px 1fr;
+    gap: 40px;
 }
 
-/* --- 6. PANELES --- */
-.control-panel,
-.preview-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
+.control-panel, .preview-panel { display: flex; flex-direction: column; gap: 20px; }
 
-.preview-panel > h2 {
-    font-family: var(--fd);
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--g400);
-    margin-bottom: 0;
-}
-
-/* Secciones internas del panel de control */
-.calendar-section,
-.selector-group,
-.output-area {
-    background: var(--bg-s);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px; 
-    margin-bottom: 12px; /* Un poco más de aire entre perfiles */
-}
-
-.calendar-section h2,
-.output-area h3 {
-    font-family: var(--fd);
-    font-size: 0.75rem; /* Ligeramente más grande para distinguir perfiles */
-    color: var(--white); /* Nombre del perfil en blanco */
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-hr {
-    display: none; /* El espacio lo da el gap del flex */
-}
-
-/* Título suelto del generador */
-.control-panel > h2 {
-    font-family: var(--fd);
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--g400);
-    padding: 0 4px;
-    margin-bottom: -16px; /* lo absorbe el gap */
-}
-
-/* --- 7. CALENDARIO --- */
-.calendar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 14px;
-}
-
-#year-label {
-    font-family: var(--fd);
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--g400);
-}
-
-/* Fila de días de semana — generada por JS, añadimos via CSS pseudo si no existe */
-.calendar-mini {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 3px;
-}
-
-.cal-day {
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.78rem;
-    font-weight: 600;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background .15s, transform .1s;
-    position: relative;
-    background: var(--bg-s2);
-    color: var(--g400);
-}
-
-.cal-day:hover:not(.empty):not(.weekend) { background: #2e2e2e; transform: scale(1.08); }
-.cal-day.empty    { background: transparent; cursor: default; }
-.cal-day.weekend  { background: transparent; color: var(--g600); cursor: default; }
-.cal-day.today    { border: 1px solid var(--green); color: var(--green); }
-
-.cal-day.has-content {
-    background: var(--blue);
-    color: var(--white);
-    font-weight: 700;
-    border: 1.5px solid var(--green);
-}
-
-.cal-day.published {
-    background: var(--success) !important;
-    color: var(--green);
-    border: 1.5px solid var(--green-d);
-}
-
-.cal-day.published::after {
-    content: '✓';
-    position: absolute;
-    font-size: 0.55rem;
-    bottom: 2px;
-    right: 3px;
-}
-
-/* --- 8. FORM CONTROLS --- */
-label {
-    display: block;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--g400);
-    margin-bottom: 8px;
-}
-
-select,
-textarea {
-    width: 100%;
-    background: var(--bg-s2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--white);
-    font-family: var(--fb);
-    font-size: 0.85rem;
-    padding: 12px 14px;
-    transition: border-color .2s;
-}
-
-select {
-    padding: 10px 14px;
-    cursor: pointer;
-    margin-bottom: 0;
-}
-
-textarea {
-    height: 130px; /* Reducido para visualización dual */
-    font-size: 0.85rem;
-}
-
-select:focus,
-textarea:focus { outline: none; border-color: var(--green); }
-
-select option { background: var(--bg-s2); }
-
-/* --- 9. BUTTONS --- */
-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    border: none;
-    border-radius: 7px;
-    cursor: pointer;
-    font-family: var(--fd);
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    transition: opacity .15s, transform .1s;
-    font-size: 0.85rem;
-    padding: 12px 22px;
-}
-
-button:hover:not(:disabled) { opacity: .85; transform: translateY(-1px); }
-button:active:not(:disabled) { transform: translateY(0); }
-button:disabled { opacity: .35; cursor: not-allowed; }
-
-/* #generate-btn — el botón principal de generación */
-#generate-btn,
-.primary-btn {
-    width: 100%;
-    background: var(--green);
-    color: #000;
-    font-size: 0.95rem;
-    padding: 15px;
-}
-
-/* Botones secundarios dentro de .action-buttons */
-.action-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 14px;
-}
-
-.action-buttons .primary {
-    background: var(--blue-l);
-    color: #fff;
-}
-
-.action-buttons .secondary {
-    background: var(--bg-s2);
-    color: var(--g100);
-    border: 1px solid var(--border);
-}
-
-/* #download-pdf-btn */
-#download-pdf-btn {
-    width: 100%;
-    background: transparent;
-    color: var(--green);
-    font-size: 0.85rem;
-    padding: 13px;
-    border: 2px solid var(--green);
-    border-radius: 8px;
-    margin-top: 4px;
-}
-
-#download-pdf-btn:hover:not(:disabled) { background: rgba(57,255,20,.06); }
-
-.secondary-btn:disabled {
-    border-color: var(--g600) !important;
-    color: var(--g600) !important;
-    opacity: 0.3;
-}
-
-/* --- 10. CAROUSEL CONTAINER --- */
-#carousel-preview-container {
-    background: #080808;
+.selector-group, .output-area {
+    background: var(--bg-panel);
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 20px;
+}
+
+h2, h3 {
+    font-family: var(--fd);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    margin-bottom: 15px;
+    color: var(--g400);
+}
+
+select, textarea {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--white);
+    padding: 12px;
+    font-family: var(--fb);
+    font-size: 0.9rem;
+}
+
+textarea { height: 120px; resize: none; margin-bottom: 10px; }
+
+/* --- 4. BUTTONS --- */
+.primary-btn {
+    background: var(--green);
+    color: #000;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    transition: 0.2s;
+}
+
+.primary-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(57,255,20,0.3); }
+
+.secondary-btn {
+    background: transparent;
+    border: 2px solid var(--green);
+    color: var(--green);
+    font-weight: 700;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* --- 5. SLIDE ENGINE (Vista Previa) --- */
+#carousel-preview-container {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 20px;
     max-height: 85vh;
     overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--bg-s2) transparent;
+    padding-right: 10px;
 }
 
-.carousel-placeholder {
-    color: var(--g600);
-    font-size: 0.9rem;
-    text-align: center;
-    padding: 60px 20px;
-    border: 1px dashed var(--g600);
-    border-radius: 8px;
-}
-
-/* ============================================================
-   11. SLIDE BASE — .slide-preview (clase real del app.js)
-   ============================================================ */
 .slide-preview {
     width: 100%;
     aspect-ratio: 1 / 1;
     position: relative;
-    overflow: hidden;
+    background-color: var(--blue-tech); /* Fallback */
+    padding: var(--pad-slide);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: var(--pad);
-    background: var(--bg-slide);
-    flex-shrink: 0;
-    box-shadow: 0 8px 40px rgba(0,0,0,.6);
-    border-radius: 6px;
-}
-
-/* Número de lámina — pill en esquina superior izquierda */
-.slide-num {
-    position: absolute;
-    top: 18px;
-    left: 24px;
-    font-family: var(--fd);
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    color: var(--g600);
-    z-index: 10;
-    background: rgba(0,0,0,.5);
-    padding: 3px 8px;
     border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
-/* Flecha — SIEMPRE esquina superior derecha */
-.slide-nav-arrow {
+/* Logo alineado a la derecha en Portada (Update) */
+.slide-header-right {
     position: absolute;
-    top: var(--pad);
-    right: var(--pad);
-    font-size: 1.8rem;
-    line-height: 1;
-    color: rgba(255,255,255,.22);
-    z-index: 10;
-    user-select: none;
+    top: var(--pad-slide);
+    right: var(--pad-slide);
+    text-align: right;
 }
 
-/* Footer */
-.slide-footer {
+/* Lámina 2: Círculo del Sensor */
+.device-circle {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #222;
+    border: 2px solid var(--green);
     display: flex;
     align-items: center;
-    font-family: var(--fd);
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--g600);
-    border-top: 1px solid var(--border);
-    padding-top: 14px;
-    margin-top: auto;
-    position: relative;
-    z-index: 2;
+    justify-content: center;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 
-.slide-footer .dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--green);
-    display: inline-block;
-    margin-right: 8px;
-    flex-shrink: 0;
-}
+.device-circle img { width: 70%; height: auto; filter: grayscale(1) brightness(1.5); }
 
-/* Branding / logo dentro de slide — siempre blanco */
-.slide-branding {
+/* Lámina 2: Ficha Técnica Vertical */
+.tech-specs-box {
     position: absolute;
-    top: var(--pad);
-    left: var(--pad);
+    bottom: 80px;
+    right: 0;
+    width: 200px;
+    background: rgba(255,255,255,0.92);
+    border-left: 5px solid var(--green);
+    padding: 15px;
+    color: #111;
+    font-family: var(--fb);
     z-index: 10;
 }
 
-.slide-branding img {
-    filter: brightness(0) invert(1);
-    height: 32px;
-    width: auto;
-}
+.tech-specs-box b { font-family: var(--fd); font-size: 0.7rem; text-transform: uppercase; color: var(--blue-tech); }
+.tech-specs-box p { font-size: 0.8rem; margin-top: 5px; line-height: 1.3; font-weight: 600; }
 
-/* Cuerpo principal del slide */
-.slide-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    flex: 1;
-    padding-top: 80px; /* clearance del logo */
-}
-
-.slide-body h3 {
+/* Tipografía de Slides */
+.slide-preview h3 {
     font-family: var(--fd);
-    font-size: 3rem;
+    font-size: 3.2rem;
     font-weight: 900;
-    line-height: 1.0;
-    letter-spacing: -.02em;
-    text-transform: uppercase;
+    line-height: 0.95;
     color: var(--white);
-    margin: 0 0 16px;
-}
-
-.slide-body p {
-    font-size: 1rem;
-    color: var(--g400);
-    line-height: 1.6;
+    text-transform: uppercase;
     margin: 0;
 }
 
-/* Métrica grande dentro de slide */
-.slide-metric {
-    font-family: var(--fd) !important;
-    font-size: 5rem !important;
-    font-weight: 900 !important;
-    line-height: 1 !important;
-    color: var(--green) !important;
-    letter-spacing: -.04em !important;
-    margin: 12px 0 !important;
-}
-
-/* ============================================================
-   12. VARIANTES — mapean a los tipos del JSON
-   ============================================================ */
-
-/* cover_bold — portada oscura */
-.slide-cover_bold {
-    background: var(--bg-slide);
-}
-
-/* Overlay del cover — entre imagen de fondo y contenido */
-.cover-overlay {
-    position: absolute;
-    inset: 0;
-    /* Gradiente direccional: más opaco abajo donde está el texto */
-    background: linear-gradient(
-        160deg,
-        rgba(0, 0, 0, 0.88) 0%,
-        rgba(0, 71, 171, 0.75) 50%,
-        rgba(0, 0, 0, 0.95) 100%
-    );
-    z-index: 1;
-    pointer-events: none;
-}
-
-/* Todo el contenido del slide va sobre el overlay */
-.slide-cover_bold .slide-content-wrapper,
-.slide-data_callout .slide-content-wrapper,
-.slide-split_map .slide-content-wrapper,
-.slide-cta_clean .slide-content-wrapper {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-/* El número de lámina y la flecha también sobre el overlay */
-.slide-preview .slide-num,
-.slide-preview .slide-nav-arrow {
-    z-index: 3;
-}
-
-/* data_callout — marco técnico neon */
-.slide-data_callout {
-    background: var(--bg-slide);
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-}
-
-.slide-data_callout::before {
-    content: '';
-    position: absolute;
-    top: 28px; left: 28px; right: 28px; bottom: 28px;
-    border: 1.5px solid rgba(57,255,20,.25);
-    border-radius: 8px;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.slide-data_callout::after {
-    content: '';
-    position: absolute;
-    top: 28px; left: 28px;
-    width: 36px; height: 36px;
-    border-top: 3px solid var(--green);
+.slide-preview p.hook {
     border-left: 3px solid var(--green);
-    border-radius: 8px 0 0 0;
-    z-index: 0;
+    padding-left: 20px;
+    color: var(--g400);
+    font-size: 1.1rem;
+    font-weight: 600;
+    max-width: 80%;
 }
 
-/* split_map — división izquierda/derecha */
-.slide-split_map {
-    background: var(--bg-slide);
-}
-
-/* cta_clean — cierre minimalista sin distracciones */
-.slide-cta_clean {
-    background: linear-gradient(145deg, #020f2a 0%, #001a5c 60%, #0a0a0a 100%) !important;
-}
-
-/* Eliminamos cualquier rastro de imagen de fondo en esta variante */
-.slide-cta_clean .cover-overlay {
-    display: none !important;
-}
-
-.slide-cta_clean .slide-body h3 {
-    font-size: 3.4rem;
-    color: var(--white);
-    text-shadow: none; /* Quitamos sombras para máxima limpieza */
-}
-
-/* ============================================================
-   13. PRINT / PDF — fuerza 1080×1080, oculta UI
-   ============================================================ */
+/* --- 6. EXPORT FIXES (PDF/PNG) --- */
 @media print {
-   
-    *, *::before, *::after {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
-
-    .js-plotly-plot .xtick text, 
-    .js-plotly-plot .ytick text {
-        fill: var(--g400) !important;
-    }
-
-    .js-plotly-plot {
-        overflow: visible !important;
-    }
-
-    body { background: #0D0D0D !important; }
-
-    .app-container { padding: 0; }
-
-   header,
-   .control-panel,
-   .preview-panel > h2,
-   #download-pdf-btn,
-   #download-png-btn { /* <--- Agrega esto aquí */
-       display: none !important; 
-   }
-
-    .content-grid { grid-template-columns: 1fr !important; }
-
-    #carousel-preview-container {
-        padding: 0 !important;
-        gap: 0 !important;
-        background: transparent !important;
-        border: none !important;
-        max-height: none !important;
-        overflow: visible !important;
-    }
-
-    .slide-preview {
-        background-color: var(--smability-navy) !important;
-        box-sizing: border-box;
-        width: 1080px !important;
-        height: 1080px !important;
-        aspect-ratio: unset !important;
-        margin: 0 !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        page-break-after: always !important;
-        break-after: page !important;
-    }
-
-   /* Forzar que los logos sean blancos */
-   .slide-branding img, .slide-footer img {
-       display: block;
-       filter: brightness(0) invert(1) !important;
-       -webkit-filter: brightness(0) invert(1) !important;
-   }
-   
-   /* Fix para la gráfica de Plotly */
-   .js-plotly-plot .main-svg {
-       background: transparent !important;
-   }
+    .control-panel, header, .status-badge { display: none !important; }
+    .content-grid { grid-template-columns: 1fr; }
+    .slide-preview { width: 1080px; height: 1080px; page-break-after: always; }
 }
