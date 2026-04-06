@@ -339,8 +339,8 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                         <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://smability.io/aire/gpt.html" style="width:100%;">
                     </div>
                     <div>
-                        <p style="color:#fff; font-weight:800; font-size:20px; margin-bottom:5px;">AIreGPT v2.6</p>
-                        <p style="color:#9A9A9A; font-weight:600; font-size:16px;">Escanea para probar el monitoreo en tiempo real.</p>
+                        <p style="color:#fff; font-weight:800; font-size:20px; margin-bottom:5px;">AIreGPT</p>
+                        <p style="color:#9A9A9A; font-weight:600; font-size:16px;">Escanea para conocer tu exposición en tiempo real.</p>
                     </div>
                 </div>
             </div>`;
