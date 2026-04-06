@@ -2,24 +2,30 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Smability Content Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smability Content Hub | Producción Abril 2026</title>
     <link rel="stylesheet" href="style.css">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-</head>
+    
+    </head>
 <body>
     <div class="app-container">
         <header>
-            <img src="assets/logo.png" alt="Smability" class="main-logo">
-            <div class="status-badge">Meta 2026: $200k USD </div>
+            <div class="header-left">
+                <img src="assets/logo.png" alt="Smability" class="main-logo">
+                <span class="version-tag">v2.6 Lean</span>
+            </div>
+            <div class="status-badge">Meta 2026: $200k USD</div>
         </header>
 
         <main class="content-grid">
             <section class="control-panel">
                 <div class="selector-group">
                     <h2>🚀 Panel de Producción</h2>
+                    <p class="helper-text">Selecciona un post del Pipeline de Abril:</p>
                     <select id="post-selector">
                         <option value="">Cargando plan maestro…</option>
                     </select>
@@ -27,37 +33,51 @@
                 </div>
             
                 <div class="output-area">
-                    <h3>👤 Perfil Personal (Horacio)</h3>
-                    <textarea id="linkedin-post-output" readonly></textarea>
-                    <div class="action-buttons">                    
-                        <button class="primary" onclick="copyText('linkedin-post-output')">Copiar</button>
+                    <div class="area-header">
+                        <h3>👤 Perfil Personal (Horacio)</h3>
+                        <span class="target-tag">B2B Insight</span>
+                    </div>
+                    <textarea id="linkedin-post-output" readonly placeholder="Aquí aparecerá el copy para Horacio..."></textarea>
+                    <div class="action-buttons">                     
+                        <button class="copy-btn" onclick="copyText('linkedin-post-output')">Copiar Contenido</button>
                     </div>
                 </div>
             
                 <div class="output-area">
-                    <h3>🏢 Perfil Corporativo (Smability)</h3>
-                    <textarea id="smability-post-output" readonly></textarea>
+                    <div class="area-header">
+                        <h3>🏢 Perfil Corporativo (Smability)</h3>
+                        <span class="target-tag">Brand Awareness</span>
+                    </div>
+                    <textarea id="smability-post-output" readonly placeholder="Aquí aparecerá el copy para la Company Page..."></textarea>
                     <div class="action-buttons">
-                        <button class="primary" onclick="copyText('smability-post-output')">Copiar</button>
+                        <button class="copy-btn" onclick="copyText('smability-post-output')">Copiar Contenido</button>
                     </div>
                 </div>
             </section>
 
             <section class="preview-panel">
-                <h2>🖼️ Vista Previa Reel (Unificado)</h2>
-                <div id="carousel-preview-container"></div>
+                <div class="preview-header">
+                    <h2>🖼️ Vista Previa Reel (Unificado)</h2>
+                    <span class="format-tag">1080x1080</span>
+                </div>
                 
-                <div class="download-group" style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button id="download-pdf-btn" class="primary-btn" disabled style="flex: 2;">
+                <div id="carousel-preview-container">
+                    </div>
+                
+                <div class="download-group">
+                    <button id="download-pdf-btn" class="primary-btn download-main" disabled>
                         ↓ Descargar PDF para LinkedIn
                     </button>
-                    <button id="download-png-btn" class="secondary-btn" disabled style="flex: 1; background-color: var(--bg-s2); border: 1px solid var(--border); color: var(--g100);">
+                    <button id="download-png-btn" class="secondary-btn download-sub" disabled title="Descargar láminas individuales">
                         📷 PNGs (ZIP)
                     </button>
                 </div>
+                
+                <p class="footer-note">Asegúrate de haber montado el <b>heatmap_ibero_1.jpg</b> en assets/analysis/</p>
             </section>
         </main>
     </div>
+
     <script src="app.js"></script>
 </body>
 </html>
