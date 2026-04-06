@@ -166,23 +166,21 @@ textarea { height: 110px; resize: none; margin-bottom: 10px; }
 }
 
 .slide-preview {
-    /* DIMENSIONES FIJAS PARA EVITAR COLAPSO */
     width: 100%;
-    max-width: 600px; /* Ajusta según tu pantalla para que no sea gigante */
-    aspect-ratio: 1 / 1; /* Fuerza el cuadrado */
-    min-height: 500px; /* Altura mínima de seguridad para el Hub */
-    flex-shrink: 0; /* Prohíbe que el flexbox la aplaste */
-    
+    aspect-ratio: 1 / 1;
     position: relative;
+    
+    /* AJUSTE: Gradiente radial sutil para dar profundidad */
+    background: radial-gradient(circle at center, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0) 70%), var(--bg-dark);
+    
+    background-color: var(--bg-dark); /* Fallback */
     padding: var(--pad-slide);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-radius: 0;
+    border-radius: 0; /* Bordes rectos LinkedIn */
     overflow: hidden;
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    background-color: var(--bg-dark);
-    margin: 0 auto;
 }
 
 /* Tipografía Masiva Editorial */
