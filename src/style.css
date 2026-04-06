@@ -98,132 +98,94 @@ select, textarea {
 textarea { height: 130px; resize: none; margin-bottom: 10px; }
 
 /* --- 4. BUTTONS --- */
-.primary-btn {
-    background: var(--green);
-    color: #000;
+.copy-btn, .primary-btn, .secondary-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    font-family: var(--fd);
     font-weight: 800;
     text-transform: uppercase;
-    padding: 14px;
-    border-radius: 8px;
-    border: none;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
     cursor: pointer;
-    width: 100%;
-    transition: 0.2s;
+    transition: all 0.2s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
-.primary-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(57,255,20,0.3); }
+.copy-btn, .primary-btn {
+    background: var(--green);
+    color: #000;
+}
+
+.secondary-btn {
+    background: var(--bg-input);
+    color: var(--white);
+    border: 1px solid var(--border);
+}
+
+.copy-btn:hover, .primary-btn:hover { background: #32e612; transform: translateY(-1px); }
+
+.download-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 10px;
+}
 
 /* --- 5. SLIDE ENGINE (VISUAL HUB - LINKEDIN FORMAT) --- */
 #carousel-preview-container {
     display: flex;
     flex-direction: column;
-    gap: 50px;
-    max-height: 85vh;
+    gap: 30px;
+    max-height: 65vh; /* Reducido para mejor UX */
     overflow-y: auto;
-    padding: 40px;
-    background: #0a0a0a;
-    border-radius: 16px;
-    border: 1px solid var(--border);
+    padding: 30px;
+    background: #080808;
+    border-radius: 12px;
     align-items: center;
 }
 
 .slide-preview {
-    /* Mantenemos 650px para visualización, pero con padding "LinkedIn Style" */
-    width: 650px; 
-    height: 650px;
-    flex-shrink: 0; 
-    position: relative;
-    
-    /* Aumentamos el padding para centrar visualmente el mensaje */
-    padding: 60px; 
+    width: 480px;  /* Tamaño de vista previa más manejable */
+    height: 480px; 
+    flex-shrink: 0;
+    padding: 45px; /* Proporcional al nuevo tamaño */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    
-    border-radius: 0; /* LinkedIn Style: Bordes rectos son más pro */
-    overflow: hidden;
-    box-shadow: 0 40px 100px rgba(0,0,0,0.7);
-    background-size: cover;
-    background-position: center;
+    border-radius: 0;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    background-color: var(--bg-dark);
 }
 
-/* Tipografía Masiva: Clave para el look de LinkedIn */
+/* Títulos Gigantes (LinkedIn Style) */
 .slide-preview h3 {
     font-family: var(--fd);
-    font-size: 3rem; /* Título grande y con peso */
+    font-size: 3.5rem; /* Aumentado significativamente */
     font-weight: 900;
-    line-height: 0.95;
-    letter-spacing: -0.04em;
-    color: var(--white);
+    line-height: 0.85; /* Más apretado, más impacto */
+    letter-spacing: -0.05em;
     text-transform: uppercase;
-    margin: 0;
-    position: relative;
-    z-index: 5;
-    max-width: 95%;
 }
 
-/* Subtextos ajustados para no saturar */
 .slide-preview p {
-    font-family: var(--fb);
-    font-size: 1.1rem;
-    line-height: 1.4;
-    color: var(--g400);
-}
-
-/* Elementos Técnicos Flotantes */
-.device-circle {
-    width: 90px;
-    height: 90px;
-    background: #111;
-    border: 3px solid var(--green);
-    border-radius: 50%;
-    z-index: 10;
-}
-
-.tech-specs-box {
-    width: 210px;
-    background: rgba(255,255,255,0.96);
-    border-left: 6px solid var(--green);
-    padding: 15px;
-    color: #000;
-    font-family: var(--fb);
-    box-shadow: -10px 10px 30px rgba(0,0,0,0.2);
+    font-size: 1.3rem; /* Texto de apoyo más legible */
+    line-height: 1.2;
+    font-weight: 600;
 }
 
 /* --- 6. EXPORT FIXES (LINKEDIN PDF READY) --- */
 @media print {
-    .control-panel, header, .status-badge, .preview-header, .download-group { 
-        display: none !important; 
+    .slide-preview {
+        width: 1080px !important;
+        height: 1080px !important;
+        padding: 90px !important;
     }
-    
-    body { background: white !important; }
-    .app-container { padding: 0; max-width: none; margin: 0; }
-    .content-grid { display: block; }
-    
-    #carousel-preview-container { 
-        overflow: visible; max-height: none; padding: 0; background: none; border: none;
-    }
-    
-    .slide-preview { 
-        width: 1080px !important; 
-        height: 1080px !important; 
-        padding: 100px !important; /* Margen de seguridad para PDF */
-        page-break-after: always; 
-        break-after: page;
-        border-radius: 0;
-        box-shadow: none;
-        margin: 0 !important;
-        position: relative !important;
-    }
-
-    /* Escalamos la fuente masivamente para el PDF de 1080px */
     .slide-preview h3 {
-        font-size: 5.5rem !important; 
-        line-height: 0.9 !important;
-    }
-    
-    .slide-preview p {
-        font-size: 2rem !important;
-        line-height: 1.3 !important;
+        font-size: 7.5rem !important; /* Texto masivo en el archivo final */
     }
 }
