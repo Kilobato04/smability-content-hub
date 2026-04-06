@@ -166,21 +166,28 @@ textarea { height: 110px; resize: none; margin-bottom: 10px; }
 }
 
 .slide-preview {
-    width: 100%;
-    aspect-ratio: 1 / 1;
+    /* FIX: Dimensiones fijas para evitar el formato tira */
+    width: 600px; 
+    height: 600px;
+    min-height: 600px; /* Asegura que no se colapse */
+    flex-shrink: 0;    /* CRÍTICO: Prohíbe que el contenedor flex la aplaste */
+    
     position: relative;
+    margin: 0 auto;    /* Centra la lámina en el panel */
     
-    /* AJUSTE: Gradiente radial sutil para dar profundidad */
+    /* GRADIENTE: Mantenemos la profundidad visual */
     background: radial-gradient(circle at center, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0) 70%), var(--bg-dark);
+    background-color: var(--bg-dark);
     
-    background-color: var(--bg-dark); /* Fallback */
-    padding: var(--pad-slide);
+    padding: 60px;     /* Padding generoso para look LinkedIn */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-radius: 0; /* Bordes rectos LinkedIn */
+    border-radius: 0;
     overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+    background-size: cover;
+    background-position: center;
 }
 
 /* Tipografía Masiva Editorial */
