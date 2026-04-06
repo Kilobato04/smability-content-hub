@@ -225,23 +225,23 @@ function imgToBase64(src) {
 // ─── 7. BUILD SLIDE ─────────────────────────────────────────
 function buildSlideEl(slide, index, total, sidepx, bgBase64) {
     const isPDF = !!sidepx;
-    const S     = sidepx || 1080; // Default para cálculo
+    const S     = sidepx || 0; // Se calculará dinámicamente en PDF
     const el = document.createElement('div');
     el.className = `slide-preview slide-${slide.type}`;
 
-    // --- FIX DE DIMENSIÓN "TIRA" ---
-    // Obligamos a que el elemento sea un cuadrado perfecto en el navegador
+    // --- FIX DE DIMENSIONAMIENTO PARA EL HUB ---
     if (!isPDF) {
-        const containerWidth = document.getElementById('carousel-preview-container').offsetWidth - 40;
-        el.style.width = containerWidth + 'px';
-        el.style.height = containerWidth + 'px';
-        el.style.minHeight = containerWidth + 'px';
-        el.style.marginBottom = '20px';
+        // En el Hub, forzamos el cuadrado para que no se vea como tira
+        el.style.width = '100%';
+        el.style.aspectRatio = '1 / 1';
     }
 
+    // 1. APLICAR COLOR ALEATORIO DE SESIÓN
     const sessionBg = _lastEnrichedPost.sessionBg || '#001A4D';
     el.style.backgroundColor = sessionBg;
 
+    // 2. LÓGICA DE IMAGEN (SOLO ANÁLISIS O PDF)
+    // Nos aseguramos que la lámina 2 siempre tenga imagen
     const isAnalysisSlide = slide.bg && (slide.bg.includes('analysis') || slide.isAnalysis);
     const bgUrl = isPDF ? bgBase64 : (isAnalysisSlide ? slide.bg : null);
 
@@ -249,98 +249,126 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
         el.style.backgroundImage    = `url(${bgUrl})`;
         el.style.backgroundSize     = 'cover';
         el.style.backgroundPosition = 'center';
+    } else {
+        el.style.backgroundImage = 'none';
     }
 
-    const pad = isPDF ? Math.round(S * 0.052) : 45;
-    const fs_h3 = isPDF ? Math.round(S * 0.07) : 34; 
-    const gap = isPDF ? Math.round(S * 0.018) : 12;
+    // 3. FIX PARA PDF: Forzar dimensiones y color
+    if (isPDF) {
+        el.style.cssText = `
+            background-image:${bgUrl ? `url(${bgUrl})` : 'none'};
+            background-size:cover; background-position:center;
+            background-color:${sessionBg};
+            width:${S}px; height:${S}px; aspect-ratio:unset;
+            position:relative; display:flex; flex-direction:column;
+            justify-content:space-between;
+            padding:${Math.round(S * 0.052)}px;
+            overflow:hidden; box-sizing:border-box;
+            border-radius:0; box-shadow:none;`;
+    }
 
+    // 4. ESCALA TIPOGRÁFICA Y ESPACIOS
+    const pad = isPDF ? Math.round(S * 0.052) : 56;
+    const fs_h3 = isPDF ? Math.round(S * 0.083) : 52;
+    const gap = isPDF ? Math.round(S * 0.018) : 14;
+
+    // --- LÓGICA DE OVERLAYS (Nítido en Lámina 2) ---
     const overlayDiv = (bgUrl && !isAnalysisSlide) ? `
-        <div style="position:absolute;inset:0; background:${slide.type === 'cover_bold' ? 'linear-gradient(160deg,rgba(0,0,0,0.85) 0%,rgba(0,71,171,0.6) 50%,rgba(0,0,0,0.9) 100%)' : 'rgba(0,0,0,0.72)'}; z-index:1;pointer-events:none;"></div>` : '';
+        <div style="position:absolute;inset:0;
+            background:${slide.type === 'cover_bold' 
+                ? 'linear-gradient(160deg,rgba(0,0,0,0.85) 0%,rgba(0,71,171,0.6) 50%,rgba(0,0,0,0.9) 100%)' 
+                : 'rgba(0,0,0,0.72)'};
+            z-index:1;pointer-events:none;"></div>` : '';
 
+    // --- PREPARACIÓN DE CONTENIDO (Masivo/LinkedIn Like) ---
     let bodyContent = '';
 
     if (slide.type === 'cover_bold') {
-        const coverLogoH = isPDF ? Math.round(S * 0.050) : 28;
+        const coverLogoH = isPDF ? Math.round(S * 0.050) : 32;
         bodyContent = `
-            <div style="position:absolute; top:${pad}px; right:${pad}px; z-index:10;">
+            <div style="position:absolute; top:${pad}px; right:${pad}px; z-index:10; text-align:right;">
                 ${logoImg(coverLogoH, isPDF, 'brightness(0) invert(1)')}
             </div>
-            <div style="position:absolute; bottom:${pad}px; left:${pad}px; right:${pad}px; z-index:10;">
-                <div class="status-badge" style="display:inline-block; margin-bottom:${gap}px; background:#39FF14; color:#000; padding:4px 12px; border-radius:100px; font-weight:800; font-size:11px; font-family:'Space Grotesk'; text-transform:uppercase;">${slide.cat_tag}</div>
-                <h3 style="font-family:'Space Grotesk'; font-size:${fs_h3}px; font-weight:900; line-height:1.1; color:#fff; text-transform:uppercase; margin:0;">${slide.headline}</h3>
-                ${slide.ai_hook ? `<p style="border-left:3px solid #39FF14; padding-left:15px; margin-top:15px; color:#9A9A9A; font-weight:600; font-size:16px; line-height:1.4;">${slide.ai_hook}</p>` : ''}
+            <div style="margin-top: auto;">
+                ${slide.cat_tag ? `<div class="status-badge" style="display:inline-block; margin-bottom:${gap}px; background:#39FF14; color:#000; padding:6px 14px; border-radius:100px; font-weight:800; font-size:12px;">${slide.cat_tag}</div>` : ''}
+                <h3 style="font-family:'Space Grotesk'; font-size:${fs_h3}px; font-weight:900; line-height:0.95; color:#fff; text-transform:uppercase; margin:0; letter-spacing:-0.03em;">${slide.headline}</h3>
+                ${slide.ai_hook ? `<p style="border-left:3px solid #39FF14; padding-left:20px; margin-top:30px; color:#9A9A9A; font-weight:600; font-size:20px;">${slide.ai_hook}</p>` : ''}
             </div>`;
 
     } else if (slide.type === 'data_callout') {
-        const deviceCircleSize = isPDF ? Math.round(S * 0.12) : 80;
-        const deviceName = slide.device_tag || 'SMAA';
-        
+        const deviceCircleSize = isPDF ? Math.round(S * 0.12) : 90; // Grande
         bodyContent = `
-            <div style="position:absolute; top:${pad}px; left:${pad}px; right:${pad}px; z-index:10;">
-                <p style="font-family:'Space Grotesk'; font-size:12px; color:#0047AB; font-weight:800; letter-spacing:2px; margin-bottom:8px;">ANÁLISIS TÉCNICO // 2026</p>
-                <h3 style="font-size:24px; color:#111; font-weight:900; line-height:1.1; text-transform:uppercase; max-width:60%;">${slide.headline}</h3>
-            </div>
-            
-            <div class="device-circle" style="position:absolute; top:${pad}px; right:${pad}px; width:${deviceCircleSize}px; height:${deviceCircleSize}px; background:#333; border:2px solid #39FF14; border-radius:50%; display:flex; align-items:center; justify-content:center; z-index:11; color:#fff; font-family:'Space Grotesk'; font-weight:900; font-size:12px; text-align:center; padding:5px;">
-                ${deviceName}
-            </div>
+            <div style="text-align:left; width:100%; height:100%; position:relative; padding-top:60px;">
+                <div class="device-circle" style="position:absolute; top:0; right:0; width:${deviceCircleSize}px; height:${deviceCircleSize}px; background:#222; border:2px solid #39FF14; border-radius:50%; display:flex; align-items:center; justify-content:center; overflow:hidden; z-index:11;">
+                    <img src="assets/devices/${(slide.device_tag || 'SMAA').toLowerCase()}.png" style="width:70%;" onerror="this.style.display='none'">
+                </div>
+                
+                <p style="font-family:'Space Grotesk'; font-size:14px; color:#0047AB; font-weight:800; letter-spacing:2px; margin-bottom:10px;">ANÁLISIS TÉCNICO // 2026</p>
+                <h3 style="font-size:32px; color:#111; font-weight:900; line-height:1.1; margin-bottom:20px; text-transform:uppercase;">${slide.headline}</h3>
+                
+                <div style="flex:1;"></div>
 
-            <div class="tech-specs-box" style="position:absolute; bottom:${pad}px; right:0; width:180px; background:rgba(255,255,255,0.95); border-left:6px solid #39FF14; padding:12px; color:#111; z-index:10; box-shadow: -5px 5px 15px rgba(0,0,0,0.1);">
-                <b style="font-family:'Space Grotesk'; font-size:10px; color:#0047AB; text-transform:uppercase; display:block; margin-bottom:5px;">Ficha Técnica:</b>
-                <p style="font-family:'Inter'; font-size:11px; font-weight:700; line-height:1.3; margin:0; color:#333;">${(slide.technical_specs || '').replace(/\n/g, '<br>')}</p>
+                <div class="tech-specs-box" style="position:absolute; bottom:20px; right:0; width:220px; background:rgba(255,255,255,0.92); border-left:5px solid #39FF14; padding:15px; color:#111; box-shadow: -10px 10px 30px rgba(0,0,0,0.15);">
+                    <b style="font-family:'Space Grotesk'; font-size:10px; color:#0047AB; text-transform:uppercase; display:block; margin-bottom:5px;">Ficha Técnica:</b>
+                    <p style="font-family:'Inter'; font-size:12px; font-weight:700; line-height:1.3; margin:0;">${(slide.technical_specs || '').replace(/\n/g, '<br>')}</p>
+                </div>
             </div>`;
 
     } else if (slide.type === 'bullets') {
         const bulletItems = (slide.bullets || []).map((b, i) => `
-            <div style="display:flex; align-items:flex-start; gap:12px; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.1);">
-                <span style="color:#39FF14; font-family:'Space Grotesk'; font-weight:900; font-size:14px;">0${i+1}</span>
-                <span style="color:#fff; font-weight:600; font-size:16px; line-height:1.3;">${b}</span>
+            <div style="display:flex; align-items:flex-start; gap:15px; padding:20px 0; border-bottom:1px solid rgba(255,255,255,0.1);">
+                <span style="color:#39FF14; font-family:'Space Grotesk'; font-weight:700;">0${i+1}</span>
+                <span style="color:#fff; font-weight:600; font-size:20px;">${b}</span>
             </div>`).join('');
-        bodyContent = `
-            <div style="position:absolute; top:${pad}px; left:${pad}px; right:${pad}px; z-index:10;">
-                <h3 style="font-size:24px; font-weight:900; color:#fff; margin-bottom:15px; text-transform:uppercase;">${slide.headline}</h3>
-                <div style="width:100%;">${bulletItems}</div>
-            </div>`;
+        bodyContent = `<div style="margin-top:60px;"><h3 style="font-size:32px; margin-bottom:30px;">${slide.headline}</h3><div>${bulletItems}</div></div>`;
 
     } else if (slide.type === 'split_map') {
         bodyContent = `
-            <div style="position:absolute; top:50%; left:${pad}px; right:${pad}px; transform:translateY(-50%); z-index:10;">
-                <h3 style="font-size:30px; font-weight:900; color:#fff; margin-bottom:15px; text-transform:uppercase;">${slide.headline}</h3>
-                <p style="font-size:16px; color:#F0F0F0; border-left:4px solid #39FF14; padding-left:20px; line-height:1.4; font-weight:600;">${slide.ai_body}</p>
-                ${slide.metric ? `<div style="font-size:54px; font-weight:900; color:#39FF14; margin-top:15px; letter-spacing:-1px;">${slide.metric}</div>` : ''}
+            <div style="display:flex; flex-direction:column; justify-content:center; height:100%; padding-top:40px;">
+                <h3 style="font-size:42px; font-weight:900; color:#fff; margin-bottom:20px; text-transform:uppercase;">${slide.headline}</h3>
+                <p style="font-size:20px; color:#F0F0F0; border-left:5px solid #39FF14; padding-left:25px; line-height:1.5; margin-bottom:25px;">${slide.ai_body}</p>
+                ${slide.metric ? `<div style="font-size:72px; font-weight:900; color:#39FF14; letter-spacing:-2px;">${slide.metric}</div>` : ''}
             </div>`;
 
     } else if (slide.type === 'cta_clean') {
         bodyContent = `
-            <div style="position:absolute; inset:${pad}px; display:flex; flex-direction:column; justify-content:center; z-index:10;">
-                <h3 style="font-size:38px; font-weight:900; margin-bottom:30px; line-height:1; text-transform:uppercase;">${slide.headline}</h3>
-                <div style="display:flex; align-items:center; gap:15px; background:rgba(255,255,255,0.05); padding:15px; border-radius:10px; border:1px solid rgba(255,255,255,0.1);">
-                    <div style="width:80px; height:80px; background:#fff; padding:6px; border-radius:6px; flex-shrink:0;">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://smability.io/aire/gpt.html" style="width:100%;">
+            <div style="height:100%; display:flex; flex-direction:column; justify-content:center;">
+                <h3 style="font-size:54px; font-weight:900; margin-bottom:40px; line-height:0.95;">${slide.headline}</h3>
+                <div style="display:flex; align-items:center; gap:25px; background:rgba(255,255,255,0.05); padding:20px; border-radius:12px; border:1px solid rgba(255,255,255,0.1);">
+                    <div style="width:120px; height:120px; background:#fff; padding:10px; border-radius:8px; flex-shrink:0;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://smability.io/aire/gpt.html" style="width:100%;">
                     </div>
                     <div>
-                        <p style="color:#fff; font-weight:800; font-size:16px; margin:0;">AIreGPT v2.6</p>
-                        <p style="color:rgba(255,255,255,0.6); font-weight:600; font-size:12px; margin-top:3px; line-height:1.2;">Prueba el monitoreo en tiempo real.</p>
+                        <p style="color:#fff; font-weight:800; font-size:20px; margin-bottom:5px;">AIreGPT v2.6</p>
+                        <p style="color:#9A9A9A; font-weight:600; font-size:16px;">Escanea para probar el monitoreo en tiempo real.</p>
                     </div>
                 </div>
             </div>`;
     }
 
-    const numLabel = `<span style="position:absolute; top:15px; left:20px; font-family:'Space Grotesk'; font-size:10px; font-weight:700; color:rgba(255,255,255,0.4); z-index:20; background:rgba(0,0,0,0.4); padding:2px 6px; border-radius:3px;">0${index + 1} / 0${total}</span>`;
-
-    const footer = slide.type === 'data_callout' ? '' : `
-        <div style="position:absolute; bottom:15px; left:${pad}px; right:${pad}px; border-top:1px solid rgba(255,255,255,0.1); padding-top:8px; font-family:'Space Grotesk'; font-size:11px; color:rgba(255,255,255,0.4); font-weight:700; display:flex; align-items:center; gap:6px; z-index:20;">
-            <span style="width:6px; height:6px; background:#39FF14; border-radius:50%; display:inline-block;"></span> smability.io
-        </div>`;
+    // --- ENSAMBLAJE FINAL ---
+    const isDataCallout = slide.type === 'data_callout';
+    const numLabel = `<span style="position:absolute; top:18px; left:24px; font-family:'Space Grotesk'; font-size:11px; font-weight:700; color:rgba(255,255,255,0.5); z-index:10; background:rgba(0,0,0,0.4); padding:3px 8px; border-radius:4px;">0${index + 1} / 0${total}</span>`;
+    const greenArrow = (index < total - 1) ? `<div class="green-arrow" style="position:absolute; top:18px; right:24px; color:#39FF14; font-size:24px; z-index:10; font-family:'Space Grotesk'; font-weight:900;">→</div>` : '';
 
     el.innerHTML = `
         ${overlayDiv}
         ${numLabel}
-        <div style="width:100%; height:100%; position:relative;">
-            ${bodyContent}
-        </div>
-        ${footer}`;
+        ${greenArrow}
+        <div style="position:relative; z-index:2; width:100%; height:100%; display:flex; flex-direction:column; justify-content:space-between;">
+            <div style="flex:1; display:flex; flex-direction:column; justify-content:${isDataCallout ? 'center' : 'flex-end'};">
+                ${bodyContent}
+            </div>
+            ${isDataCallout ? '' : `<div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:15px; margin-top:20px; font-family:'Space Grotesk'; font-size:11px; color:rgba(255,255,255,0.4); font-weight:700;">
+                <span style="color:#39FF14;">●</span> smability.io
+            </div>`}
+        </div>`;
+
+    // FIX DE CONTRASTE PARA COLORES CLAROS
+    const coloresClaros = ['#F5F5F5', '#FFFFFF', '#EAEAEA']; 
+    if (coloresClaros.includes(sessionBg)) {
+        el.style.color = '#111111';
+    }
 
     return el;
 }
@@ -383,17 +411,17 @@ async function downloadAssets(format) {
             btn.textContent = `Procesando ${i + 1}/${slides.length}...`;
             
             const canvas = await html2canvas(slides[i], {
-                scale: 1.2, // Bajamos de 2 a 1.2 (Suficiente para 1080px nítidos)
+                scale: 4.0, // SUBIMOS A 4.0 PARA MÁXIMA NITIDEZ (PDF 8MB)
                 useCORS: true,
                 backgroundColor: _lastEnrichedPost.sessionBg
             });
 
-            // Convertimos a JPEG con calidad 0.8 para ahorrar el 90% del espacio
-            const imgData = canvas.toDataURL('image/jpeg', 0.8);
+            // Usamos JPEG Calidad 0.9 para balance peso/nitidez
+            const imgData = canvas.toDataURL('image/jpeg', 0.9);
 
             if (format === 'png') {
                 const b64Data = imgData.replace(/^data:image\/jpeg;base64,/, "");
-                zip.file(`Slide_${i + 1}.jpg`, b64Data, {base64: true});
+                zip.file(`Smability_Slide_${i + 1}.jpg`, b64Data, {base64: true});
             } else {
                 if (i > 0) pdf.addPage([1080, 1080], 'p');
                 pdf.addImage(imgData, 'JPEG', 0, 0, 1080, 1080, undefined, 'FAST');
@@ -402,9 +430,9 @@ async function downloadAssets(format) {
 
         if (format === 'png') {
             const content = await zip.generateAsync({type:"blob"});
-            saveAs(content, `Smability_Post_${Date.now()}.zip`);
+            saveAs(content, `Smability_Post_Abril_${Date.now()}.zip`);
         } else {
-            pdf.save(`Smability_LinkedIn_${Date.now()}.pdf`);
+            pdf.save(`Smability_Reel_LinkedIn_${Date.now()}.pdf`);
         }
 
     } catch (err) {
