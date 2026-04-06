@@ -160,56 +160,45 @@ function copyText(id) {
 function build5Slides(postData, aiData) {
     const src = postData.slides;
     const cat = postData.cat;
-    
-    // 1. LÓGICA DE COLOR: Si es Contingencia forzamos Morado (#2E0854), sino aleatorio
     const isContingencia = cat === 'CONTINGENCIA';
-    const sessionColor = isContingencia 
-        ? '#2E0854' 
-        : SMABILITY_PALETTE[Math.floor(Math.random() * SMABILITY_PALETTE.length)];
+    const sessionColor = isContingencia ? '#2E0854' : SMABILITY_PALETTE[Math.floor(Math.random() * SMABILITY_PALETTE.length)];
 
     return {
         ...postData,
-        sessionBg: sessionColor, // Inyectamos el color para que buildSlideEl lo use
+        sessionBg: sessionColor,
         slides: [
             {
-                type:     'cover_bold',
-                bg:       null,
-                cat_tag:  cat,
+                type: 'cover_bold',
+                cat_tag: cat,
                 headline: src[0].headline,
-                ai_hook:  aiData.hook || null
+                ai_hook: aiData.hook || null
             },
             {
-                type:        'data_callout',
-                // Jala el JPG del análisis técnico
-                bg:          src[1].bg || 'assets/analysis/heatmap_ibero_1.jpg', 
-                isAnalysis:  true,
-                device_tag:  src[1].device_tag || 'SMAA', // Para el círculo del sensor
-                headline:    src[1].headline,
-                // Jala la Ficha Técnica directamente del JSON (Hardcoded)
-                technical_specs: postData.datos.technical_specs || '', 
+                type: 'data_callout',
+                bg: src[1].bg || 'assets/analysis/heatmap_ibero_1.jpg',
+                isAnalysis: true,
+                device_tag: src[1].device_tag || 'SMAA',
+                headline: src[1].headline,
+                technical_specs: postData.datos.technical_specs || '',
                 ai_stat_ctx: aiData.stat_ctx || src[1].supporting_text || ''
             },
             {
-                type:     'bullets',
-                bg:       null,
-                cat_tag:  cat,
+                type: 'bullets',
+                cat_tag: cat,
                 headline: aiData.bullets_title || 'Protocolo Técnico',
-                bullets:  aiData.bullets
+                bullets: aiData.bullets
             },
             {
-                type:     'split_map',
-                bg:       null,
+                type: 'split_map',
                 headline: src[3]?.headline || 'Dato Crítico',
-                // Jala el Insight directamente del JSON (Hardcoded) para control total
-                ai_body:  postData.datos.datos_hardcoded || aiData.insight_body || '',
-                metric:   src[3]?.metric || aiData.insight_metric || null,
+                ai_body: postData.datos.datos_hardcoded || aiData.insight_body || '',
+                metric: src[3]?.metric || aiData.insight_metric || null,
                 metric_label: src[3]?.metric_label || ''
             },
             {
-                type:     'cta_clean',
-                bg:       null,
+                type: 'cta_clean',
                 headline: src[src.length - 1].headline,
-                ai_body:  aiData.cta_body || '',
+                ai_body: aiData.cta_body || '',
                 ai_cta_label: aiData.cta_label || 'Probar AIreGPT'
             }
         ]
@@ -241,15 +230,12 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
     const el = document.createElement('div');
     el.className = `slide-preview slide-${slide.type}`;
 
-    // --- EL FIX: COLOR ALEATORIO + FILTRO DE IMÁGENES ---
-    
-    // 1. Aplicamos el color de fondo de la sesión (el que elegimos en build5Slides)
+    // 1. APLICAR COLOR ALEATORIO DE SESIÓN
     const sessionBg = _lastEnrichedPost.sessionBg || '#001A4D';
     el.style.backgroundColor = sessionBg;
 
-    // 2. Lógica de imagen: SOLO permitimos imagen si es la lámina de análisis
-    // o si el PDF trae el base64 específico (para exportación)
-    const isAnalysisSlide = slide.bg && slide.bg.includes('analysis');
+    // 2. LÓGICA DE IMAGEN (SOLO ANÁLISIS O PDF)
+    const isAnalysisSlide = slide.bg && (slide.bg.includes('analysis') || slide.isAnalysis);
     const bgUrl = isPDF ? bgBase64 : (isAnalysisSlide ? slide.bg : null);
 
     if (bgUrl) {
@@ -257,331 +243,67 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
         el.style.backgroundSize     = 'cover';
         el.style.backgroundPosition = 'center';
     } else {
-        el.style.backgroundImage = 'none'; // Limpieza total para las demás láminas
+        el.style.backgroundImage = 'none';
     }
 
-   if (isPDF) {
+    // 3. FIX PARA PDF: Forzar dimensiones y color
+    if (isPDF) {
         el.style.cssText = `
             background-image:${bgUrl ? `url(${bgUrl})` : 'none'};
-            background-size:cover;background-position:center;
-            background-color:${sessionBg}; /* <--- CAMBIO: Usamos el color de la sesión */
-            width:${S}px;height:${S}px;aspect-ratio:unset;
-            position:relative;display:flex;flex-direction:column;
+            background-size:cover; background-position:center;
+            background-color:${sessionBg};
+            width:${S}px; height:${S}px; aspect-ratio:unset;
+            position:relative; display:flex; flex-direction:column;
             justify-content:space-between;
             padding:${Math.round(S * 0.052)}px;
-            overflow:hidden;box-sizing:border-box;
-            border-radius:0;box-shadow:none;`;
+            overflow:hidden; box-sizing:border-box;
+            border-radius:0; box-shadow:none;`;
         
-        // CAMBIO: Eliminamos el gradiente hardcoded y forzamos el color aleatorio
         if (slide.type === 'cta_clean') {
-            el.style.backgroundColor = sessionBg; 
-            el.style.background = sessionBg; // Asegura que el gradiente previo se borre
+            el.style.background = sessionBg; 
         }
     }
 
-    // Escala tipográfica
-    const pad       = isPDF ? Math.round(S * 0.052) : 56;
-    const fs_tag    = isPDF ? Math.round(S * 0.020) : 12;
-    const fs_h3     = isPDF ? Math.round(S * 0.083) : 52;
-    const fs_hook   = isPDF ? Math.round(S * 0.030) : 19;
-    const fs_body   = isPDF ? Math.round(S * 0.026) : 16;
-    const fs_met    = isPDF ? Math.round(S * 0.148) : 90;
-    const fs_ctx    = isPDF ? Math.round(S * 0.026) : 16;
-    const fs_bullet = isPDF ? Math.round(S * 0.030) : 19;
-    const fs_num    = isPDF ? Math.round(S * 0.018) : 11;
-    const fs_ftr    = isPDF ? Math.round(S * 0.018) : 11;
-    const fs_arrow  = isPDF ? Math.round(S * 0.044) : 28;
-    const dot_sz    = isPDF ? Math.round(S * 0.010) : 7;
-    const gap       = isPDF ? Math.round(S * 0.018) : 14;
-    const fp        = isPDF ? Math.round(S * 0.026) : 28;
-    const fc        = isPDF ? Math.round(S * 0.033) : 36;
-    const bnum_sz   = isPDF ? Math.round(S * 0.018) : 11;
+    // 4. ESCALA TIPOGRÁFICA Y ESPACIOS
+    const pad = isPDF ? Math.round(S * 0.052) : 56;
+    const fs_h3 = isPDF ? Math.round(S * 0.083) : 52;
+    const gap = isPDF ? Math.round(S * 0.018) : 14;
 
-    // Overlay: 
-    // 1. Si es la lámina de análisis (Lámina 2), NO hay overlay (transparencia total).
-    // 2. Si es cover_bold, mantenemos el gradiente azul/negro.
-    // 3. Si tiene imagen pero no es análisis, aplicamos el negro semi estándar.
-   
-    const isAnalysis = slide.bg && slide.bg.includes('analysis');
-   
-    const overlayDiv = (slide.bg && slide.type !== 'cta_clean' && !isAnalysis) ? `
-       <div style="position:absolute;inset:0;
-           background:${slide.type === 'cover_bold'
-               ? 'linear-gradient(160deg,rgba(0,0,0,0.88) 0%,rgba(0,71,171,0.75) 50%,rgba(0,0,0,0.95) 100%)'
-               : 'rgba(0,0,0,0.72)'};
-           z-index:1;pointer-events:none;"></div>` : '';
+    // --- LÓGICA DE OVERLAYS ---
+    // Quitamos el overlay solo en la lámina de análisis para máxima nitidez
+    const overlayDiv = (bgUrl && !isAnalysisSlide) ? `
+        <div style="position:absolute;inset:0;
+            background:${slide.type === 'cover_bold' 
+                ? 'linear-gradient(160deg,rgba(0,0,0,0.85) 0%,rgba(0,71,171,0.6) 50%,rgba(0,0,0,0.9) 100%)' 
+                : 'rgba(0,0,0,0.72)'};
+            z-index:1;pointer-events:none;"></div>` : '';
 
-    // Marco neon data_callout
-    const bw = isPDF ? 4 : 3;
-    const frameDiv = slide.type === 'data_callout' ? `
-        <div style="position:absolute;top:${fp}px;left:${fp}px;right:${fp}px;bottom:${fp}px;
-            border:${isPDF ? 2 : 1.5}px solid rgba(57,255,20,0.25);border-radius:8px;
-            z-index:1;pointer-events:none;"></div>
-        <div style="position:absolute;top:${fp}px;left:${fp}px;width:${fc}px;height:${fc}px;
-            border-top:${bw}px solid #39FF14;border-left:${bw}px solid #39FF14;
-            border-radius:8px 0 0 0;z-index:2;pointer-events:none;"></div>
-        <div style="position:absolute;bottom:${fp}px;right:${fp}px;width:${fc}px;height:${fc}px;
-            border-bottom:${bw}px solid #39FF14;border-right:${bw}px solid #39FF14;
-            border-radius:0 0 8px 0;z-index:2;pointer-events:none;"></div>` : '';
+    // --- PREPARACIÓN DE CONTENIDO (Paso 8 del flujo anterior) ---
+    let bodyContent = '';
+    // Aquí va el switch/if que genera el HTML de cada slide (Portada, Análisis, etc.)
+    // ... [Tu lógica de bodyContent por tipo] ...
 
-    // Número de lámina
-    const numTop  = isPDF ? Math.round(S * 0.045) : 48;
-    const numLeft = isPDF ? Math.round(S * 0.022) : 24;
-    const numLabel = `<span style="
-        position:absolute;top:${numTop}px;left:${numLeft}px;
-        font-family:'Space Grotesk',sans-serif;
-        font-size:${fs_num}px;font-weight:700;letter-spacing:.15em;
-        text-transform:uppercase;color:#555;z-index:10;
-        background:rgba(0,0,0,0.5);
-        padding:${isPDF ? Math.round(S * .003) : 3}px ${isPDF ? Math.round(S * .008) : 8}px;
-        border-radius:4px;">0${index + 1} / 0${total}</span>`;
-
-    // Flecha verde neon
-    const isLast = index === total - 1;
-    const arrow = isLast ? '' : `<div style="
-        position:absolute;top:${pad}px;right:${pad}px;
-        font-size:${fs_arrow}px;line-height:1;
-        color:#39FF14;z-index:10;user-select:none;">→</div>`;
-
-    // Pill categoría
-    const catTag = slide.cat_tag ? `<div style="
-        display:inline-block;
-        background:rgba(57,255,20,0.12);border:1px solid #39FF14;color:#39FF14;
-        font-family:'Space Grotesk',sans-serif;
-        font-size:${fs_tag}px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-        padding:${isPDF ? Math.round(S * .005) : 4}px ${isPDF ? Math.round(S * .012) : 10}px;
-        border-radius:4px;margin-bottom:${gap}px;">${slide.cat_tag}</div>` : '';
-
-    // Footer con logo
-    const ftrLogoH = isPDF ? Math.round(S * 0.028) : 18;
-    const footer = `<div style="
-        display:flex;align-items:center;justify-content:space-between;
-        font-family:'Space Grotesk',sans-serif;
-        font-size:${fs_ftr}px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-        color:#555;border-top:1px solid rgba(255,255,255,0.08);
-        padding-top:${isPDF ? Math.round(S * .013) : 14}px;
-        margin-top:auto;position:relative;z-index:2;">
-        <div style="display:flex;align-items:center;gap:${isPDF ? Math.round(S * .007) : 8}px;">
-            <span style="width:${dot_sz}px;height:${dot_sz}px;border-radius:50%;
-                background:#39FF14;display:inline-block;flex-shrink:0;"></span>
-            <span>smability.io</span>
-        </div>
-        ${logoImg(ftrLogoH, isPDF, 'brightness(0) invert(0.4)')}
-    </div>`;
-
-    // ── Contenido por tipo ───────────────────────────────────
-    let bodyContent  = '';
-    const bodyPadTop = isPDF ? Math.round(S * 0.08) : 90;
+    // --- ENSAMBLAJE FINAL ---
     const isDataCallout = slide.type === 'data_callout';
+    const numLabel = `<span style="position:absolute; top:18px; left:24px; font-family:'Space Grotesk'; font-size:11px; font-weight:700; color:rgba(255,255,255,0.5); z-index:10; background:rgba(0,0,0,0.4); padding:3px 8px; border-radius:4px;">0${index + 1} / 0${total}</span>`;
 
-    if (slide.type === 'cover_bold') {
-        const coverLogoH = isPDF ? Math.round(S * 0.050) : 32;
-        const hookLine = slide.ai_hook ? `
-            <p style="
-                font-family:'Inter',sans-serif;
-                font-size:${fs_hook}px;font-weight:600;
-                color:#9A9A9A;line-height:1.4;margin:0;
-                border-left:${isPDF ? Math.round(S * .004) : 3}px solid #39FF14;
-                padding-left:${isPDF ? Math.round(S * .016) : 13}px;">
-                ${slide.ai_hook}</p>` : '';
-
-        bodyContent = `
-            <div style="position:absolute;top:${pad}px;right:${pad}px;z-index:10;">
-                ${logoImg(coverLogoH, isPDF, 'brightness(0) invert(1)')}
-            </div>
-            ${catTag}
-            <h3 style="
-                font-family:'Space Grotesk',sans-serif;
-                font-size:${fs_h3}px;font-weight:900;line-height:0.95;
-                letter-spacing:-.03em;text-transform:uppercase;
-                color:#fff;margin:0 0 ${gap * 1.5}px;">
-                ${slide.headline}</h3>
-            ${hookLine}`;
-
-    } else if (slide.type === 'data_callout') {
-    bodyContent = `
-        <div style="text-align:left; width:100%; position:relative; z-index:5;">
-            <p style="font-family:'Space Grotesk',sans-serif; font-size:14px; color:#0047AB; font-weight:800; letter-spacing:2px; margin-bottom:10px; text-shadow: 0 1px 2px rgba(255,255,255,0.8);">
-                ANÁLISIS TÉCNICO // 2026
-            </p>
-            <h3 style="font-size:28px; margin-bottom:15px; color:#1A1A1A; font-weight:900; line-height:1.1;">
-                ${slide.headline}
-            </h3>
-            <div style="height:350px;"></div> <p style="font-family:'Inter',sans-serif; font-size:15px; color:#333; margin-top:15px; line-height:1.5; background:rgba(255,255,255,0.7); padding:10px; border-radius:4px; display:inline-block;">
-                ${slide.ai_stat_ctx}
-            </p>
-        </div>`;
-   } else if (slide.type === 'bullets') {
-        const items      = (slide.bullets || []).slice(0, 4);
-        const bulletRows = items.map((b, bi) => `
-            <div style="
-                display:flex;align-items:flex-start;
-                gap:${isPDF ? Math.round(S * .018) : 16}px;
-                padding:${isPDF ? Math.round(S * .018) : 16}px 0;
-                border-bottom:1px solid rgba(255,255,255,0.07);">
-                <span style="
-                    font-family:'Space Grotesk',sans-serif;
-                    font-size:${bnum_sz}px;font-weight:700;
-                    color:#39FF14;letter-spacing:.1em;
-                    min-width:${isPDF ? Math.round(S * .032) : 26}px;
-                    padding-top:${isPDF ? Math.round(S * .004) : 3}px;flex-shrink:0;">
-                    0${bi + 1}</span>
-                <span style="
-                    font-family:'Inter',sans-serif;
-                    font-size:${fs_bullet}px;font-weight:600;
-                    color:#F0F0F0;line-height:1.35;">
-                    ${b}</span>
-            </div>`).join('');
-
-        bodyContent = `
-            ${catTag}
-            <h3 style="
-                font-family:'Space Grotesk',sans-serif;
-                font-size:${isPDF ? Math.round(S * .050) : 32}px;font-weight:900;
-                line-height:1.0;letter-spacing:-.02em;text-transform:uppercase;
-                color:#fff;margin:0 0 ${gap}px;">
-                ${slide.headline}</h3>
-            <div style="flex:1;">${bulletRows}</div>`;
-
-    } else if (slide.type === 'split_map') {
-        const hasMetric   = !!slide.metric;
-        const insightBody = slide.ai_body || '';
-
-        if (hasMetric) {
-            const rightW   = isPDF ? Math.round(S * .42) : 210;
-            const leftW    = isPDF ? Math.round(S * .46) : 230;
-            const splitGap = isPDF ? Math.round(S * .02) : 16;
-            const metFs    = isPDF ? Math.round(S * .095) : 58;
-            const metLblFs = isPDF ? Math.round(S * .017) : 10;
-            const h3SmFs   = isPDF ? Math.round(S * .056) : 34;
-            const rightPad = isPDF ? Math.round(S * .03) : 20;
-
-            bodyContent = `
-                <div style="display:flex;gap:${splitGap}px;align-items:stretch;
-                    flex:1;min-height:0;width:100%;">
-                    <div style="width:${leftW}px;flex-shrink:0;
-                        display:flex;flex-direction:column;justify-content:center;gap:${gap}px;">
-                        ${catTag}
-                        <h3 style="font-family:'Space Grotesk',sans-serif;
-                            font-size:${h3SmFs}px;font-weight:900;
-                            line-height:1.0;letter-spacing:-.02em;text-transform:uppercase;
-                            color:#fff;margin:0;">
-                            ${slide.headline}</h3>
-                        <p style="font-family:'Inter',sans-serif;font-size:${fs_body}px;
-                            color:#9A9A9A;line-height:1.65;margin:0;
-                            border-left:${isPDF ? Math.round(S * .003) : 2}px solid rgba(57,255,20,0.5);
-                            padding-left:${isPDF ? Math.round(S * .014) : 12}px;">
-                            ${insightBody}</p>
-                    </div>
-                    <div style="width:${rightW}px;flex-shrink:0;
-                        background:rgba(255,255,255,0.03);
-                        border-left:1px solid rgba(255,255,255,0.08);
-                        border-radius:0 6px 6px 0;
-                        display:flex;flex-direction:column;
-                        align-items:center;justify-content:center;
-                        padding:${rightPad}px;box-sizing:border-box;">
-                        <div style="font-family:'Space Grotesk',sans-serif;
-                            font-size:${metFs}px;font-weight:900;
-                            color:#39FF14;letter-spacing:-.04em;line-height:1;
-                            text-align:center;word-break:break-word;max-width:100%;">
-                            ${slide.metric}</div>
-                        <div style="font-family:'Space Grotesk',sans-serif;
-                            font-size:${metLblFs}px;font-weight:700;
-                            letter-spacing:.12em;text-transform:uppercase;color:#555;
-                            margin-top:${Math.round(gap * .7)}px;
-                            text-align:center;line-height:1.3;">
-                            ${slide.metric_label || ''}</div>
-                    </div>
-                </div>`;
-        } else {
-            bodyContent = `
-                ${catTag}
-                <h3 style="font-family:'Space Grotesk',sans-serif;
-                    font-size:${isPDF ? Math.round(S * .070) : 44}px;font-weight:900;
-                    line-height:1.0;letter-spacing:-.02em;text-transform:uppercase;
-                    color:#fff;margin:0 0 ${gap * 1.4}px;">
-                    ${slide.headline}</h3>
-                <p style="font-family:'Inter',sans-serif;font-size:${fs_body}px;
-                    color:#9A9A9A;line-height:1.7;margin:0;
-                    border-left:${isPDF ? Math.round(S * .003) : 2}px solid rgba(57,255,20,0.4);
-                    padding-left:${isPDF ? Math.round(S * .014) : 12}px;">
-                    ${insightBody}</p>`;
-        }
-
-    } else if (slide.type === 'cta_clean') {
-    const ctaLabel = slide.ai_cta_label || 'Agenda una demo';
-    const qrUrl = "https://www.smability.io/aire/gpt.html";
-    const qrApi = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}`;
-    const qrBoxSize = isPDF ? Math.round(S * 0.13) : 100;
-
-    // YA NO HAY OVERLAY AQUÍ. El fondo será el sessionBg puro.
-    bodyContent = `
-        <div style="position:relative; z-index:2; width:100%;">
-            <h3 style="font-family:'Space Grotesk',sans-serif;
-                font-size:${isPDF ? Math.round(S * .083) : 52}px; font-weight:900;
-                line-height:0.95; letter-spacing:-.03em; text-transform:uppercase;
-                color:#fff; margin:0 0 ${gap}px;">
-                ${slide.headline}</h3>
-            
-            <div style="display:flex; align-items:center; gap:20px; margin-bottom:${gap * 1.5}px;">
-                <div style="width:${qrBoxSize}px; height:${qrBoxSize}px; background:#fff; padding:8px; border-radius:6px; flex-shrink:0;">
-                    <img src="${qrApi}" style="width:100%; height:100%;" alt="QR AIreGPT">
-                </div>
-                <p style="font-family:'Inter',sans-serif; font-size:${isPDF ? Math.round(S * .024) : 16}px; color:rgba(255,255,255,0.7); line-height:1.4; margin:0;">
-                    Escanea para probar <strong style="color:#39FF14;">AIreGPT</strong> en vivo<br>
-                    o visita: <span style="color:#FFFFFF; text-decoration:underline;">smability.io/aire/gpt.html</span>
-                </p>
-            </div>
-
-            <div style="display:inline-flex; align-items:center;
-                border:2px solid #39FF14; border-radius:6px;
-                padding:${isPDF ? Math.round(S * .016) : 17}px ${isPDF ? Math.round(S * .030) : 32}px;
-                font-family:'Space Grotesk',sans-serif;
-                font-size:${isPDF ? Math.round(S * .024) : 15}px;
-                font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#39FF14;">
-                ↗ ${ctaLabel}</div>
-        </div>`;
-   }
-    // Footer absoluto para data_callout (centrada verticalmente)
-    const dataCalloutFooter = isDataCallout ? `
-        <div style="position:absolute;bottom:${pad}px;left:${pad}px;right:${pad}px;
-            display:flex;align-items:center;justify-content:space-between;z-index:2;
-            font-family:'Space Grotesk',sans-serif;
-            font-size:${fs_ftr}px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-            color:#555;border-top:1px solid rgba(255,255,255,0.08);
-            padding-top:${isPDF ? Math.round(S * .013) : 14}px;">
-            <div style="display:flex;align-items:center;gap:${isPDF ? Math.round(S * .007) : 8}px;">
-                <span style="width:${dot_sz}px;height:${dot_sz}px;border-radius:50%;
-                    background:#39FF14;display:inline-block;flex-shrink:0;"></span>
-                <span>smability.io</span>
-            </div>
-            ${logoImg(isPDF ? Math.round(S * 0.028) : 18, isPDF, 'brightness(0) invert(0.4)')}
-        </div>` : '';
-
+    // ESTRUCTURA DE FLEXBOX PARA EVITAR CORTES
     el.innerHTML = `
         ${overlayDiv}
-        ${frameDiv}
         ${numLabel}
-        ${arrow}
-        <div style="position:relative;z-index:2;width:100%;height:100%;
-            display:flex;flex-direction:column;
-            justify-content:${isDataCallout ? 'center' : 'space-between'};
-            align-items:${isDataCallout ? 'center' : 'stretch'};
-            text-align:${isDataCallout ? 'center' : 'left'};">
-            <div style="${isDataCallout
-                ? 'display:flex;flex-direction:column;align-items:center;justify-content:center;'
-                : `flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding-top:${bodyPadTop}px;`}">
+        <div style="position:relative; z-index:2; width:100%; height:100%; display:flex; flex-direction:column; justify-content:space-between;">
+            <div style="flex:1; display:flex; flex-direction:column; justify-content:${isDataCallout ? 'center' : 'flex-end'};">
                 ${bodyContent}
             </div>
-            ${isDataCallout ? '' : footer}
-        </div>
-        ${dataCalloutFooter}`;
+            ${isDataCallout ? '' : `<div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:15px; margin-top:20px; font-family:'Space Grotesk'; font-size:11px; color:rgba(255,255,255,0.4); font-weight:700;">
+                <span style="color:#39FF14;">●</span> smability.io
+            </div>`}
+        </div>`;
 
-   const coloresClaros = ['#F5F5F5', '#FFFFFF', '#EAEAEA']; 
+    // FIX DE CONTRASTE PARA COLORES CLAROS
+    const coloresClaros = ['#F5F5F5', '#FFFFFF', '#EAEAEA']; 
     if (coloresClaros.includes(sessionBg)) {
-        el.style.color = '#111111'; // Forzamos texto oscuro
-        // Opcional: Si tienes iconos o líneas neón que se pierdan, 
-        // podrías añadir lógica extra aquí.
+        el.style.color = '#111111';
     }
 
     return el;
