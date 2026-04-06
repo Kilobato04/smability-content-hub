@@ -1,23 +1,23 @@
 /* ============================================================
    SMABILITY CONTENT HUB — style.css
-   Estrategia: Lean Mode | High-Contrast | 12-Post Campaign
+   Estrategia: Lean Mode | Square Fix | PDF Export Ready
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Space+Grotesk:wght@400;700;900&display=swap');
 
 /* --- 1. VARIABLES --- */
 :root {
-    --green:     #39FF14; /* Neon Smability */
-    --blue-tech: #0047AB; /* Azul Cobalto */
-    --bg-dark:   #111111;
-    --bg-panel:  #1C1C1C;
-    --bg-input:  #252525;
-    --border:    rgba(255,255,255,0.08);
-    --white:     #FFFFFF;
-    --g400:      #9A9A9A;
-    --fd:        'Space Grotesk', sans-serif;
-    --fb:        'Inter', sans-serif;
-    --pad-slide: 56px;
+    --green:      #39FF14; 
+    --blue-tech:  #0047AB; 
+    --bg-dark:    #111111;
+    --bg-panel:   #1C1C1C;
+    --bg-input:   #252525;
+    --border:     rgba(255,255,255,0.08);
+    --white:      #FFFFFF;
+    --g400:       #9A9A9A;
+    --fd:         'Space Grotesk', sans-serif;
+    --fb:         'Inter', sans-serif;
+    --pad-slide:  50px; 
 }
 
 /* --- 2. RESET & BASE --- */
@@ -32,7 +32,7 @@ body {
 }
 
 .app-container {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
     padding: 32px 40px;
 }
@@ -95,7 +95,7 @@ select, textarea {
     font-size: 0.9rem;
 }
 
-textarea { height: 120px; resize: none; margin-bottom: 10px; }
+textarea { height: 130px; resize: none; margin-bottom: 10px; }
 
 /* --- 4. BUTTONS --- */
 .primary-btn {
@@ -113,107 +113,99 @@ textarea { height: 120px; resize: none; margin-bottom: 10px; }
 
 .primary-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(57,255,20,0.3); }
 
-.secondary-btn {
-    background: transparent;
-    border: 2px solid var(--green);
-    color: var(--green);
-    font-weight: 700;
-    padding: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-/* --- 5. SLIDE ENGINE (Vista Previa) --- */
+/* --- 5. SLIDE ENGINE (VISUAL HUB) --- */
 #carousel-preview-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 40px;
     max-height: 85vh;
     overflow-y: auto;
-    padding-right: 10px;
+    padding: 30px;
+    background: #080808;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    align-items: center;
 }
 
 .slide-preview {
-    width: 100%;
-    aspect-ratio: 1 / 1;
+    /* FIX: Dimensiones fijas para evitar colapso de "tira" */
+    width: 650px; 
+    height: 650px;
+    flex-shrink: 0; 
+    
     position: relative;
-    background-color: var(--blue-tech); /* Fallback */
     padding: var(--pad-slide);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     border-radius: 4px;
     overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    background-size: cover;
+    background-position: center;
 }
 
-/* Logo alineado a la derecha en Portada (Update) */
-.slide-header-right {
-    position: absolute;
-    top: var(--pad-slide);
-    right: var(--pad-slide);
-    text-align: right;
-}
-
-/* Lámina 2: Círculo del Sensor */
-.device-circle {
-    position: absolute;
-    top: 30px;
-    right: 30px;
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background: #222;
-    border: 2px solid var(--green);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-}
-
-.device-circle img { width: 70%; height: auto; filter: grayscale(1) brightness(1.5); }
-
-/* Lámina 2: Ficha Técnica Vertical */
-.tech-specs-box {
-    position: absolute;
-    bottom: 80px;
-    right: 0;
-    width: 200px;
-    background: rgba(255,255,255,0.92);
-    border-left: 5px solid var(--green);
-    padding: 15px;
-    color: #111;
-    font-family: var(--fb);
-    z-index: 10;
-}
-
-.tech-specs-box b { font-family: var(--fd); font-size: 0.7rem; text-transform: uppercase; color: var(--blue-tech); }
-.tech-specs-box p { font-size: 0.8rem; margin-top: 5px; line-height: 1.3; font-weight: 600; }
-
-/* Tipografía de Slides */
 .slide-preview h3 {
     font-family: var(--fd);
-    font-size: 3.2rem;
+    font-size: 2.8rem;
     font-weight: 900;
-    line-height: 0.95;
+    line-height: 1;
     color: var(--white);
     text-transform: uppercase;
     margin: 0;
+    position: relative;
+    z-index: 5;
 }
 
-.slide-preview p.hook {
-    border-left: 3px solid var(--green);
-    padding-left: 20px;
-    color: var(--g400);
-    font-size: 1.1rem;
-    font-weight: 600;
-    max-width: 80%;
+.device-circle {
+    background: #333;
+    border: 2px solid var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* --- 6. EXPORT FIXES (PDF/PNG) --- */
+.tech-specs-box {
+    background: rgba(255,255,255,0.95);
+    border-left: 6px solid var(--green);
+    padding: 15px;
+    color: #111;
+}
+
+/* --- 6. EXPORT FIXES (PUNTO 6 RESTAURADO) --- */
 @media print {
-    .control-panel, header, .status-badge { display: none !important; }
-    .content-grid { grid-template-columns: 1fr; }
-    .slide-preview { width: 1080px; height: 1080px; page-break-after: always; }
+    /* Ocultar toda la interfaz del Hub */
+    .control-panel, 
+    header, 
+    .status-badge, 
+    .preview-header,
+    .download-group,
+    .footer-note { 
+        display: none !important; 
+    }
+    
+    body { background: white !important; }
+    .app-container { padding: 0; max-width: none; margin: 0; }
+    .content-grid { display: block; }
+    
+    #carousel-preview-container { 
+        overflow: visible; 
+        max-height: none; 
+        padding: 0; 
+        background: none; 
+        border: none;
+    }
+    
+    /* Forzar que cada lámina sea un cuadrado perfecto en el PDF */
+    .slide-preview { 
+        width: 1080px !important; 
+        height: 1080px !important; 
+        page-break-after: always; 
+        break-after: page;
+        border-radius: 0;
+        box-shadow: none;
+        margin: 0 !important;
+        position: relative !important;
+    }
 }
