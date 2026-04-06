@@ -17,9 +17,9 @@
       "cat": "PATENTE",
       "datos": {
         "titulo": "Patente: Sistema modular de islas de calor",
-        "technical_specs": "Patente: MX/a/2024/088166\nAliado: IBERO CDMX\nSensor: SMAAmicro\nInvento: Monitoreo Granular RT",
+        "technical_specs": "Patente: MX/a/2024/088166\nCo-Autor: IBERO CDMX\nDispositivo: SMAAmicro\nSolución: Monitoreo Isla de Calor",
         "datos_hardcoded": "Sistema modular diseñado para monitorear y diagnosticar islas de calor urbanas de forma granular en tiempo real. Algoritmo propio procesado en AWS para mapas hiperlocales.",
-        "dato_viral": "Una solución de $500 USD que habilita desicioens de hasta $50,000 USD."
+        "dato_viral": "Una solución de $500 USD que habilita decisiones de hasta $50,000 USD."
       },
       "slides": [
         { "type": "cover_bold", "headline": "PATENTAMOS EL SISTEMA QUE OTROS NO TIENEN.", "metric": "MX/a/2024/088166", "bg": null },
