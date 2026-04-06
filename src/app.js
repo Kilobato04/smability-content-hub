@@ -364,65 +364,52 @@ async function downloadAssets(format) {
 
     const btn = format === 'pdf' ? document.getElementById('download-pdf-btn') : document.getElementById('download-png-btn');
     const originalText = btn.textContent;
-    btn.textContent = "Procesando...";
+    btn.textContent = "⚙️ Optimizando...";
     btn.disabled = true;
 
     const zip = format === 'png' ? new JSZip() : null;
     const { jsPDF } = window.jspdf;
-    const pdf = format === 'pdf' ? new jsPDF({ orientation: 'p', unit: 'px', format: [1080, 1080] }) : null;
+    
+    // PDF Setings: Compresión activa
+    const pdf = format === 'pdf' ? new jsPDF({ 
+        orientation: 'p', 
+        unit: 'px', 
+        format: [1080, 1080],
+        compress: true // Activa compresión interna de jsPDF
+    }) : null;
 
     try {
         for (let i = 0; i < slides.length; i++) {
-            btn.textContent = `Capturando ${i + 1}/${slides.length}...`;
+            btn.textContent = `Procesando ${i + 1}/${slides.length}...`;
             
-            // Forzar renderizado de Plotly antes de capturar
-            const chartDiv = slides[i].querySelector('[id^="wowChart-"]');
-            if (chartDiv) {
-                await Plotly.Plots.resize(chartDiv);
-            }
-
             const canvas = await html2canvas(slides[i], {
-                scale: 2, // Calidad Retina
+                scale: 1.2, // Bajamos de 2 a 1.2 (Suficiente para 1080px nítidos)
                 useCORS: true,
-                allowTaint: true,
-                backgroundColor: _lastEnrichedPost.sessionBg,
-                logging: false,
-                onclone: (clonedDoc) => {
-                    // FORZAR LOGOS BLANCOS EN EL RENDERIZADO DE CAPTURA
-                    const logos = clonedDoc.querySelectorAll('img');
-                    logos.forEach(img => {
-                        if(img.src.includes('logo')) {
-                            img.style.filter = 'brightness(0) invert(1)';
-                            img.style.opacity = '1';
-                        }
-                    });
-                }
+                backgroundColor: _lastEnrichedPost.sessionBg
             });
 
-            const imgData = canvas.toDataURL('image/png');
+            // Convertimos a JPEG con calidad 0.8 para ahorrar el 90% del espacio
+            const imgData = canvas.toDataURL('image/jpeg', 0.8);
 
             if (format === 'png') {
-                const b64Data = imgData.replace(/^data:image\/(png|jpg);base64,/, "");
-                zip.file(`Smability_Slide_${i + 1}.png`, b64Data, {base64: true});
+                const b64Data = imgData.replace(/^data:image\/jpeg;base64,/, "");
+                zip.file(`Slide_${i + 1}.jpg`, b64Data, {base64: true});
             } else {
                 if (i > 0) pdf.addPage([1080, 1080], 'p');
-                pdf.addImage(imgData, 'PNG', 0, 0, 1080, 1080);
+                pdf.addImage(imgData, 'JPEG', 0, 0, 1080, 1080, undefined, 'FAST');
             }
         }
 
         if (format === 'png') {
             const content = await zip.generateAsync({type:"blob"});
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(content);
-            link.download = `Smability_Post_Imágenes_${Date.now()}.zip`;
-            link.click();
+            saveAs(content, `Smability_Post_${Date.now()}.zip`);
         } else {
-            pdf.save(`Smability_Reel_LinkedIn_${Date.now()}.pdf`);
+            pdf.save(`Smability_LinkedIn_${Date.now()}.pdf`);
         }
 
     } catch (err) {
-        console.error("Error en captura:", err);
-        alert("Error al procesar las láminas.");
+        console.error(err);
+        alert("Error en la descarga");
     } finally {
         btn.textContent = originalText;
         btn.disabled = false;
