@@ -1,5 +1,5 @@
 {
-  "mes": "Año 2026",
+  "mes": "Abril 2026",
   "meta_ingresos": "$200,000 USD",
   "empresa": {
     "nombre": "Smability SAPI de CV",
@@ -16,249 +16,191 @@
       "fecha": "2026-04-02",
       "cat": "PATENTE",
       "datos": {
-        "titulo": "Sistema modular y método para determinación de islas de calor",
-        "registro_impi": "MX/a/2024/088166",
-        "co_desarrollador": "IBERO Universidad Iberoamericana CDMX",
-        "tipo": "Patente de sistema IoT para determinación de islas de calor en zonas urbanas",
-        "alcance": "Exclusividad técnica en México. Solicitud de Patente activa ante IMPI",
-        "diferenciador": "No es hardware genérico: patente de algoritmo de isla de calor a través del desarrollo de dispositivos IoT accesibles",
-        "invento": "Sistema modular y método diseñado para monitorear y diagnosticar islas de calor urbanas de forma granular en tiempo real",
-        "sistema": "Dispositivos IoT con sensores de PM2.5, PM10, temperatura, humedad relativa y NO2, transmitiendo a la nube con tecnología AWS",
-        "datos": "Los datos se procesan para generar mapas e índices de islas de calor hiperlocales",
-        "precio_referencia": "SMAA Micro un dispositivo de $500 USD",
-        "dato_viral": "Una solución de $500 USD que en conjunto con su motor de cálculo puede reemplazar análisis y evaluaciones con baja confiabilidad y alto costo"
+        "titulo": "Patente: Sistema modular de islas de calor",
+        "technical_specs": "Patente: MX/a/2024/088166\nAliado: IBERO CDMX\nSensor: SMAAmicro\nInvento: Monitoreo Granular RT",
+        "datos_hardcoded": "Sistema modular diseñado para monitorear y diagnosticar islas de calor urbanas de forma granular en tiempo real. Algoritmo propio procesado en AWS para mapas hiperlocales.",
+        "dato_viral": "Una solución de $500 USD que habilita desicioens de hasta $50,000 USD."
       },
       "slides": [
-        { "type": "cover_bold",   "headline": "PATENTAMOS EL SISTEMA QUE OTROS NO TIENEN.",    "metric": "MX/a/2024/088166", "bg": "assets/covers/post_01_patente_mx.jpg",          "slide_bg": "assets/slides/post_01_patente_mx.jpg" },
-        { "type": "data_callout", "headline": "NO CALCULAMOS ISLAS DE CALOR. LAS MEDIMOS.",    "metric": "$500 USD",         "supporting_text": "Un dispositivo IoT de $500 USD genera mapas de islas de calor que antes requerían $50,000 USD + en esfuerzo de análisis e infraestructura fija." },
-        { "type": "cta_clean",    "headline": "TRABAJA CON LOS CREADORES.",                    "supporting_text": "Co-desarrollado con la IBERO CDMX. Patente MX/a/2024/088166 activa. Agenda demo técnica." }
+        { "type": "cover_bold", "headline": "PATENTAMOS EL SISTEMA QUE OTROS NO TIENEN.", "metric": "MX/a/2024/088166", "bg": null },
+        { "type": "data_callout", "headline": "NO CALCULAMOS ISLAS DE CALOR. LAS MEDIMOS.", "metric": "$500 USD", "device_tag": "SMAAmicro", "bg": "assets/analysis/heatmap_ibero_1.jpg" },
+        { "type": "cta_clean", "headline": "TRABAJA CON LOS CREADORES.", "supporting_text": "Co-desarrollado con la IBERO CDMX. Patente activa. Agenda demo técnica.", "bg": null }
       ]
     },
     {
-      "id": "post_02_caso_ibero",
-      "fecha": "2026-04-07",
-      "cat": "CASO B2B",
-      "datos": {
-        "cliente": "Universidad Iberoamericana CDMX",
-        "proyecto": "Monitoreo de calidad del aire en campus + co-desarrollo SMAAmicro",
-        "resultado": "4 cisternas monitoreadas en tiempo real con SMAWA; red SMAA desplegada en campus",
-        "patente_conjunta": "IBERO-Smability: patente sistema monitoreo islas de calor",
-        "impacto": "Datos académicos reales publicados en artículos científicos con calibración UNAM-CCA",
-        "roi_institucional": "Acceso a datos hiperlocales que estaciones SIMAT no cubren",
-        "dato_viral": "26 estaciones SIMAT para 22 millones de personas. Smability lleva sensores a cada colonia.",
-        "referencia_validacion": "http://www.epr.atmosfera.unam.mx/Microsensores-2022/"
-      },
-      "slides": [
-        { "type": "cover_bold",    "headline": "IBERO + SMABILITY: CIENCIA QUE SE PATENTA.",   "metric": "PATENTE ACTIVA", "bg": "assets/covers/post_02_caso_ibero.jpg",          "slide_bg": "assets/slides/post_02_caso_ibero.jpg" },
-        { "type": "data_callout",  "headline": "26 ESTACIONES PARA 22 MILLONES.",              "metric": "26×",            "supporting_text": "Ese es el déficit de monitoreo en la ZMVM. Smability lo resuelve con sensores hiperlocales calibrados por la UNAM." },
-        { "type": "cta_clean",     "headline": "TU CAMPUS O PLANTA, MONITOREADA.",             "supporting_text": "Desplegamos en menos de 4 semanas." }
-      ]
-    },
-    {
-      "id": "post_03_contingencia_cdmx",
-      "fecha": "2026-04-09",
-      "cat": "SALUD",
-      "datos": {
-        "evento": "Contingencia ambiental CDMX",
-        "pm25_pico": "150+ µg/m³",
-        "equivalencia": "7 cigarrillos/día de exposición pulmonar",
-        "umbral_oms": "15 µg/m³ (límite OMS 2021)",
-        "diferencia": "10x por encima del límite OMS en contingencia",
-        "grupos_vulnerables": "Niños, embarazadas, adultos mayores de 60 años",
-        "antecedente": "Horacio Jiménez convocado por Claudia Sheinbaum en Mayo 2022 para análisis de contingencias con ICAyCC-UNAM",
-        "airegpt_canal": "AireGPT Telegram: alertas horarias para Valle de México",
-        "dato_viral": "El IMECA dice Regular. Smability mide tu colonia, no el promedio."
-      },
-      "slides": [
-        { "type": "cover_bold",    "headline": "HOY EN CDMX: RESPIRAR ES FUMAR.",              "metric": "PM2.5: 150+",    "bg": "assets/covers/post_03_contingencia_cdmx.jpg",   "slide_bg": "assets/slides/post_03_contingencia_cdmx.jpg" },
-        { "type": "data_callout",  "headline": "10 VECES EL LÍMITE OMS.",                      "metric": "10×",            "supporting_text": "En contingencia, el PM2.5 en CDMX supera 10 veces el límite recomendado por la OMS (15 µg/m³)." },
-        { "type": "cta_clean",     "headline": "ACTIVA AIREGPT. ES GRATIS.",                   "supporting_text": "Alertas horarias en Telegram y WhatsApp para el Valle de México." }
-      ]
-    },
-    {
-      "id": "post_04_airegpt_demo",
-      "fecha": "2026-04-14",
-      "cat": "PRODUCTO",
-      "datos": {
-        "producto": "AireGPT",
-        "plataformas": ["WhatsApp", "Telegram"],
-        "tiempo_respuesta": "< 3 segundos",
-        "datos_disponibles": ["IAS por colonia", "PM2.5/PM10", "O3", "CO", "Temperatura", "Humedad", "Contaminante dominante", "Riesgo para la salud"],
-        "fuente_datos": "Red SMAA + SIMAT CDMX (fusión de datos calibrados)",
-        "estado": "Beta activa — t.me/AireGPT_bot",
-        "caso_uso": "IAS 128 en Tultitlán a las 22:00h. AireGPT lo sabe. Tu app del clima, no.",
-        "dato_viral": "Sin registro. Sin app. Solo escribe en WhatsApp."
-      },
-      "slides": [
-        { "type": "cover_bold",    "headline": "AIREGPT: EL AIRE DE TU COLONIA EN 3 SEGUNDOS.", "metric": "< 3 SEG",      "bg": "assets/covers/post_04_airegpt_demo.jpg",        "slide_bg": "assets/slides/post_04_airegpt_demo.jpg" },
-        { "type": "data_callout",  "headline": "IAS 128. TULTITLÁN. 22:00H.",                  "metric": "128 IAS",        "supporting_text": "Mala calidad del aire, contaminante dominante PM10. AireGPT lo detectó y alertó automáticamente." },
-        { "type": "cta_clean",     "headline": "ÚNETE A LA BETA.",                             "supporting_text": "t.me/AireGPT_bot — Sin registro. Sin app. Solo escribe." }
-      ]
-    },
-    {
-      "id": "post_05_calibracion_unam",
-      "fecha": "2026-04-16",
-      "cat": "CIENCIA",
-      "datos": {
-        "proceso": "Calibración y compensación virtual SMAA",
-        "referencia_oficial": "Estación CCA-SIMAT (ICAyCC UNAM)",
-        "periodo_validacion": "1 mes de datos de ozono (marzo-abril 2023)",
-        "mae_antes": 17.8094,
-        "mae_despues": 9.1185,
-        "mejora_mae": "49%",
-        "rmse_antes": 20.0733,
-        "rmse_despues": 11.8960,
-        "mejora_rmse": "41%",
-        "r2_sin_calibrar": 0.7162,
-        "r2_calibrado": 0.9085,
-        "errores_corregidos": ["Error por temperatura", "Error por humedad relativa"],
-        "dato_viral": "Los sensores económicos mienten. Los nuestros, después de calibración UNAM, dicen la verdad."
-      },
-      "slides": [
-        { "type": "cover_bold",    "headline": "SENSORES BARATOS, DATOS DE REFERENCIA.",       "metric": "R²=0.9085",      "bg": "assets/covers/post_05_calibracion_unam.jpg",    "slide_bg": "assets/slides/post_05_calibracion_unam.jpg" },
-        { "type": "data_callout",  "headline": "49% MENOS ERROR CON NUESTRO ALGORITMO.",       "metric": "−49%",           "supporting_text": "MAE de 17.8 a 9.1 tras calibración virtual. Validado por ICAyCC UNAM." },
-        { "type": "cta_clean",     "headline": "PRECISIÓN SIN PAGAR ESTACIÓN FIJA.",           "supporting_text": "Conoce cómo funciona nuestro algoritmo de calibración." }
-      ]
-    },
-    {
-      "id": "post_06_red_clientes",
-      "fecha": "2026-04-21",
-      "cat": "CREDIBILIDAD",
-      "datos": {
-        "anos_operacion": 8,
-        "clientes_gobierno": ["SEDEMA CDMX", "SECTEI CDMX", "Planta de Asfalto CDMX", "Secretaría de Turismo BCS"],
-        "clientes_academia": ["Universidad Iberoamericana CDMX", "UAM Azcapotzalco", "ICAyCC UNAM", "Universidad Anáhuac Cancún"],
-        "clientes_ong": ["Greenpeace México", "GIZ México", "GAIA Guatemala"],
-        "socios_privados": ["AlisBio Monterrey", "SkyAlert México", "Water Mappers Países Bajos"],
-        "respaldo_presidencial": "Horacio Jiménez convocado por Presidenta Claudia Sheinbaum (entonces Jefa de Gobierno CDMX) para análisis de contingencias 2022",
-        "mediciones_historicas": "2+ millones de mediciones horarias red SIMAT 2002-2026",
-        "dato_viral": "8 años. 4 sectores. 1 misión: democratizar los datos del aire."
-      },
-      "slides": [
-        { "type": "cover_bold",    "headline": "8 AÑOS. GOBIERNO, UNAM, GREENPEACE NOS ELIGEN.", "metric": "8 AÑOS",      "bg": "assets/covers/post_06_red_clientes.jpg",        "slide_bg": "assets/slides/post_06_red_clientes.jpg" },
-        { "type": "data_callout",  "headline": "2 MILLONES DE MEDICIONES.",                    "metric": "2M+",            "supporting_text": "Mediciones horarias históricas procesadas para el modelo de pronóstico de calidad del aire CDMX." },
-        { "type": "cta_clean",     "headline": "ÚNETE A LA RED.",                              "supporting_text": "Desde universidades hasta plantas industriales. smability.io" }
-      ]
-    },
-    {
-      "id": "post_07_smawa_ibero",
-      "fecha": "2026-04-23",
-      "cat": "CASO B2B",
-      "datos": {
-        "producto": "SMAWA",
-        "cliente": "Universidad Iberoamericana CDMX",
-        "aplicacion": "Monitoreo nivel de agua en cisternas — 4 cisternas implementadas",
-        "tecnologia": "Sensor óptico + sonda de presión + comunicación celular",
-        "bot": "IberoTank — bot Telegram para consulta de niveles",
-        "dato_registrado": "Nivel más alto: 2.37 m. Nivel actual consultable 24/7 vía WhatsApp",
-        "expansion": "Aplicable a plantas industriales, data centers, edificios, hospitales",
-        "dato_viral": "¿Cuánta agua tienes en tu cisterna ahora mismo? La Ibero lo sabe. En tiempo real."
-      },
-      "slides": [
-        { "type": "cover_bold",    "headline": "LA IBERO MONITOREA SUS CISTERNAS EN TIEMPO REAL.", "metric": "4 CISTERNAS", "bg": "assets/covers/post_07_smawa_ibero.jpg",        "slide_bg": "assets/slides/post_07_smawa_ibero.jpg" },
-        { "type": "data_callout",  "headline": "NIVEL DE AGUA. AHORA. EN TU TELÉFONO.",        "metric": "2.37 m",         "supporting_text": "Nivel más alto registrado en cisternas Iberoamericana. Consultable 24/7 vía bot IberoTank." },
-        { "type": "cta_clean",     "headline": "¿CUÁNTA AGUA TIENES?",                         "supporting_text": "SMAWA: monitoreo de cisternas, tinacos y almacenamiento industrial." }
-      ]
-    },
-    {
-      "id": "post_08_contingencia_inversion",
-      "fecha": "2026-04-28",
-      "cat": "SALUD",
-      "datos": {
-        "fenomeno": "Inversión térmica",
-        "mecanismo": "Capa de aire caliente atrapa contaminantes a nivel de piso",
-        "riesgo_principal": "Concentración de PM2.5, O3 y NOx se multiplica por 3-5x en pocas horas",
-        "grupos_criticos": ["Niños menores de 5 años", "Adultos mayores de 60", "Personas con asma o EPOC"],
-        "ventaja_temporal": "Detección 2-4 horas antes que medios oficiales",
-        "canal_alerta": "t.me/AireGPT_bot — alertas horarias automáticas",
-        "dato_viral": "El IMECA reporta el promedio de la ciudad. La inversión térmica afecta TU calle."
-      },
-      "slides": [
-        { "type": "cover_bold",    "headline": "INVERSIÓN TÉRMICA: EL AIRE NO SE MUEVE.",      "metric": "ALTO RIESGO",    "bg": "assets/covers/post_08_contingencia_inversion.jpg", "slide_bg": "assets/slides/post_08_contingencia_inversion.jpg" },
-        { "type": "data_callout",  "headline": "3-5X MÁS CONTAMINACIÓN EN HORAS.",            "metric": "3-5×",           "supporting_text": "Durante inversión térmica, concentraciones de PM2.5 y O3 se multiplican en pocas horas a nivel de calle." },
-        { "type": "cta_clean",     "headline": "ACTIVA LA ALERTA ANTES QUE EL IMECA.",        "supporting_text": "AireGPT detecta patrones 2-4h antes. t.me/AireGPT_bot" }
-      ]
-    },
-    {
-      "id": "post_09_smaa_precio",
-      "fecha": "2026-04-29",
-      "cat": "CASO B2B",
-      "datos": {
-        "producto": "SMAA v22025",
-        "precio_dispositivo": "$7,000 USD",
-        "precio_pdn_anual": "$1,400 USD/año",
-        "precio_total_primer_anio": "$8,400 USD",
-        "parametros": ["PM2.5", "PM10", "CO", "O3", "Temperatura", "Humedad Relativa", "GPS"],
-        "conectividad": "4G LTE + Panel Solar incluido",
-        "frecuencia_muestreo": "1 muestra cada 5 minutos (modo fijo)",
-        "incluye": ["Calibración anual", "Acceso PDN", "AireGPT bot", "2 capacitaciones remotas", "Mantenimiento a distancia"],
-        "comparativa": "Estación fija SIMAT: $150,000-$300,000 USD. SMAA calibrado: $8,400 USD.",
-        "dato_viral": "Misma precisión que una estación de $200K. Al 4% del costo. Validado por la UNAM."
-      },
-      "slides": [
-        { "type": "cover_bold",    "headline": "PRECISIÓN DE REFERENCIA. PRECIO DE STARTUP.",  "metric": "$8,400 USD",     "bg": "assets/covers/post_09_smaa_precio.jpg",         "slide_bg": "assets/slides/post_09_smaa_precio.jpg" },
-        { "type": "data_callout",  "headline": "4% DEL COSTO DE UNA ESTACIÓN FIJA.",           "metric": "4%",             "supporting_text": "Estación SIMAT: $150,000-$300,000 USD. SMAA calibrado por UNAM: $8,400 USD. Mismos datos." },
-        { "type": "cta_clean",     "headline": "COTIZA TU RED DE MONITOREO.",                  "supporting_text": "SMAA + PDN anual. Instalación en 4 semanas. smability.io" }
-      ]
-    },
-    {
-      "id": "post_10_resumen_abril",
-      "fecha": "2026-04-30",
-      "cat": "INFORMATIVO",
-      "datos": {
-        "resumen": "Abril 2026 — Smability en números",
-        "hitos_mes": [
-          "Patente MX/a/2026/001 activa con Iberoamericana",
-          "AireGPT beta disponible en WhatsApp y Telegram",
-          "R²=0.9085 validado ICAyCC UNAM publicado",
-          "SMAWA: 4 cisternas Ibero operando en tiempo real"
-        ],
-        "meta_mayo": "Cerrar 3 nuevos clientes industriales — Data Centers, Manufactura, Gobierno Municipal",
-        "dato_viral": "8 años construyendo. 2026: el año que Smability escala."
-      },
-      "slides": [
-        { "type": "cover_bold",    "headline": "ABRIL 2026: LO QUE CONSTRUIMOS.",              "metric": "4 HITOS",        "bg": "assets/covers/post_10_resumen_abril.jpg",       "slide_bg": "assets/slides/post_10_resumen_abril.jpg" },
-        { "type": "data_callout",  "headline": "8 AÑOS. MISMO NORTE.",                         "metric": "2017→",          "supporting_text": "Desde CDMX para el mundo: democratizamos el acceso a datos críticos medioambientales." },
-        { "type": "cta_clean",     "headline": "¿LISTO PARA MAYO?",                            "supporting_text": "Data Centers · Manufactura · Gobierno Municipal. Hablemos." }
-      ]
-    },
-    {
-      "id": "post_contingencia_01_vdmx",
+      "id": "post_02_contingencia_vdmx",
       "fecha": "2026-04-06",
       "cat": "CONTINGENCIA",
       "datos": {
-        "titulo": "Estado de Contingencia Ambiental Fase 1 - Valle de México",
-        "registro_impi": "Monitoreo con Patente MX/a/2024/088166",
-        "co_desarrollador": "Smability Data Lab & AIreGPT",
-        "tipo": "Alerta Atmosférica por altas concentraciones de Ozono (O3)",
-        "alcance": "Zona Metropolitana del Valle de México (ZMVM)",
-        "diferenciador": "Detección temprana de estancamiento térmico mediante Red Mesh IoT",
-        "invento": "Algoritmo de predicción de dispersión de contaminantes en micro-escala",
-        "sistema": "SMAA v2.6 + Motor de Inteligencia Artificial AIreGPT",
-        "technical_specs": "Sensor: SMAA Electromecánico\nParámetro: Ozono (O3)\nUmbral: 155 ppb (Crítico)\nRed: AWS Cloud / IoT Core",
-        "datos_hardcoded": "Durante la Fase 1, el corredor Insurgentes Sur superó los 160 ppb. El 70% de la carga proviene de fuentes móviles en estancamiento térmico.",
-        "dato_viral": "Nivel Morado (Extremadamente Malo): Se recomienda suspender toda actividad al aire libre y logística pesada."
+        "titulo": "Contingencia Ambiental Fase 1 - CDMX",
+        "technical_specs": "Alerta: Fase 1\nParámetro: Ozono (O3)\nUmbral: 155 ppb\nRed: Smability IoT Mesh",
+        "datos_hardcoded": "Durante la Fase 1, el corredor Insurgentes Sur superó los 160 ppb. El 70% de la carga proviene de fuentes móviles en estancamiento térmico detectado por AIreGPT.",
+        "dato_viral": "Nivel Morado (Extremadamente Malo): Se recomienda suspender toda actividad logística pesada."
       },
       "slides": [
-        { 
-          "type": "cover_bold", 
-          "headline": "ESTAMOS EN CONTINGENCIA: FASE 1 ACTIVA.", 
-          "metric": "155+ ppb O3", 
-          "bg": null 
-        },
-        { 
-          "type": "data_callout", 
-          "headline": "MAPA CRÍTICO DE OZONO EN VALLE DE MÉXICO", 
-          "metric": "NIVEL MORADO", 
-          "device_tag": "SMAA",
-          "supporting_text": "Concentraciones críticas detectadas en la periferia de la CDMX. Protocolo de salud activado.",
-          "bg": "assets/analysis/contingencia_abril_01.jpg" 
-        },
-        { 
-          "type": "cta_clean", 
-          "headline": "ACTIVA TU MONITOREO DE EMERGENCIA.", 
-          "supporting_text": "Consulta protocolos de seguridad industrial en tiempo real con AIreGPT. Agenda demo técnica." 
-        }
+        { "type": "cover_bold", "headline": "ESTAMOS EN CONTINGENCIA: FASE 1 ACTIVA.", "metric": "155+ ppb O3", "bg": null },
+        { "type": "data_callout", "headline": "MAPA CRÍTICO DE OZONO EN VALLE DE MÉXICO", "metric": "NIVEL MORADO", "device_tag": "SMAA", "bg": "assets/analysis/contingencia_abril_01.jpg" },
+        { "type": "cta_clean", "headline": "ACTIVA TU MONITOREO DE EMERGENCIA.", "supporting_text": "Protocolos de seguridad industrial en tiempo real con AIreGPT.", "bg": null }
+      ]
+    },
+    {
+      "id": "post_03_caso_ibero",
+      "fecha": "2026-04-07",
+      "cat": "CASO B2B",
+      "datos": {
+        "titulo": "Ciencia que se patenta: Caso IBERO CDMX",
+        "technical_specs": "Cliente: IBERO CDMX\nProyecto: Red Smart Campus\nValidación: UNAM-CCA\nEquipos: SMAA + SMAWA",
+        "datos_hardcoded": "26 estaciones SIMAT para 22 millones de personas es insuficiente. Smability despliega sensores hiperlocales calibrados para cubrir el déficit de monitoreo oficial.",
+        "dato_viral": "Smability lleva sensores a cada colonia, no solo promedios regionales."
+      },
+      "slides": [
+        { "type": "cover_bold", "headline": "IBERO + SMABILITY: CIENCIA QUE SE PATENTA.", "metric": "PATENTE ACTIVA", "bg": null },
+        { "type": "data_callout", "headline": "26 ESTACIONES PARA 22 MILLONES.", "metric": "26× DÉFICIT", "device_tag": "SMAA", "bg": "assets/analysis/ibero_network.jpg" },
+        { "type": "cta_clean", "headline": "TU CAMPUS O PLANTA, MONITOREADA.", "supporting_text": "Desplegamos redes locales en menos de 4 semanas.", "bg": null }
+      ]
+    },
+    {
+      "id": "post_04_salud_laboral",
+      "fecha": "2026-04-10",
+      "cat": "B2B / RRHH",
+      "datos": {
+        "titulo": "Productividad y Calidad del Aire Interior",
+        "technical_specs": "Estudio: Harvard/Smability\nImpacto: -15% Cognitivo\nSensor: SMAAmicro\nAlerta: CO2 / PM2.5",
+        "datos_hardcoded": "El aire viciado en oficinas reduce la capacidad de toma de decisiones en un 15%. Medir el aire interior es una métrica de rendimiento operativo y salud laboral.",
+        "dato_viral": "Un aire viciado cuesta dinero. Smability protege tu capital humano."
+      },
+      "slides": [
+        { "type": "cover_bold", "headline": "TU EQUIPO RESPIRA LO QUE NO MIDES.", "metric": "-15% PROD.", "bg": null },
+        { "type": "data_callout", "headline": "AIRE INTERIOR: EL ENEMIGO INVISIBLE.", "metric": "CO2 > 1000", "device_tag": "SMAAmicro", "bg": "assets/analysis/office_air.jpg" },
+        { "type": "cta_clean", "headline": "AUDITA TU AIRE INTERIOR.", "supporting_text": "Paquetes B2B para oficinas y naves industriales.", "bg": null }
+      ]
+    },
+    {
+      "id": "post_05_airegpt_demo",
+      "fecha": "2026-04-14",
+      "cat": "PRODUCTO",
+      "datos": {
+        "titulo": "AIreGPT: Inteligencia Atmosférica",
+        "technical_specs": "Motor: AIreGPT v2\nCanal: WhatsApp/Telegram\nData: Red IoT Smability\nRespuesta: < 3 segundos",
+        "datos_hardcoded": "Sin apps pesadas. AIreGPT fusiona datos SIMAT y SMAA para darte el riesgo real por colonia. IAS 128 en Tultitlán detectado al instante mientras otras apps callan.",
+        "dato_viral": "Sin registro. Sin app. Solo escribe en WhatsApp."
+      },
+      "slides": [
+        { "type": "cover_bold", "headline": "AIREGPT: EL AIRE DE TU COLONIA EN 3 SEGUNDOS.", "metric": "< 3 SEG", "bg": null },
+        { "type": "data_callout", "headline": "IAS 128. TULTITLÁN. 22:00H.", "metric": "ALERTA RT", "device_tag": "AIreGPT", "bg": "assets/analysis/airegpt_demo.jpg" },
+        { "type": "cta_clean", "headline": "ÚNETE A LA BETA GRATIS.", "supporting_text": "t.me/AireGPT_bot — Escribe y recibe el IAS de tu zona.", "bg": null }
+      ]
+    },
+    {
+      "id": "post_06_data_centers",
+      "fecha": "2026-04-15",
+      "cat": "DATA CENTERS",
+      "datos": {
+        "titulo": "Resiliencia Hídrica en IT",
+        "technical_specs": "Equipo: SMAWA\nVariable: Nivel de Cisterna\nRedundancia: Alerta SMS/Tel\nUso: Enfriamiento Líquido",
+        "datos_hardcoded": "Un Data Center sin agua es un sistema apagado. SMAWA monitorea el suministro crítico para asegurar que los sistemas de enfriamiento operen sin interrupciones.",
+        "dato_viral": "Si el agua baja, SMAWA te avisa antes que el sensor de temperatura."
+      },
+      "slides": [
+        { "type": "cover_bold", "headline": "DATA CENTERS: EL AGUA ES CONTINUIDAD.", "metric": "99.9% UPTIME", "bg": null },
+        { "type": "data_callout", "headline": "MONITOREO CRÍTICO DE ENFRIAMIENTO.", "metric": "SMAWA RT", "device_tag": "SMAWA", "bg": "assets/analysis/datacenter_water.jpg" },
+        { "type": "cta_clean", "headline": "PROTEGE TU INFRAESTRUCTURA.", "supporting_text": "Gestión de agua industrial basada en IoT.", "bg": null }
+      ]
+    },
+    {
+      "id": "post_07_ias_vs_imeca",
+      "fecha": "2026-04-17",
+      "cat": "EDUCATIVO",
+      "datos": {
+        "titulo": "¿IMECA o IAS? La verdad del aire",
+        "technical_specs": "Norma: NOM-020-SSA1\nÍndice: IAS (Aire y Salud)\nUpdate: Horario (RT)\nFusión: Red SMAA + SIMAT",
+        "datos_hardcoded": "El IMECA es un promedio lento. El IAS (Índice de Aire y Salud) de Smability te dice el riesgo AHORA. Si el color es Morado, la recomendación técnica es no salir.",
+        "dato_viral": "El IMECA reporta el pasado. Smability reporta tu presente."
+      },
+      "slides": [
+        { "type": "cover_bold", "headline": "¿POR QUÉ EL IMECA YA NO ES SUFICIENTE?", "metric": "IAS > IMECA", "bg": null },
+        { "type": "data_callout", "headline": "ÍNDICE DE AIRE Y SALUD (IAS) EN VIVO.", "metric": "NIVEL 5/5", "device_tag": "AIreGPT", "bg": "assets/analysis/ias_scale.jpg" },
+        { "type": "cta_clean", "headline": "MIDE TU RIESGO REAL.", "supporting_text": "AIreGPT usa el estándar IAS para proteger tu salud.", "bg": null }
+      ]
+    },
+    {
+      "id": "post_08_gobierno_municipal",
+      "fecha": "2026-04-20",
+      "cat": "B2G / GOBIERNO",
+      "datos": {
+        "titulo": "Smart Cities: Monitoreo Municipal",
+        "technical_specs": "Aliado: Planta Asfalto CDMX\nRed: 15 Nodos SMAA\nDashboard: PDN Smability\nCumplimiento: Norma Ambiental",
+        "datos_hardcoded": "Ayudamos a los municipios a gestionar su pasivo ambiental. La Planta de Asfalto de la CDMX ya monitorea sus emisiones con nuestra red IoT de bajo costo.",
+        "dato_viral": "Ciudades inteligentes empiezan con datos honestos."
+      },
+      "slides": [
+        { "type": "cover_bold", "headline": "MUNICIPIOS: GESTIONEN SU AIRE, NO SUS QUEJAS.", "metric": "B2G READY", "bg": null },
+        { "type": "data_callout", "headline": "CUMPLIMIENTO NORMATIVO EN TIEMPO REAL.", "metric": "RED MESH", "device_tag": "SMAA", "bg": "assets/analysis/city_monitoring.jpg" },
+        { "type": "cta_clean", "headline": "COTIZA TU RED MUNICIPAL.", "supporting_text": "Transparencia ambiental para gobiernos modernos.", "bg": null }
+      ]
+    },
+    {
+      "id": "post_09_smawa_ibero",
+      "fecha": "2026-04-23",
+      "cat": "CASO B2B",
+      "datos": {
+        "titulo": "SMAWA: Gestión Hídrica en la IBERO",
+        "technical_specs": "Producto: SMAWA (Agua)\nUbicación: Cisternas IBERO\nBot: IberoTank RT\nPrecisión: +/- 1cm",
+        "datos_hardcoded": "Monitoreo de 4 cisternas críticas. La IBERO gestiona su recurso hídrico mediante consultas 24/7 vía Telegram, evitando desabasto y optimizando el llenado.",
+        "dato_viral": "¿Cuánta agua tienes en tu cisterna ahora mismo? La Ibero lo sabe."
+      },
+      "slides": [
+        { "type": "cover_bold", "headline": "LA IBERO MONITOREA SUS CISTERNAS EN TIEMPO REAL.", "metric": "4 CISTERNAS", "bg": null },
+        { "type": "data_callout", "headline": "NIVEL DE AGUA. AHORA. EN TU TELÉFONO.", "metric": "2.37 m MAX", "device_tag": "SMAWA", "bg": "assets/analysis/smawa_levels.jpg" },
+        { "type": "cta_clean", "headline": "¿CUÁNTA AGUA TIENES?", "supporting_text": "SMAWA: Monitoreo industrial de almacenamiento hídrico.", "bg": null }
+      ]
+    },
+    {
+      "id": "post_10_mantenimiento_solar",
+      "fecha": "2026-04-27",
+      "cat": "OPERACIONES",
+      "datos": {
+        "titulo": "SMAA: Cero Infraestructura, 100% Autonomía",
+        "technical_specs": "Energía: Panel Solar 10W\nBatería: Li-ion 48h Backup\nInstalación: < 15 min\nSoporte: Remoto vía PDN",
+        "datos_hardcoded": "Nuestros sensores no necesitan cables. Se instalan en un poste en 15 minutos y se alimentan de sol. El mantenimiento es mínimo, diseñado para despliegues masivos.",
+        "dato_viral": "Ponlo. Olvídalo. Recibe datos."
+      },
+      "slides": [
+        { "type": "cover_bold", "headline": "INSTALACIÓN EN 15 MIN. SIN CABLES.", "metric": "100% SOLAR", "bg": null },
+        { "type": "data_callout", "headline": "DISEÑADO PARA LA PERIFERIA URBANA.", "metric": "IP65 RATED", "device_tag": "SMAA", "bg": "assets/analysis/solar_setup.jpg" },
+        { "type": "cta_clean", "headline": "DESPLIEGUE RÁPIDO B2B.", "supporting_text": "Hardware robusto para condiciones extremas.", "bg": null }
+      ]
+    },
+    {
+      "id": "post_11_smaa_precio",
+      "fecha": "2026-04-29",
+      "cat": "CASO B2B",
+      "datos": {
+        "titulo": "SMAA: Precisión UNAM al 4% del costo",
+        "technical_specs": "Equipo: SMAA v2025\nInversión: $8,400 USD\nCalibración: UNAM-CCA\nPanel Solar: Incluido",
+        "datos_hardcoded": "Una estación fija SIMAT cuesta hasta $300k USD. El SMAA ofrece la misma precisión (R²=0.90) validada por la UNAM a una fracción del costo operativo.",
+        "dato_viral": "Misma precisión que una estación de $200k. Al 4% del costo."
+      },
+      "slides": [
+        { "type": "cover_bold", "headline": "PRECISIÓN DE REFERENCIA. PRECIO DE STARTUP.", "metric": "$8,400 USD", "bg": null },
+        { "type": "data_callout", "headline": "4% DEL COSTO DE UNA ESTACIÓN FIJA.", "metric": "ROI 25X", "device_tag": "SMAA", "bg": "assets/analysis/smaa_comparison.jpg" },
+        { "type": "cta_clean", "headline": "COTIZA TU RED DE MONITOREO.", "supporting_text": "Instalación en 4 semanas. Hardware + SaaS PDN.", "bg": null }
+      ]
+    },
+    {
+      "id": "post_12_resumen_abril",
+      "fecha": "2026-04-30",
+      "cat": "HITOS",
+      "datos": {
+        "titulo": "Resumen de Lanzamiento Abril 2026",
+        "technical_specs": "Hitos: 4 Estratégicos\nValidación: UNAM R²=0.90\nPatente: IMPI Activa\nBeta: AireGPT Live",
+        "datos_hardcoded": "Abril marca el inicio de la democratización de datos ambientales en México. Con la patente IBERO-Smability y la precisión validada por la UNAM, estamos listos para escalar.",
+        "dato_viral": "8 años construyendo. Hoy Smability es el estándar IoT en México."
+      },
+      "slides": [
+        { "type": "cover_bold", "headline": "ABRIL: EL MES QUE CAMBIAMOS LAS REGLAS.", "metric": "4 HITOS", "bg": null },
+        { "type": "data_callout", "headline": "2017 → 2026: CIENCIA REAL.", "metric": "R²=0.9085", "device_tag": "AIreGPT", "bg": "assets/analysis/hitos_abril.jpg" },
+        { "type": "cta_clean", "headline": "¿LISTO PARA MAYO?", "supporting_text": "Se vienen nuevos despliegues industriales. smability.io", "bg": null }
       ]
     }
   ]
