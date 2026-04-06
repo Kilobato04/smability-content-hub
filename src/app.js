@@ -303,11 +303,11 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
         
         bodyContent = `
             <div style="text-align:left; width:100%; height:100%; position:relative; padding-top:60px;">
-                <div style="position:absolute; top:-25px; right:0; text-align:right; z-index:12;">
-                    <span style="font-family:'Space Grotesk'; font-size:12px; color:#39FF14; font-weight:700; letter-spacing:1px; text-transform:uppercase;">
-                        ${deviceName}
-                    </span>
-                </div>
+               <div style="position:absolute; top:-28px; right:0; text-align:right; z-index:12;">
+                   <span style="font-family:'Space Grotesk'; font-size:12px; color:#000; background:#39FF14; padding:2px 8px; font-weight:800; letter-spacing:1px; text-transform:uppercase; border-radius:2px;">
+                       ${deviceName}
+                   </span>
+               </div>
 
                 <div class="device-circle" style="position:absolute; top:0; right:0; width:${deviceCircleSize}px; height:${deviceCircleSize}px; background:#222; border:2px solid #39FF14; border-radius:50%; display:flex; align-items:center; justify-content:center; overflow:hidden; z-index:11;">
                     <img src="assets/devices/${(slide.device_tag || 'SMAA').toLowerCase()}.png" style="width:70%; filter: brightness(1.5);" onerror="this.style.display='none'">
@@ -318,7 +318,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                 
                 <div style="flex:1;"></div>
 
-                <div class="tech-specs-box" style="position:absolute; bottom:20px; right:0; width:220px; background:rgba(255,255,255,0.95); border-left:6px solid #39FF14; padding:18px; color:#111; box-shadow: -10px 10px 30px rgba(0,0,0,0.15);">
+                <div class="tech-specs-box" style="position:absolute; bottom:0px; right:0; width:220px; background:rgba(255,255,255,0.95); border-left:6px solid #39FF14; padding:18px; color:#111; box-shadow: -10px 10px 30px rgba(0,0,0,0.15);">
                     <b style="font-family:'Space Grotesk'; font-size:11px; color:#0047AB; text-transform:uppercase; display:block; margin-bottom:8px; letter-spacing:1px;">Ficha Técnica:</b>
                     <p style="font-family:'Inter'; font-size:13px; font-weight:700; line-height:1.4; margin:0; color:#333;">${(slide.technical_specs || '').replace(/\n/g, '<br>')}</p>
                 </div>
