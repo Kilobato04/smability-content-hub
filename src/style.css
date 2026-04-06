@@ -1,23 +1,23 @@
 /* ============================================================
    SMABILITY CONTENT HUB — style.css
-   Estrategia: Lean Mode | Square Fix | PDF Export Ready
+   Estrategia: Lean Mode | High-Contrast | 12-Post Campaign
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Space+Grotesk:wght@400;700;900&display=swap');
 
 /* --- 1. VARIABLES --- */
 :root {
-    --green:      #39FF14; 
-    --blue-tech:  #0047AB; 
-    --bg-dark:    #111111;
-    --bg-panel:   #1C1C1C;
-    --bg-input:   #252525;
-    --border:     rgba(255,255,255,0.08);
-    --white:      #FFFFFF;
-    --g400:       #9A9A9A;
-    --fd:         'Space Grotesk', sans-serif;
-    --fb:         'Inter', sans-serif;
-    --pad-slide:  50px; 
+    --green:     #39FF14; /* Neon Smability */
+    --blue-tech: #0047AB; /* Azul Cobalto */
+    --bg-dark:   #111111;
+    --bg-panel:  #1C1C1C;
+    --bg-input:  #252525;
+    --border:    rgba(255,255,255,0.08);
+    --white:     #FFFFFF;
+    --g400:      #9A9A9A;
+    --fd:        'Space Grotesk', sans-serif;
+    --fb:        'Inter', sans-serif;
+    --pad-slide: 56px;
 }
 
 /* --- 2. RESET & BASE --- */
@@ -32,9 +32,9 @@ body {
 }
 
 .app-container {
-    max-width: 1600px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 32px 40px;
+    padding: 20px 40px;
 }
 
 /* --- 3. UI COMPONENTS (Panel de Control) --- */
@@ -95,97 +95,121 @@ select, textarea {
     font-size: 0.9rem;
 }
 
-textarea { height: 130px; resize: none; margin-bottom: 10px; }
+textarea { height: 110px; resize: none; margin-bottom: 10px; }
 
-/* --- 4. BUTTONS --- */
-.copy-btn, .primary-btn, .secondary-btn {
-    width: 100%;
-    padding: 12px;
-    border-radius: 6px;
-    font-family: var(--fd);
-    font-weight: 800;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
+/* --- 4. BUTTONS CONSOLIDADOS --- */
+.primary-btn, .secondary-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-family: var(--fb);
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.2s;
+    border: none;
 }
 
-.copy-btn, .primary-btn {
-    background: var(--green);
-    color: #000;
-}
+.primary-btn { background: var(--green); color: #000; }
+.primary-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(57,255,20,0.3); }
 
-.secondary-btn {
-    background: var(--bg-input);
-    color: var(--white);
-    border: 1px solid var(--border);
-}
-
-.copy-btn:hover, .primary-btn:hover { background: #32e612; transform: translateY(-1px); }
+.secondary-btn { background: var(--bg-input); color: var(--green); border: 2px solid var(--green); }
+.secondary-btn:hover { background: rgba(57,255,20,0.1); }
 
 .download-group {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 10px;
+    gap: 15px;
+    margin-top: 20px;
 }
 
-/* --- 5. SLIDE ENGINE (VISUAL HUB - LINKEDIN FORMAT) --- */
+/* --- 5. SLIDE ENGINE (VISUAL HUB - LINKEDIN LIKE) --- */
 #carousel-preview-container {
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    max-height: 65vh; /* Reducido para mejor UX */
+    gap: 20px;
+    max-height: 85vh;
     overflow-y: auto;
-    padding: 30px;
-    background: #080808;
-    border-radius: 12px;
-    align-items: center;
+    padding-right: 10px;
 }
 
 .slide-preview {
-    width: 480px;  /* Tamaño de vista previa más manejable */
-    height: 480px; 
-    flex-shrink: 0;
-    padding: 45px; /* Proporcional al nuevo tamaño */
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    position: relative;
+    background-color: var(--bg-dark);
+    padding: var(--pad-slide);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-radius: 0;
+    border-radius: 0; /* Bordes rectos LinkedIn */
+    overflow: hidden;
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    background-color: var(--bg-dark);
 }
 
-/* Títulos Gigantes (LinkedIn Style) */
+/* Tipografía Masiva Editorial */
 .slide-preview h3 {
     font-family: var(--fd);
-    font-size: 3.5rem; /* Aumentado significativamente */
+    font-size: 3.2rem;
     font-weight: 900;
-    line-height: 0.85; /* Más apretado, más impacto */
-    letter-spacing: -0.05em;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--white);
     text-transform: uppercase;
+    margin: 0;
+    position: relative;
+    z-index: 5;
 }
 
-.slide-preview p {
-    font-size: 1.3rem; /* Texto de apoyo más legible */
-    line-height: 1.2;
-    font-weight: 600;
+/* Fix para Lámina 2 (Análisis) */
+.device-circle {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: #111;
+    border: 3px solid var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
 }
 
-/* --- 6. EXPORT FIXES (LINKEDIN PDF READY) --- */
+.tech-specs-box {
+    width: 220px;
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    background: rgba(255,255,255,0.95);
+    border-left: 6px solid var(--green);
+    padding: 15px;
+    color: #111;
+    z-index: 10;
+}
+
+.tech-specs-box b {
+    font-family: var(--fd);
+    font-size: 10px;
+    color: var(--blue-tech);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.tech-specs-box p {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* --- 6. EXPORT FIXES (PDF 1080) --- */
 @media print {
-    .slide-preview {
-        width: 1080px !important;
-        height: 1080px !important;
-        padding: 90px !important;
-    }
-    .slide-preview h3 {
-        font-size: 7.5rem !important; /* Texto masivo en el archivo final */
-    }
+    .control-panel, header, .status-badge { display: none !important; }
+    .content-grid { display: block; }
+    .slide-preview { width: 1080px; height: 1080px; page-break-after: always; padding: 80px; }
+    .slide-preview h3 { font-size: 5.5rem !important; } /* Título masivo al exportar */
 }
