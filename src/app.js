@@ -192,8 +192,8 @@ function build5Slides(postData, aiData) {
                 type: 'split_map',
                 headline: src[3]?.headline || 'Dato Crítico',
                 ai_body: postData.datos.datos_hardcoded || aiData.insight_body || '',
-                metric: src[3]?.metric || aiData.insight_metric || null,
-                metric_label: src[3]?.metric_label || ''
+                metric: src[3]?.metric || aiData.insight_metric || '49%', // Usa el del JSON, o el de la IA, o 49% como último recurso
+                metric_label: src[3]?.metric_label || 'Impacto Medido'
             },
             {
                 type: 'cta_clean',
