@@ -287,7 +287,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
         // AJUSTE: Logo 50% más grande (de 0.050 a 0.075)
         const coverLogoH = isPDF ? Math.round(S * 0.075) : 48;
         bodyContent = `
-            <div style="position:absolute; top:${pad}px; right:${pad}px; z-index:10; text-align:right;">
+            <div style="position:absolute; top:${pad}px; right:20px; z-index:10; text-align:right;">
                 ${logoImg(coverLogoH, isPDF, 'brightness(0) invert(1)')}
             </div>
             <div style="margin-top: auto;">
