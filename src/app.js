@@ -37,7 +37,7 @@ function logoImg(height, isPDF, filter) {
             filter:brightness(0) invert(1);opacity:${opacity};" />`;
     }
     const flt = filter ? `filter:${filter};` : '';
-    return `<img src="assets/logo.png" height="${height}"
+    return `<img src="assets/logo_white.png" height="${height}"
         style="width:auto;object-fit:contain;display:block;${flt}" />`;
 }
 
