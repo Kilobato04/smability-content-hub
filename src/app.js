@@ -364,28 +364,29 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
             </div>`;
 
    } else if (slide.type === 'cta_clean') {
-        // --- CONFIGURACIÓN DE TEXTOS EDITABLES (Lámina 5) ---
-        const tituloCTA = "AIreGPT"; // Texto grande arriba
-        const bajadaCTA = "Escanea para activar tus alertas de aire y lluvia."; // Texto debajo del nombre
-        const labelBoton = slide.ai_cta_label || "Probar Bot";
+        // --- EDITAR LEYENDA AQUÍ ---
+        const leyendaPersonalizada = "Escanea para activar tus alertas de lluvia y aire en tiempo real.";
+        const tituloPrincipal = "TRABAJA CON LOS CREADORES.";
 
         bodyContent = `
-            <div style="text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; position:relative;">
-                <div style="margin-bottom:30px;">
-                    <h2 style="font-family:'Space Grotesk'; font-size:64px; font-weight:900; color:#fff; margin:0; line-height:1;">
-                        ${tituloCTA}
-                    </h2>
-                    <p style="font-family:'Inter'; font-size:18px; color:#39FF14; font-weight:700; margin-top:10px;">
-                        ${bajadaCTA}
-                    </p>
-                </div>
-
-                <div class="qr-container" style="background:#fff; padding:15px; border-radius:12px; margin-bottom:30px; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
-                    <img src="assets/qr_airegpt.png" style="width:180px; height:180px;">
-                </div>
+            <div style="height:100%; display:flex; flex-direction:column; justify-content:center; position:relative; z-index:5;">
+                <h3 style="font-size:54px; font-weight:900; margin-bottom:40px; line-height:0.95; color:#FFFFFF; text-transform:uppercase;">
+                    ${tituloPrincipal}
+                </h3>
                 
-                <div style="background:#39FF14; color:#000; padding:15px 40px; border-radius:100px; font-family:'Space Grotesk'; font-weight:900; text-transform:uppercase; font-size:16px; letter-spacing:1px;">
-                    ${labelBoton}
+                <div style="display:flex; align-items:center; gap:25px; background:rgba(255,255,255,0.05); padding:25px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); backdrop-filter:blur(5px);">
+                    <div style="width:140px; height:140px; background:#fff; padding:10px; border-radius:8px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://smability.io/aire/gpt.html" style="width:100%; height:100%;">
+                    </div>
+                    
+                    <div style="text-align:left;">
+                        <p style="color:#FFFFFF; font-weight:800; font-size:22px; margin-bottom:8px; font-family:'Space Grotesk';">
+                            AIreGPT v2.6
+                        </p>
+                        <p style="color:#9A9A9A; font-weight:600; font-size:16px; line-height:1.3; font-family:'Inter';">
+                            ${leyendaPersonalizada}
+                        </p>
+                    </div>
                 </div>
             </div>`;
     }
