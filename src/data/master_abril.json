@@ -35,7 +35,7 @@
       "cat": "LLUVIA VALLE DE MÉXICO",
       "datos": {
         "titulo": "Época de Lluvias en el Valle de México",
-        "technical_specs": "Alerta: Púrpura registrada en \nZona de Polanco en CDMX: > 20.0 mm/h\nRed: Smability & Oficial ",
+        "technical_specs": "Alerta: Púrpura\nZona: Polanco en CDMX\n Umbral: > 20.0 mm/h \nRed: Smability & Oficial ",
         "datos_hardcoded": "El 22/04/2026 se registro una lluvia torrencial en la CDMX. El modelo de lluvia de AIreGPT detecto alerta Púrpura en la zona de Polanco.",
         "dato_viral": "El modelo también ayuda a predecir si la lluvia será ligera o torrencial. Es un modelo predictivo en donde las alertas se diseminan por Telegra y próximamante también por WhatsApp."
       },
