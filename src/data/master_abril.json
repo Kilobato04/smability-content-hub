@@ -32,17 +32,18 @@
     {
       "id": "post_02_rain_cdmx",
       "fecha": "2026-04-22",
-      "cat": "LLUVIA Valle de México",
+      "cat": "LLUVIA VALLE DE MÉXICO",
       "datos": {
-        "titulo": "Epoca de Lluvias en el Valle de México",
-        "technical_specs": "Alerta: Púrpura registrada en \nZona de Polanco CDMX: > 20.0 mm/h\nRed: Smability & Oficial ",
-        "datos_hardcoded": "El 22 de Abril se registro una lluvia intensa en la CDMX. El modelo de lluvia de AIreGPT detecto alerta Púrpura en la zona de Polanco.",
-        "dato_viral": "El modelo también ayuda a predecir si la lluvia será ligera o torrencial. Es un modelo predictivo en donde las alertas se diseminan por Telegra y próximamante WhatsApp."
+        "titulo": "Época de Lluvias en el Valle de México",
+        "technical_specs": "Alerta: Púrpura registrada en \nZona de Polanco en CDMX: > 20.0 mm/h\nRed: Smability & Oficial ",
+        "datos_hardcoded": "El 22/04/2026 se registro una lluvia torrencial en la CDMX. El modelo de lluvia de AIreGPT detecto alerta Púrpura en la zona de Polanco.",
+        "dato_viral": "El modelo también ayuda a predecir si la lluvia será ligera o torrencial. Es un modelo predictivo en donde las alertas se diseminan por Telegra y próximamante también por WhatsApp."
       },
       "slides": [
-        { "type": "cover_bold", "headline": "ALERTA PÚRPURA: MÁS DE 20 MM/H DE LLUEVIA.", "metric": "> 20.0 mm/h", "bg": null },
-        { "type": "data_callout", "headline": "MAPA CRÍTICO DE LA LLUVIA EN VALLE DE MEXICO", "metric": "NIVEL PÚRPURA", "device_tag": "CHAAK", "bg": "assets/analysis/heatmap_ibero_1.jpg" },
-        { "type": "cta_clean", "headline": "CHATEA CON AIreGPT para activar tus alertas.", "supporting_text": "Adelantate a la tormenta con AIreGPT.", "bg": null }
+        { "type": "cover_bold", "headline": "ALERTA PÚRPURA: MÁS DE 20 MM/H DE LLUVIA.", "metric": "> 20.0 mm/h", "bg": null },
+        { "type": "data_callout", "headline": "MAPA CRÍTICO DE LA LLUVIA PARA EL VALLE DE MEXICO", "metric": "NIVEL PÚRPURA", "device_tag": "CHAAK", "bg": "assets/products/rainapp.png" },
+        { "type": "split_map", "headline": "ANÁLISIS PREDICTIVO PARA DETECTAR LA PRÓXIMA TORMENTA", "metric": "VEMOS LA LLUVIA CADA MINUTO", "metric_label": "NUESTRO MODELO ALIMENTAN LAS ALERTAS QUE TE SALVAN DEL AGUACERO"},
+        { "type": "cta_clean", "headline": "CHATEA CON AIreGPT para activar tus alertas.", "supporting_text": "Adelantate a la tormenta con AIreGPT!.", "bg": null }
       ]
     },
     {
