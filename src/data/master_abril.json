@@ -55,8 +55,9 @@
           "headline": "CAPACIDADES DEL MODELO",
           "bullets": [
             "Monitoreo granular en tiempo real",
-            "Alertas predictivas por zona",
-            "Integración con Telegram/WhatsApp"
+            "Alertas predictivas por usuario y por zona",
+            "Estación CHAAK como parte del sistema",
+            "Integración con Telegram & WhatsApp"
           ] 
         },
         { 
