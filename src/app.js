@@ -363,18 +363,29 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                 ${slide.metric ? `<div style="font-size:72px; font-weight:900; color:#39FF14; letter-spacing:-2px;">${slide.metric}</div>` : ''}
             </div>`;
 
-    } else if (slide.type === 'cta_clean') {
+   } else if (slide.type === 'cta_clean') {
+        // --- CONFIGURACIÓN DE TEXTOS EDITABLES (Lámina 5) ---
+        const tituloCTA = "AIreGPT"; // Texto grande arriba
+        const bajadaCTA = "Escanea para activar tus alertas de aire y lluvia."; // Texto debajo del nombre
+        const labelBoton = slide.ai_cta_label || "Probar Bot";
+
         bodyContent = `
-            <div style="height:100%; display:flex; flex-direction:column; justify-content:center;">
-                <h3 style="font-size:54px; font-weight:900; margin-bottom:40px; line-height:0.95;">${slide.headline}</h3>
-                <div style="display:flex; align-items:center; gap:25px; background:rgba(255,255,255,0.05); padding:20px; border-radius:12px; border:1px solid rgba(255,255,255,0.1);">
-                    <div style="width:120px; height:120px; background:#fff; padding:10px; border-radius:8px; flex-shrink:0;">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://smability.io/aire/gpt.html" style="width:100%;">
-                    </div>
-                    <div>
-                        <p style="color:#fff; font-weight:600; font-size:20px; margin-bottom:5px;">AIreGPT</p>
-                        <p style="color:#9A9A9A; font-weight:600; font-size:16px;">Escanea para conocer tu exposición en tiempo real.</p>
-                    </div>
+            <div style="text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; position:relative;">
+                <div style="margin-bottom:30px;">
+                    <h2 style="font-family:'Space Grotesk'; font-size:64px; font-weight:900; color:#fff; margin:0; line-height:1;">
+                        ${tituloCTA}
+                    </h2>
+                    <p style="font-family:'Inter'; font-size:18px; color:#39FF14; font-weight:700; margin-top:10px;">
+                        ${bajadaCTA}
+                    </p>
+                </div>
+
+                <div class="qr-container" style="background:#fff; padding:15px; border-radius:12px; margin-bottom:30px; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+                    <img src="assets/qr_airegpt.png" style="width:180px; height:180px;">
+                </div>
+                
+                <div style="background:#39FF14; color:#000; padding:15px 40px; border-radius:100px; font-family:'Space Grotesk'; font-weight:900; text-transform:uppercase; font-size:16px; letter-spacing:1px;">
+                    ${labelBoton}
                 </div>
             </div>`;
     }
