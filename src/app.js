@@ -325,7 +325,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                     </h3>
                 </div>
 
-                <div style="position:absolute; top:-10px; right:0; text-align:right; z-index:12;">
+                <div style="position:absolute; top:-10px; right:12px; text-align:right; z-index:12;">
                     <span style="font-family:'Space Grotesk'; font-size:11px; color:#000; background:#39FF14; padding:3px 10px; font-weight:900; letter-spacing:1px; text-transform:uppercase; border-radius:2px;">
                         ${deviceName}
                     </span>
