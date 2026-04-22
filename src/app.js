@@ -381,7 +381,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                     
                     <div style="text-align:left;">
                         <p style="color:#FFFFFF; font-weight:800; font-size:22px; margin-bottom:8px; font-family:'Space Grotesk';">
-                            AIreGPT v2.6
+                            AIreGPT
                         </p>
                         <p style="color:#9A9A9A; font-weight:600; font-size:16px; line-height:1.3; font-family:'Inter';">
                             ${leyendaPersonalizada}
