@@ -8,7 +8,7 @@
     "director": "Horacio S. Jiménez Soto",
     "web": "smability.io",
     "mision": "Democratizamos el acceso a la información crítica medioambiental",
-    "productos": ["SMAA", "SMAAmicro", "CHAAK", "SMAWA", "AIreGPT", "PDN"]
+    "productos": ["SMAA", "SMAAmicro", "CHAAK", "SMAWA", "AIreGPT", "PDN", "AIRMODEL", "RAINMODEL"]
   },
   "pipeline": [
     {
