@@ -298,28 +298,69 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
 
    } else if (slide.type === 'data_callout') {
         const deviceCircleSize = isPDF ? Math.round(S * 0.12) : 90;
-        // Nombre del dispositivo para el fallback
         const deviceName = slide.device_tag || 'SMAA(m)';
         
-        bodyContent = `
-            <div style="text-align:left; width:100%; height:100%; position:relative; padding-top:60px;">
-               <div style="position:absolute; top:-28px; right:0; text-align:right; z-index:12;">
-                   <span style="font-family:'Space Grotesk'; font-size:12px; color:#000; background:#39FF14; padding:2px 8px; font-weight:800; letter-spacing:1px; text-transform:uppercase; border-radius:2px;">
-                       ${deviceName}
-                   </span>
-               </div>
+        // --- CONFIGURACIÓN DE TEXTOS EDITABLES ---
+        // 1. Texto Fijo Superior (Edítalo aquí)
+        const textoFijoSuperior = "MODELO DE LLUVIA A NIVEL METROPOLITANO"; 
+        
+        // 2. Título Dinámico (Viene del JSON, pero definimos un fallback)
+        const tituloDinamico = slide.headline || "MAPA CRÍTICO DE LLUVIAS ATÍPICAS";
 
-                <div class="device-circle" style="position:absolute; top:0; right:0; width:${deviceCircleSize}px; height:${deviceCircleSize}px; background:#222; border:2px solid #39FF14; border-radius:50%; display:flex; align-items:center; justify-content:center; overflow:hidden; z-index:11;">
-                    <img src="assets/devices/${(slide.device_tag || 'SMAA').toLowerCase()}.png" style="width:70%; filter: brightness(1.5);" onerror="this.style.display='none'">
-                </div>
+        bodyContent = `
+            <div style="text-align:left; width:100%; height:100%; position:relative; display:flex; flex-direction:column;">
                 
-                <p style="font-family:'Space Grotesk'; font-size:14px; color:#0047AB; font-weight:800; letter-spacing:2px; margin-bottom:10px; text-shadow: 0 1px 2px rgba(255,255,255,0.5);">ANÁLISIS TÉCNICO // 2026</p>
-                <h3 style="font-size:32px; color:#111; font-weight:900; line-height:1.1; margin-bottom:20px; text-transform:uppercase;">${slide.headline}</h3>
+                <div class="analysis-header-highlight" style="
+                    position:absolute; top:-${pad}px; left:-${pad}px; 
+                    width:calc(100% + ${pad*2}px); 
+                    background:rgba(0, 31, 63, 0.85); /* Azul Navy Aero (Semi-transparente) */
+                    backdrop-filter: blur(10px); /* Efecto Esmerilado (Opcional, si el navegador lo soporta) */
+                    padding:${isPDF ? Math.round(pad * 1.2) : 40}px ${pad}px; 
+                    border-bottom:3px solid #39FF14; /* Subrayado Neón Smability */
+                    z-index:10; box-sizing:border-box;">
+                    
+                    <p style="
+                        font-family:'Space Grotesk'; font-size:12px; 
+                        color:rgba(255,255,255,0.7); font-weight:800; 
+                        letter-spacing:2px; margin:0 0 15px 0; 
+                        text-transform:uppercase;">
+                        ${textoFijoSuperior}
+                    </p>
+                    
+                    <h3 style="
+                        font-family:'Space Grotesk'; font-size:${fs_h3 * 0.8}px; /* Ligeramente más pequeño que la portada */
+                        color:#FFFFFF; font-weight:900; 
+                        line-height:0.95; margin:0; 
+                        text-transform:uppercase; letter-spacing:-0.04em;">
+                        ${tituloDinamico}
+                    </h3>
+                </div>
+
+                <div style="position:absolute; top:${isPDF ? Math.round(S * 0.22) : 130}px; right:0; text-align:right; z-index:12;">
+                    <span style="font-family:'Space Grotesk'; font-size:11px; color:#000; background:#39FF14; padding:3px 10px; font-weight:900; letter-spacing:1px; text-transform:uppercase; border-radius:2px;">
+                        ${deviceName}
+                    </span>
+                </div>
+
+                <div class="device-circle" style="
+                    position:absolute; top:${isPDF ? Math.round(S * 0.25) : 150}px; right:0; 
+                    width:${deviceCircleSize}px; height:${deviceCircleSize}px; 
+                    background:#222; border:3px solid #39FF14; 
+                    border-radius:50%; display:flex; align-items:center; 
+                    justify-content:center; overflow:hidden; z-index:11; 
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                    <img src="assets/devices/${(slide.device_tag || 'SMAA').toLowerCase()}.png" style="width:70%; filter: brightness(1.3);" onerror="this.style.display='none'">
+                </div>
                 
                 <div style="flex:1;"></div>
 
-                <div class="tech-specs-box" style="position:absolute; bottom:0px; right:0; width:220px; background:rgba(255,255,255,0.95); border-left:6px solid #39FF14; padding:18px; color:#111; box-shadow: -10px 10px 30px rgba(0,0,0,0.15);">
-                    <b style="font-family:'Space Grotesk'; font-size:11px; color:#0047AB; text-transform:uppercase; display:block; margin-bottom:8px; letter-spacing:1px;">Ficha Técnica:</b>
+                <div class="tech-specs-box" style="
+                    position:absolute; bottom:0; right:-${isPDF ? 0 : 20}px; 
+                    width:230px; background:rgba(255,255,255,0.96); 
+                    border-left:8px solid #39FF14; padding:20px; 
+                    color:#111; z-index:10; 
+                    box-shadow: -15px 15px 40px rgba(0,0,0,0.2);">
+                    <b style="font-family:'Space Grotesk'; font-size:11px; color:#0047AB; text-transform:uppercase; display:block; margin-bottom:8px; letter-spacing:1px;">Ficha Técnica / Patente:</b>
                     <p style="font-family:'Inter'; font-size:13px; font-weight:700; line-height:1.4; margin:0; color:#333;">${(slide.technical_specs || '').replace(/\n/g, '<br>')}</p>
                 </div>
             </div>`;
