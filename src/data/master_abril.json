@@ -30,19 +30,19 @@
       ]
     },
     {
-      "id": "post_02_contingencia_vdmx",
-      "fecha": "2026-04-06",
-      "cat": "CONTINGENCIA",
+      "id": "post_02_rain_cdmx",
+      "fecha": "2026-04-22",
+      "cat": "LLUVIA Valle de México",
       "datos": {
-        "titulo": "Contingencia Ambiental Fase 1 - CDMX",
-        "technical_specs": "Alerta: Fase 1\nParámetro: Ozono (O3)\nUmbral: 155 ppb\nRed: Smability IoT Mesh",
-        "datos_hardcoded": "Durante la Fase 1, el corredor Insurgentes Sur superó los 160 ppb. El 70% de la carga proviene de fuentes móviles en estancamiento térmico detectado por AIreGPT.",
-        "dato_viral": "Nivel Morado (Extremadamente Malo): Se recomienda suspender toda actividad logística pesada."
+        "titulo": "Epoca de Lluvias en el Valle de México",
+        "technical_specs": "Alerta: Púrpura registrada en \nZona de Polanco CDMX: > 20.0 mm/h\nRed: Smability & Oficial ",
+        "datos_hardcoded": "El 22 de Abril se registro una lluvia intensa en la CDMX. El modelo de lluvia de AIreGPT detecto alerta Púrpura en la zona de Polanco.",
+        "dato_viral": "El modelo también ayuda a predecir si la lluvia será ligera o torrencial. Es un modelo predictivo en donde las alertas se diseminan por Telegra y próximamante WhatsApp."
       },
       "slides": [
-        { "type": "cover_bold", "headline": "ESTAMOS EN CONTINGENCIA: FASE 1 ACTIVA.", "metric": "155+ ppb O3", "bg": null },
-        { "type": "data_callout", "headline": "MAPA CRÍTICO DE OZONO EN VALLE DE MÉXICO", "metric": "NIVEL MORADO", "device_tag": "SMAA", "bg": "assets/analysis/contingencia_abril_01.jpg" },
-        { "type": "cta_clean", "headline": "ACTIVA TU MONITOREO DE EMERGENCIA.", "supporting_text": "Protocolos de seguridad industrial en tiempo real con AIreGPT.", "bg": null }
+        { "type": "cover_bold", "headline": "ALERTA PÚRPURA: MÁS DE 20 MM/H DE LLUEVIA.", "metric": "> 20.0 mm/h", "bg": null },
+        { "type": "data_callout", "headline": "MAPA CRÍTICO DE LA LLUVIA EN VALLE DE MEXICO", "metric": "NIVEL PÚRPURA", "device_tag": "CHAAK", "bg": "assets/analysis/heatmap_ibero_1.jpg" },
+        { "type": "cta_clean", "headline": "CHATEA CON AIreGPT para activar tus alertas.", "supporting_text": "Adelantate a la tormenta con AIreGPT.", "bg": null }
       ]
     },
     {
