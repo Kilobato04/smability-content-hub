@@ -185,14 +185,20 @@ function build5Slides(postData, aiData) {
             {
                 type: 'bullets',
                 cat_tag: cat,
-                headline: aiData.bullets_title || 'Protocolo Técnico',
-                bullets: aiData.bullets
+                headline: src[2]?.headline || aiData.bullets_title || 'Protocolo Técnico',
+                
+                // PRIORIDAD: Si en el JSON de slides definiste "bullets", úsalos. 
+                // Si no, usa los de la IA.
+                bullets: src[2]?.bullets || aiData.bullets || ['Dato técnico 1', 'Dato técnico 2']
             },
             {
                 type: 'split_map',
                 headline: src[3]?.headline || 'Dato Crítico',
                 ai_body: postData.datos.datos_hardcoded || aiData.insight_body || '',
-                metric: src[3]?.metric || aiData.insight_metric || '49%', // Usa el del JSON, o el de la IA, o 49% como último recurso
+                
+                // PRIORIDAD: 1. JSON manual (src) | 2. Dato de la IA (postData.datos.metric) | 3. Fallback
+                metric: src[3]?.metric || postData.datos.metric || '---', 
+                
                 metric_label: src[3]?.metric_label || 'Impacto Medido'
             },
             {
@@ -300,32 +306,21 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
         const deviceCircleSize = isPDF ? Math.round(S * 0.12) : 90;
         const deviceName = slide.device_tag || 'SMAA(m)';
         
-        // --- CONFIGURACIÓN DE TEXTOS EDITABLES (Edita aquí) ---
+        // --- EDITAR TEXTOS AQUÍ ---
         const textoFijoSuperior = "MODELO DE LLUVIA PARA EL VALLE DE MÉXICO"; 
-        const etiquetaFichaTecnica = "DATOS CLAVE:"; // <-- Modifica este texto a tu gusto
+        const etiquetaFichaTecnica = "DATOS CLAVE:"; // Antes "Ficha Técnica"
         
-        // Título Dinámico (Viene del JSON)
+        // Título Dinámico (El que viene del JSON)
         const tituloDinamico = slide.headline || "MAPA CRÍTICO DE LA LLUVIA";
 
         bodyContent = `
             <div style="text-align:left; width:100%; height:100%; position:relative; display:flex; flex-direction:column;">
                 
                 <div style="position:absolute; top:0; left:0; z-index:10; max-width:85%;">
-                    
-                    <p style="
-                        font-family:'Space Grotesk'; font-size:12px; 
-                        color:#001F3F; font-weight:800; 
-                        letter-spacing:2px; margin:0 0 10px 0; 
-                        text-transform:uppercase;">
+                    <p style="font-family:'Space Grotesk'; font-size:12px; color:#FFFFFF; font-weight:800; letter-spacing:2px; margin:0 0 10px 0; text-transform:uppercase;">
                         ${textoFijoSuperior}
                     </p>
-                    
-                    <h3 style="
-                        font-family:'Space Grotesk'; font-size:${fs_h3 * 0.85}px; 
-                        color:#001F3F; font-weight:900; 
-                        line-height:0.95; margin:0; 
-                        text-transform:uppercase; letter-spacing:-0.04em;
-                        text-shadow: 0 0 20px rgba(255,255,255,0.8);">
+                    <h3 style="font-family:'Space Grotesk'; font-size:${fs_h3 * 0.85}px; color:#FFFFFF; font-weight:900; line-height:0.95; margin:0; text-transform:uppercase; letter-spacing:-0.04em; text-shadow: 0 2px 15px rgba(0,0,0,0.6);">
                         ${tituloDinamico}
                     </h3>
                 </div>
@@ -336,29 +331,16 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                     </span>
                 </div>
 
-                <div class="device-circle" style="
-                    position:absolute; top:15px; right:0; 
-                    width:${deviceCircleSize}px; height:${deviceCircleSize}px; 
-                    background:#222; border:2px solid #39FF14; 
-                    border-radius:50%; display:flex; align-items:center; 
-                    justify-content:center; overflow:hidden; z-index:11; 
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <div class="device-circle" style="position:absolute; top:15px; right:0; width:${deviceCircleSize}px; height:${deviceCircleSize}px; background:#222; border:2px solid #39FF14; border-radius:50%; display:flex; align-items:center; justify-content:center; overflow:hidden; z-index:11; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
                     <img src="assets/devices/${(slide.device_tag || 'SMAA').toLowerCase()}.png" style="width:70%; filter: brightness(1.3);" onerror="this.style.display='none'">
                 </div>
                 
                 <div style="flex:1;"></div>
 
-                <div class="tech-specs-box" style="
-                    position:absolute; bottom:0; right:-${isPDF ? 0 : 10}px; 
-                    width:240px; background:rgba(255,255,255,0.96); 
-                    border-left:8px solid #39FF14; padding:20px; 
-                    color:#111; z-index:10; 
-                    box-shadow: -15px 15px 40px rgba(0,0,0,0.15);">
-                    
+                <div class="tech-specs-box" style="position:absolute; bottom:0; right:-${isPDF ? 0 : 10}px; width:240px; background:rgba(255,255,255,0.96); border-left:8px solid #39FF14; padding:20px; color:#111; z-index:10; box-shadow: -15px 15px 40px rgba(0,0,0,0.15);">
                     <b style="font-family:'Space Grotesk'; font-size:11px; color:#0047AB; text-transform:uppercase; display:block; margin-bottom:8px; letter-spacing:1px;">
                         ${etiquetaFichaTecnica}
                     </b>
-                    
                     <p style="font-family:'Inter'; font-size:13px; font-weight:700; line-height:1.4; margin:0; color:#333;">
                         ${(slide.technical_specs || '').replace(/\n/g, '<br>')}
                     </p>
