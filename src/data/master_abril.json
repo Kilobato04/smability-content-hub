@@ -35,15 +35,40 @@
       "cat": "LLUVIA VALLE DE MÉXICO",
       "datos": {
         "titulo": "Época de Lluvias en el Valle de México",
-        "technical_specs": "Alerta: Púrpura\nZona: Polanco en CDMX\n Umbral: > 20.0 mm/h \nRed: Smability & Oficial ",
-        "datos_hardcoded": "El 22/04/2026 se registro una lluvia torrencial en la CDMX. El modelo de lluvia de AIreGPT detecto alerta Púrpura en la zona de Polanco.",
-        "dato_viral": "El modelo también ayuda a predecir si la lluvia será ligera o torrencial. Es un modelo predictivo en donde las alertas se diseminan por Telegra y próximamante también por WhatsApp."
+        "technical_specs": "Alerta: Púrpura\nZona: Polanco en CDMX\nUmbral: > 20.0 mm/h\nRed: Smability & Oficial",
+        "datos_hardcoded": "El 22/04/2026 se registró una lluvia torrencial en la CDMX. El modelo de lluvia de AIreGPT detectó alerta Púrpura en la zona de Polanco.",
+        "dato_viral": "Alertas vía Telegram y pronto WhatsApp."
       },
       "slides": [
-        { "type": "cover_bold", "headline": "ALERTA PÚRPURA: MÁS DE 20 MM/H DE LLUVIA.", "metric": "> 20.0 mm/h", "bg": null },
-        { "type": "data_callout", "headline": "MAPA CRÍTICO DE LA LLUVIA PARA EL VALLE DE MEXICO", "metric": "NIVEL PÚRPURA", "device_tag": "CHAAK", "bg": "assets/products/rainapp.png" },
-        { "type": "split_map", "headline": "ANÁLISIS PREDICTIVO PARA DETECTAR LA PRÓXIMA TORMENTA", "metric": "VEMOS LA LLUVIA CADA MINUTO", "metric_label": "NUESTRO MODELO ALIMENTAN LAS ALERTAS QUE TE SALVAN DEL AGUACERO"},
-        { "type": "cta_clean", "headline": "CHATEA CON AIreGPT para activar tus alertas.", "supporting_text": "Adelantate a la tormenta con AIreGPT!.", "bg": null }
+        { 
+          "type": "cover_bold", 
+          "headline": "ALERTA PÚRPURA: MÁS DE 20 MM/H DE LLUVIA." 
+        },
+        { 
+          "type": "data_callout", 
+          "headline": "MAPA CRÍTICO DE LA LLUVIA PARA EL VALLE DE MEXICO", 
+          "device_tag": "CHAAK", 
+          "bg": "assets/products/rainapp.png" 
+        },
+        { 
+          "type": "bullets", 
+          "headline": "CAPACIDADES DEL MODELO",
+          "bullets": [
+            "Monitoreo granular en tiempo real",
+            "Alertas predictivas por zona",
+            "Integración con Telegram/WhatsApp"
+          ] 
+        },
+        { 
+          "type": "split_map", 
+          "headline": "ANÁLISIS PREDICTIVO DE TORMENTAS", 
+          "metric": "REAL-TIME", 
+          "metric_label": "DATOS CADA MINUTO PARA ALERTAS PREVENTIVAS"
+        },
+        { 
+          "type": "cta_clean", 
+          "headline": "CHATEA CON AIreGPT Y ACTIVA TUS ALERTAS." 
+        }
       ]
     },
     {
