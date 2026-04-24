@@ -1,0 +1,235 @@
+{
+  "soluciones_hardware_smability": {
+    "smaa_micro": {
+      "tag_id": "HW-SMAA-MICRO",
+      "modelo": "SMAA MICRO V0.01-2024 [cite: 13]",
+      "descripcion": "Dispositivo para el monitoreo en tiempo real de parámetros de calidad del aire [cite: 12]",
+      "especificaciones_sensores": {
+        "NO2": {
+          "principio": "Electroquímico",
+          "rango": "0 ppb - 20,000 ppb",
+          "precision": "+/-2%",
+          "resolucion": "100ppb"
+        },
+        "PM2.5": {
+          "principio": "Dispersión láser",
+          "rango": "0 ug/m3 - 10000 ug/m3",
+          "precision": "+/-15 µg/m3",
+          "resolucion": "1 µg/m3"
+        },
+        "PM10": {
+          "principio": "Dispersión láser",
+          "rango": "0 ug/m3 - 10000 ug/m3",
+          "precision": "+/-15 µg/m3",
+          "resolucion": "1 µg/m3"
+        },
+        "Temperatura": {
+          "principio": "Estado Sólido",
+          "rango": "-40°C - +80°C",
+          "precision": "+0.5°C",
+          "resolucion": "0.1°C"
+        },
+        "Humedad Relativa": {
+          "principio": "Estado Sólido",
+          "rango": "5% - 99%",
+          "precision": "+2%",
+          "resolucion": "0.1%"
+        }
+      },
+      "especificaciones_dispositivo": {
+        "protocolo_comunicacion": "WiFi - 4G LTE - con GPS [cite: 19]",
+        "tiempo_muestreo": "@1 min para todos los parámetros",
+        "fuente_poder": "Eliminador 5VDC/2A",
+        "consumo_energia": "2.5 W en promedio",
+        "proteccion_carcasa": "Nylon PA 12",
+        "temperatura_operacion": "-5°C a +45°C",
+        "humedad_operacion": "0-100%"
+      },
+      "notas": [
+        "Los datos son integrados en la Plataforma de Datos en la Nube (PDN) de Smability[cite: 20].",
+        "API disponible para integración con terceros[cite: 21].",
+        "Evaluación basada en microsensores UNAM-ICAYCC[cite: 22]."
+      ]
+    },
+    "smaa": {
+      "tag_id": "HW-SMAA-STANDARD",
+      "modelo": "SMAA V0.1-V22025 [cite: 130]",
+      "descripcion": "Dispositivo para el monitoreo en tiempo real de parámetros de calidad del aire y ruido [cite: 130]",
+      "especificaciones_sensores": {
+        "Ruido": {
+          "principio": "Monitoreo acústico",
+          "rango": "30 - 130 dB",
+          "precision": "Integrada",
+          "resolucion": "dBA"
+        },
+        "CO": {
+          "principio": "Electroquímico",
+          "rango": "0 ppb - 10000 ppb",
+          "precision": "+/-2%",
+          "resolucion": "<=10 ppb"
+        },
+        "O3_SO2_NO2_H2S_CH4": {
+          "principio": "Electroquímico",
+          "rango": "0 ppb - 1000 ppb",
+          "precision": "+/-2%",
+          "resolucion": "<=10 ppb"
+        },
+        "PM2.5": {
+          "principio": "Dispersión láser",
+          "rango": "0 ug/m3 - 10000 ug/m3",
+          "precision": "+/-15 µg/m3",
+          "resolucion": "1 µg/m3"
+        },
+        "PM10": {
+          "principio": "Dispersión láser",
+          "rango": "0 ug/m3 - 10000 ug/m3",
+          "precision": "+/-15 µg/m3",
+          "resolucion": "1 µg/m3"
+        },
+        "TRS": {
+          "principio": "Correlación estequiométrica (H2S)",
+          "rango": "0 ppb - 1000 ppb",
+          "precision": "Indicativa",
+          "resolucion": "<=10 ppt"
+        },
+        "NH3": {
+          "principio": "Electroquímico",
+          "rango": "0 ppm - 100 ppm",
+          "precision": "+/-4%",
+          "resolucion": "1 ppm"
+        },
+        "Temperatura": {
+          "principio": "Estado Sólido",
+          "rango": "-40°C - +80°C",
+          "precision": "+0.5°C",
+          "resolucion": "0.1°C"
+        },
+        "Humedad_Relativa": {
+          "principio": "Estado Sólido",
+          "rango": "5% - 99%",
+          "precision": "+2%",
+          "resolucion": "0.1%"
+        },
+        "GPS": {
+          "funcionalidad": "Ubicación y mapeo de contaminantes interno [cite: 133]"
+        }
+      },
+      "especificaciones_dispositivo": {
+        "conectividad_celular": "2G/4G (Según disponibilidad) [cite: 136]",
+        "tipo_bateria": "3.7v LiPo-Recargable, 2000mAh",
+        "duracion_bateria": "7 hrs (fijo) / 3 hrs (móvil)",
+        "tiempo_muestreo": "Fijo: 5 min / Móvil: 5 sec",
+        "fuente_poder": "Eliminador 5VDC/2A y Panel Solar V.0.2",
+        "consumo_energia": "3W",
+        "proteccion_carcasa": "Nylon PA 12",
+        "temperatura_operacion": "-5°C a +45°C",
+        "humedad_operacion": "0-100%"
+      },
+      "notas": [
+        "Soporte de IA vía AireGPT para consultas de parámetros[cite: 138].",
+        "Integra únicamente dos (2) gases criterio a elección del cliente[cite: 141].",
+        "Cálculo de TRS basado en sensor de H2S existente[cite: 142]."
+      ]
+    },
+    "chaak": {
+      "tag_id": "HW-CHAAK-METEO",
+      "modelo": "CHAAK VO.1-V12025 [cite: 274]",
+      "descripcion": "Dispositivo para el monitoreo en tiempo real de parámetros meteorológicos",
+      "especificaciones_sensores": {
+        "Velocidad_Viento": {
+          "principio": "Ultrasónico",
+          "rango": "0 - 60 m/s",
+          "precision": "±2%",
+          "resolucion": "0.01 m/s"
+        },
+        "Direccion_Viento": {
+          "principio": "Ultrasónico",
+          "rango": "0 - 359°",
+          "precision": "<3°",
+          "resolucion": "1°"
+        },
+        "Temperatura": {
+          "principio": "Sensor MEMS",
+          "rango": "-40°C - +80°C",
+          "precision": "±0.5°C",
+          "resolucion": "0.1°C"
+        },
+        "Humedad_Relativa": {
+          "principio": "Sensor MEMS",
+          "rango": "0 - 100%",
+          "precision": "±2%",
+          "resolucion": "0.1%"
+        },
+        "Presion_Atmosferica": {
+          "principio": "Sensor MEMS",
+          "rango": "150 - 1100 hPa",
+          "precision": "±1 hPa",
+          "resolucion": "0.1 hPa"
+        },
+        "Precipitacion": {
+          "principio": "Radar",
+          "rango": "0 - 500 mm/hr",
+          "precision": "±10%",
+          "resolucion": "0.01 mm",
+          "tipos": "Lluvia, Granizo, Aguanieve, Nieve"
+        },
+        "Radiacion_Solar": {
+          "principio": "Sensor Estado Sólido",
+          "rango": "0 - 2000 W/m2",
+          "precision": "±5%",
+          "resolucion": "1 W/m2"
+        },
+        "Altitud": {
+          "principio": "Sensor MEMS",
+          "rango": "-50 - 9000 m",
+          "precision": "±5%",
+          "resolucion": "1 m"
+        },
+        "Nubosidad_Evaporacion": {
+          "principio": "Modelado numérico (Open-Meteo API) [cite: 278]",
+          "rango": "0 - 100% / Variable",
+          "precision": "Estimada",
+          "resolucion": "1% / 0.01 mm"
+        }
+      },
+      "especificaciones_dispositivo": {
+        "conectividad_celular": "2G/4G [cite: 282]",
+        "tipo_bateria": "3.7v LiPo-Recargable, 2000mAh",
+        "duracion_bateria": "2 hrs",
+        "tiempo_muestreo": "1 muestra/min",
+        "fuente_poder": "Eliminador 5VDC/3A",
+        "consumo_energia": "4W",
+        "proteccion_caja": "IP68",
+        "material_soporte": "ABS con protección EMI en tubo conduit",
+        "temperatura_operacion": "-40°C a +70°C"
+      },
+      "notas": [
+        "El modelado numérico es un parámetro procesado vía software, no un sensor físico[cite: 285].",
+        "Incluye brújula electrónica y GPS para orientación[cite: 280]."
+      ]
+    },
+    "smawa": {
+      "tag_id": "HW-SMAWA-AGUA",
+      "modelo": "SMAWA V0.2V12025 [cite: 316]",
+      "descripcion": "Dispositivo para el monitoreo en tiempo real del nivel acumulado de agua",
+      "especificaciones_dispositivo": {
+        "rango_nivel": "0 - 5 m (opcional 0-10m, 0-50m) [cite: 321]",
+        "resolucion": "1 cm",
+        "precision": "0.05% F.S",
+        "conectividad_celular": "2G",
+        "tipo_bateria": "Batería LiPo-Recargable 3.7 V, 2000mAh",
+        "tiempo_muestreo": "Seco: 5 min / Lluvia: 3 seg [cite: 338]",
+        "carcasa": "IP68",
+        "material_sonda": "Acero inoxidable 316L [cite: 341]",
+        "rango_presion_max": "400 Bar",
+        "sensor_optico": "Detección de primera gota de lluvia [cite: 343]",
+        "temperatura_operacion": "-20°C a 70°C (sonda sumergida)",
+        "dimensiones": "200mm(W) x 300mm(H) x 50mm(D)"
+      },
+      "notas": [
+        "Especializado en anticipar desabasto en cisternas y tanques[cite: 293].",
+        "Cable de sonda con aislamiento contra corrosión y humedad[cite: 340]."
+      ]
+    }
+  }
+}
