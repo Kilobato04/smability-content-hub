@@ -1,0 +1,149 @@
+{
+  "ecosistema_smability": {
+    "bloque_encabezado": {
+      "tag": "header",
+      "marca": "smability.io",
+      "titulo_principal": "EL ECOSISTEMA SMABILITY",
+      "subtitulo": "DATOS INTELIGENTES QUE PROTEGEN COMUNIDADES"
+    },
+    "bloque_vision_general": {
+      "tag": "overview_features",
+      "descripcion": "Un ecosistema IoT completo",
+      "caracteristicas_clave": [
+        "Sensores inteligentes",
+        "Nube segura",
+        "IA conversacional",
+        "Modelos predictivos",
+        "Alertas accionables"
+      ]
+    },
+    "bloque_cerebro_central": {
+      "tag": "core_os",
+      "nombre": "SMAA OS",
+      "descripcion": "El cerebro del ecosistema",
+      "infraestructura": "Nube segura y escalable (AWS)",
+      "capacidades": [
+        "Recepción y gestión de datos IoT en tiempo real",
+        "Calibración y control de calidad",
+        "Almacenamiento seguro y escalable",
+        "Análisis de Big Data",
+        "Modelos predictivos y simulaciones",
+        "APIs abiertas e integraciones"
+      ]
+    },
+    "bloque_hardware_sensores": {
+      "tag": "hw_devices",
+      "dispositivos": {
+        "chaak": {
+          "id": "hw_01",
+          "nombre": "CHAAK",
+          "medicion_principal": "Precipitación",
+          "especificaciones": [
+            "Sensor de lluvia de estado sólido",
+            "0-500 mm/hr",
+            "Resolución: 0.01 mm",
+            "Temp., Humedad, Presión, Viento, Radiación Solar, Altitud",
+            "4G / NB-IoT / Solar",
+            "IP68"
+          ]
+        },
+        "smaa": {
+          "id": "hw_02",
+          "nombre": "SMAA",
+          "medicion_principal": "Calidad del Aire",
+          "especificaciones": [
+            "PM2.5 / PM10 / CO / O3 / NO2 / SO2 / H2S / NH3",
+            "Temp. / Humedad",
+            "Ruido (30-130 dB)",
+            "4G / Wi-Fi / Solar",
+            "IP67"
+          ]
+        },
+        "smawa": {
+          "id": "hw_03",
+          "nombre": "SMAWA",
+          "medicion_principal": "Nivel de Agua",
+          "especificaciones": [
+            "Monitoreo de nivel en cisternas y tanques",
+            "Rango: 0-5 m",
+            "Resolución: 1 cm",
+            "Precisión: 0.05% F.S",
+            "2G",
+            "Batería Li-Po 3.7V, 2000mAh",
+            "IP68"
+          ]
+        },
+        "smaamicro": {
+          "id": "hw_04",
+          "nombre": "SMAAMicro",
+          "medicion_principal": "Calidad del Aire (versión accesible)",
+          "especificaciones": [
+            "PM2.5 / PM10 / NO2",
+            "Temp. / Humedad",
+            "Wi-Fi / Celular",
+            "Sin panel solar",
+            "IP65"
+          ]
+        }
+      }
+    },
+    "bloque_modelos_datos": {
+      "tag": "data_models",
+      "modelos": [
+        {
+          "nombre": "MODELO DE PRECIPITACIÓN",
+          "descripcion": "Mapas de intensidad y acumulación de lluvia en tiempo casi real."
+        },
+        {
+          "nombre": "MODELO DE CALIDAD DEL AIRE",
+          "descripcion": "Mapa de calidad del aire (AQI) en tiempo casi real.",
+          "escala_aqi_referencia": "0-50 (Buena) a 201+ (Muy insalubre/Peligrosa)"
+        },
+        {
+          "nombre": "MODELO HÍDRICO",
+          "descripcion": "Monitoreo de nivel en tus cisternas en tiempo real."
+        },
+        {
+          "nombre": "MODELO DE ISLAS DE CALOR",
+          "descripcion": "Mapa de temperatura superficial (°C)."
+        }
+      ]
+    },
+    "bloque_ia_usuario": {
+      "tag": "ai_assistant",
+      "nombre": "AireGPT",
+      "rol": "Asistente Ambiental Inteligente",
+      "descripcion": "IA conversacional que transforma datos ambientales en información clara y accionable para tu día a día.",
+      "ejemplos_alertas": [
+        "ALERTA AIRE - Calidad MALA, AQI: 156, Recomendación: evitar actividades al aire libre.",
+        "ALERTA LLUVIA - Lluvia intensa > 20 mm/h, Riesgo de inundación, Toma precauciones."
+      ]
+    },
+    "bloque_canales_distribucion": {
+      "tag": "delivery_channels",
+      "descripcion": "Recibe alertas personalizadas en los canales que prefieras.",
+      "plataformas": [
+        {
+          "nombre": "Telegram",
+          "uso": "Alertas en tiempo real y notificaciones personalizadas."
+        },
+        {
+          "nombre": "WhatsApp",
+          "uso": "Información clara y oportuna donde estés."
+        }
+      ]
+    },
+    "bloque_propuesta_valor_pie": {
+      "tag": "footer_value_props",
+      "pilares": [
+        "Conectividad confiable (2G / 4G / NB-IoT / Wi-Fi)",
+        "Datos seguros (Cifrados de extremo a extremo)",
+        "Infraestructura en la nube (Escalable, redundante y de alta disponibilidad)",
+        "IA & Analítica (Modelos avanzados que generan valor real)",
+        "Alertas accionables (Información clara para decisiones oportunas)",
+        "Comunidades más seguras y resilientes"
+      ],
+      "eslogan": "Conectamos datos. Protegemos comunidades."
+    }
+  }
+}
