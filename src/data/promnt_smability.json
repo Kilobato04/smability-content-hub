@@ -1,0 +1,69 @@
+{
+  "smability_infographic_prompt": {
+    "global_settings": {
+      "aesthetic": "Highly detailed, professional, and hyper-realistic infographic poster. Modern, corporate, 3D tech-render aesthetic. Avoid cartoonish styles.",
+      "color_palette": "Deep blues, crisp whites, and vibrant data-viz colors (greens, oranges, reds).",
+      "resolution": "8k, photorealistic, studio lighting, isometric or symmetrical composition."
+    },
+    "header_section": {
+      "text": "The Smability Ecosystem: Intelligent Data Protecting Communities",
+      "branding": "Incorporate corporate branding in the top corners.",
+      "reference_images": [
+        "logo.png",
+        "smabilitycuadro.png"
+      ]
+    },
+    "core_ecosystem_center": {
+      "smaa_os": "A glowing, high-tech central hub representing 'SMAA OS' connected to the AWS cloud.",
+      "airegpt": "A sleek smartphone mockup showing a Telegram message alert for AireGPT.",
+      "reference_images": [
+        "airegpt_telegram_alert.png"
+      ]
+    },
+    "hardware_nodes_perimeter": {
+      "instruction": "Orbiting the central hub, connected by digital glowing data lines. Use the exact provided reference images for the devices.",
+      "nodes": [
+        {
+          "id": "SMAA_Standard",
+          "description": "Render the exact hardware device from the reference image. Show it as a robust monitoring box with a solar panel, microphone for dBA, and air quality vents.",
+          "reference_image": "smaa.png"
+        },
+        {
+          "id": "CHAAK",
+          "description": "Render the exact hardware device from the reference image. White solid-state weather station mounted on a metallic pole.",
+          "reference_image": "chaak.png"
+        },
+        {
+          "id": "SMAA_Micro",
+          "description": "Render the exact hardware device from the reference image. Compact grey sensor box for air quality.",
+          "reference_image": "smaamicro.png"
+        },
+        {
+          "id": "SMAWA",
+          "description": "GENERATE SCENE FROM SCRATCH: Since there is no reference image, generate a hyper-realistic 3D cutaway view of an underground water cistern or water tank. Show a submersible piezometer probe inside the water measuring the level, connected to a rugged transmission module outside. Focus on 'Water Tank and Cistern Monitoring'.",
+          "reference_image": "NONE_GENERATE_FROM_PROMPT"
+        }
+      ]
+    },
+    "floating_data_models": {
+      "instruction": "Integrate semi-transparent, high-tech data visualization widgets floating near their respective hardware nodes, using the reference images provided.",
+      "models": [
+        {
+          "type": "Precipitation Model",
+          "reference_image": "rain_app.png"
+        },
+        {
+          "type": "Air Quality / AQI Model",
+          "reference_image": "air_app.png"
+        },
+        {
+          "type": "Heat Island Model",
+          "reference_image": "isla_calor.png"
+        }
+      ]
+    },
+    "footer_section": {
+      "content": "Clean, minimal typography listing core value propositions: Reliable Connectivity (4G/Wi-Fi/Solar), End-to-End Security, Scalable Cloud, Actionable AI Alerts."
+    }
+  }
+}
