@@ -246,14 +246,22 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
     const sessionBg = _lastEnrichedPost.sessionBg || '#001A4D';
     el.style.backgroundColor = sessionBg;
 
-    // 2. LÓGICA DE IMAGEN (SOLO ANÁLISIS O PDF)
-    // Nos aseguramos que la lámina 2 siempre tenga imagen
-    const isAnalysisSlide = slide.bg && (slide.bg.includes('analysis') || slide.isAnalysis);
+   // 2. LÓGICA DE IMAGEN (SOLO ANÁLISIS O PDF)
+    const isAnalysisSlide = slide.bg && (slide.bg.includes('analysis') || slide.isAnalysis || slide.bg.includes('products'));
     const bgUrl = isPDF ? bgBase64 : (isAnalysisSlide ? slide.bg : null);
 
     if (bgUrl) {
-        el.style.backgroundImage    = `url(${bgUrl})`;
-        el.style.backgroundSize     = 'cover';
+        el.style.backgroundImage = `url(${bgUrl})`;
+        
+        // --- AJUSTE DE TAMAÑO ESPECÍFICO ---
+        // Si es la imagen del producto en lámina 2, la hacemos un 30% más chica (70%)
+        if (slide.type === 'data_callout' && slide.bg.includes('products')) {
+            el.style.backgroundSize = '70%'; // Ajusta este valor (ej. 50%, 80%)
+        } else {
+            el.style.backgroundSize = 'cover';
+        }
+        
+        el.style.backgroundRepeat = 'no-repeat';
         el.style.backgroundPosition = 'center';
     } else {
         el.style.backgroundImage = 'none';
