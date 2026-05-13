@@ -333,7 +333,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                     </h3>
                 </div>
 
-               <div style="position:absolute; top:${deviceCircleSize * 0.8}px; right:-15px; text-align:right; z-index:13;">
+               <div style="position:absolute; top:${deviceCircleSize * 1.5}px; right:-15px; text-align:right; z-index:13;">
                     <span style="font-family:'Space Grotesk'; font-size:11px; color:#000; background:#39FF14; padding:3px 10px; font-weight:900; letter-spacing:1px; text-transform:uppercase; border-radius:2px; box-shadow: 5px 5px 15px rgba(0,0,0,0.4);">
                         ${deviceName}
                     </span>
