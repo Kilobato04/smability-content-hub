@@ -208,7 +208,7 @@ textarea { height: 110px; resize: none; margin-bottom: 10px; }
     z-index: 5;
 }
 
-/* Fix para Lámina 2 (Análisis) */
+/* Fix para Lámina 2 (Análisis) - Círculo técnico de fondo */
 .device-circle {
     width: 100px;
     height: 100px;
@@ -218,10 +218,8 @@ textarea { height: 110px; resize: none; margin-bottom: 10px; }
     background: #111;
     border: 3px solid var(--green);
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     z-index: 10;
+    overflow: visible !important; /* Permitir que lo que esté encima sobresalga */
 }
 
 .tech-specs-box {
