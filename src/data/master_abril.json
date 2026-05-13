@@ -72,20 +72,47 @@
         }
       ]
     },
-    {
-      "id": "post_03_caso_ibero",
-      "fecha": "2026-04-07",
-      "cat": "CASO B2B",
+{
+      "id": "post_03_rain_purple_alert",
+      "fecha": "2026-05-23",
+      "cat": "ALERTA PÚRPURA VALLE DE MÉXICO",
       "datos": {
-        "titulo": "Ciencia que se patenta: Caso IBERO CDMX",
-        "technical_specs": "Cliente: IBERO CDMX\nProyecto: Red Smart Campus\nValidación: UNAM-CCA\nEquipos: SMAA + SMAWA",
-        "datos_hardcoded": "26 estaciones SIMAT para 22 millones de personas es insuficiente. Smability despliega sensores hiperlocales calibrados para cubrir el déficit de monitoreo oficial.",
-        "dato_viral": "Smability lleva sensores a cada colonia, no solo promedios regionales."
+        "titulo": "Alerta Púrpura en el Valle de México",
+        "technical_specs": "Alerta: Púrpura\nZona: en CDMX\nUmbral: > 70.0 mm/24h \nRed: Smability & Oficial",
+        "datos_hardcoded": "El pasado 11 de Mayo de 2026 se registró una lluvia torrencial en la CDMX. El máximo acumulado marco 73mm/24h en la estación Santa Fe. Nuestro modelo genera alertas tempranas y mapas de acumlado de las últimas 24 hr",
+        "dato_viral": "Alertas vía Telegram y próximamente WhatsApp."
       },
       "slides": [
-        { "type": "cover_bold", "headline": "IBERO + SMABILITY: CIENCIA QUE SE PATENTA.", "metric": "PATENTE ACTIVA", "bg": null },
-        { "type": "data_callout", "headline": "26 ESTACIONES PARA 22 MILLONES.", "metric": "26× DÉFICIT", "device_tag": "SMAA", "bg": "assets/analysis/ibero_network.jpg" },
-        { "type": "cta_clean", "headline": "TU CAMPUS O PLANTA, MONITOREADA.", "supporting_text": "Desplegamos redes locales en menos de 4 semanas.", "bg": null }
+        { 
+          "type": "cover_bold", 
+          "headline": "ALERTA PÚRPURA: MÁS DE 70 MM/24H DE LLUVIA." 
+        },
+        { 
+          "type": "data_callout", 
+          "headline": " ", 
+          "device_tag": "CHAAK", 
+          "bg": "assets/products/rainapp.png" 
+        },
+        { 
+          "type": "bullets", 
+          "headline": "CAPACIDADES DEL MODELO",
+          "bullets": [
+            "Alertamiento de hasta 15min antes de la llegada de la tormenta",
+            "Monitoreo granular y radar meteorológico",
+            "Estación CHAAK de Smability como parte del sistema",
+            "Alertas en Telegram & WhatsApp"
+          ] 
+        },
+        { 
+          "type": "split_map", 
+          "headline": "ANÁLISIS PREDICTIVO DE TORMENTAS", 
+          "metric": "REAL-TIME", 
+          "metric_label": "DATOS CADA MINUTO PARA ALERTAS PREVENTIVAS"
+        },
+        { 
+          "type": "cta_clean", 
+          "headline": "CHATEA CON AIreGPT Y ACTIVA TUS ALERTAS." 
+        }
       ]
     },
     {
