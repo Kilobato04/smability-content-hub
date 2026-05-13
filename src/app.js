@@ -256,7 +256,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
         // --- AJUSTE DE TAMAÑO ESPECÍFICO ---
         // Si es la imagen del producto en lámina 2, la hacemos un 30% más chica (70%)
         if (slide.type === 'data_callout' && slide.bg.includes('products')) {
-            el.style.backgroundSize = '70%'; // Ajusta este valor (ej. 50%, 80%)
+            el.style.backgroundSize = '80%'; // Ajusta este valor (ej. 50%, 80%)
         } else {
             el.style.backgroundSize = 'cover';
         }
