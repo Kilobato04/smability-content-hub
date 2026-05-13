@@ -325,7 +325,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                     </h3>
                 </div>
 
-                <div style="position:absolute; top:-10px; right:12px; text-align:right; z-index:12;">
+               <div style="position:absolute; top:${deviceCircleSize + 30}px; right:${deviceCircleSize / 2}px; text-align:right; z-index:12;">
                     <span style="font-family:'Space Grotesk'; font-size:11px; color:#000; background:#39FF14; padding:3px 10px; font-weight:900; letter-spacing:1px; text-transform:uppercase; border-radius:2px;">
                         ${deviceName}
                     </span>
@@ -336,7 +336,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
 
                 <div style="position:absolute; top:15px; right:0; width:${deviceCircleSize}px; height:${deviceCircleSize}px; z-index:11; display:flex; align-items:center; justify-content:center; pointer-events:none;">
                     <img src="assets/devices/${(slide.device_tag || 'SMAA').toLowerCase()}.png" 
-                         style="width:100%; height:auto; transform: scale(1.5); filter: drop-shadow(0 20px 30px rgba(0,0,0,0.6)) brightness(1.2);" 
+                         style="width:80%; height:auto; transform: scale(1.2); filter: drop-shadow(0 20px 30px rgba(0,0,0,0.6)) brightness(1.2);" 
                          onerror="this.style.display='none'">
                 </div>
                 
