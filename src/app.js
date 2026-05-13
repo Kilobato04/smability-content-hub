@@ -344,7 +344,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
 
                 <div style="position:absolute; top:15px; right:0; width:${deviceCircleSize}px; height:${deviceCircleSize}px; z-index:11; display:flex; align-items:center; justify-content:center; pointer-events:none; overflow:visible;">
                     <img src="assets/devices/${(slide.device_tag || 'SMAA').toLowerCase()}.png" 
-                         style="width:90%; height:auto; transform: scale(1.4); filter: drop-shadow(0 20px 30px rgba(0,0,0,0.6)) brightness(1.2); transition: all 0.3s ease;" 
+                         style="width:80%; height:auto; transform: scale(1.0); filter: drop-shadow(0 20px 30px rgba(0,0,0,0.6)) brightness(1.2); transition: all 0.3s ease;" 
                          onerror="this.style.display='none'">
                 </div>
                 
