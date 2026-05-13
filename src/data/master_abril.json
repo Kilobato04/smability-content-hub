@@ -91,7 +91,7 @@
           "type": "data_callout", 
           "headline": " ", 
           "device_tag": "CHAAK", 
-          "bg": "assets/products/rainapp_airegpt.png" 
+          "bg": "assets/products/rainapp.png" 
         },
         { 
           "type": "bullets", 
@@ -107,7 +107,7 @@
           "type": "split_map", 
           "headline": "ANÁLISIS PREDICTIVO DE TORMENTAS", 
           "metric": "73mm/24h", 
-          "metric_label": "DATOS CADA MINUTO PARA ALERTAS PREVENTIVAS"
+          "metric_label": "MODELADO POR MINUTO PARA ALERTAS PREVENTIVAS"
         },
         { 
           "type": "cta_clean", 
