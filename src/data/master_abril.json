@@ -79,7 +79,7 @@
       "datos": {
         "titulo": "Alerta Púrpura en el Valle de México",
         "technical_specs": "Alerta: Púrpura\nZona: en CDMX\nUmbral: > 70.0 mm/24h \nRed: Smability & Oficial",
-        "datos_hardcoded": "El pasado 11 de Mayo de 2026 se registró una lluvia torrencial en la CDMX. El máximo acumulado marco 73mm/24h en la estación Santa Fe. Nuestro modelo genera alertas tempranas y mapas de acumlado de las últimas 24 hr",
+        "datos_hardcoded": "El pasado 11 de Mayo de 2026 se registró una lluvia torrencial en la CDMX. El máximo acumulado marco 73mm/24h en la estación Santa Fe. Nuestro modelo genera alertas tempranas y mapas de acumlado de las últimas 24 hrs.",
         "dato_viral": "Alertas vía Telegram y próximamente WhatsApp."
       },
       "slides": [
@@ -106,7 +106,7 @@
         { 
           "type": "split_map", 
           "headline": "ANÁLISIS PREDICTIVO DE TORMENTAS", 
-          "metric": "REAL-TIME", 
+          "metric": "73mm/24h", 
           "metric_label": "DATOS CADA MINUTO PARA ALERTAS PREVENTIVAS"
         },
         { 
