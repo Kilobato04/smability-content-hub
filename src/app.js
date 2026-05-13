@@ -312,7 +312,7 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
         
         // Título Dinámico (El que viene del JSON)
         const tituloDinamico = slide.headline || "MAPA CRÍTICO DE LA LLUVIA";
-
+      
         bodyContent = `
             <div style="text-align:left; width:100%; height:100%; position:relative; display:flex; flex-direction:column;">
                 
@@ -331,8 +331,13 @@ function buildSlideEl(slide, index, total, sidepx, bgBase64) {
                     </span>
                 </div>
 
-                <div class="device-circle" style="position:absolute; top:15px; right:0; width:${deviceCircleSize}px; height:${deviceCircleSize}px; background:#222; border:2px solid #39FF14; border-radius:50%; display:flex; align-items:center; justify-content:center; overflow:hidden; z-index:11; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
-                    <img src="assets/devices/${(slide.device_tag || 'SMAA').toLowerCase()}.png" style="width:70%; filter: brightness(1.3);" onerror="this.style.display='none'">
+                <div class="device-circle" style="position:absolute; top:15px; right:0; width:${deviceCircleSize}px; height:${deviceCircleSize}px; background:#222; border:2px solid #39FF14; border-radius:50%; z-index:10; box-shadow: 0 10px 30px rgba(0,0,0,0.4);">
+                </div>
+
+                <div style="position:absolute; top:15px; right:0; width:${deviceCircleSize}px; height:${deviceCircleSize}px; z-index:11; display:flex; align-items:center; justify-content:center; pointer-events:none;">
+                    <img src="assets/devices/${(slide.device_tag || 'SMAA').toLowerCase()}.png" 
+                         style="width:100%; height:auto; transform: scale(1.5); filter: drop-shadow(0 20px 30px rgba(0,0,0,0.6)) brightness(1.2);" 
+                         onerror="this.style.display='none'">
                 </div>
                 
                 <div style="flex:1;"></div>
